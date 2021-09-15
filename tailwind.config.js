@@ -19,6 +19,11 @@ module.exports = {
     variants: {
         extend: {
             opacity: ['disabled'],
+            margin:["hover"],
+            top:["hover"],
+            inset:["hover"],
+            transform:["hover"],
+            fontSize:["hover","focus"],
         },
     },
 
