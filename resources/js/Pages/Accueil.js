@@ -2,11 +2,25 @@ import React from 'react';
 import {Head, Link} from "@inertiajs/inertia-react";
 import Authenticated from "@/Layouts/Authenticated";
 import img1 from "../img/4.jpg"
-import TouchApp from "@material-ui/icons/TouchApp"
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"
-import AttachMoney from "@material-ui/icons/AttachMoney"
-import AccountBalance from "@material-ui/icons/AccountBalance"
-import DoneAll from "@material-ui/icons/DoneAll"
+import TouchApp from "@mui/icons-material/TouchApp"
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"
+import AttachMoney from "@mui/icons-material/AttachMoney"
+import AccountBalance from "@mui/icons-material/AccountBalance"
+import DoneAll from "@mui/icons-material/DoneAll"
+
+
+//SWIPER
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import 'swiper/css/bundle';
+
+
+// import Swiper core and required modules
+import SwiperCore, {Navigation, Pagination,Autoplay} from 'swiper';
+// install Swiper modules
+SwiperCore.use([Pagination,Navigation,Autoplay]);
+//SWIPER
+
 
 function Accueil(props) {
     return (
@@ -15,6 +29,14 @@ function Accueil(props) {
             errors={props.errors}
         >
             <Head title="Accueil" />
+            <Swiper className={"my-3"} slidesPerView={5} autoplay={{delay:5000}} zoom={true} navigation={true}>
+                <SwiperSlide><div style={{width:'fit-content'}}><Link className={"font-bold"} href="/" ><p style={{width:'fit-content'}} className={"transform hover:scale-125 transition duration-10 hover:text-indigo-600"}>Art</p></Link></div></SwiperSlide>
+                <SwiperSlide><div style={{width:'fit-content'}}><Link  className={"font-bold"} href="/" ><p style={{width:'fit-content'}} className={"transform hover:scale-125 transition duration-10 hover:text-indigo-600"}>Technologie</p></Link></div></SwiperSlide>
+                <SwiperSlide><div style={{width:'fit-content'}}><Link className={"font-bold"} href="/" ><p style={{width:'fit-content'}} className={"transform hover:scale-125 transition duration-10 hover:text-indigo-600"}>Design</p></Link></div></SwiperSlide>
+                <SwiperSlide><div style={{width:'fit-content'}}><Link className={"font-bold"} href="/" ><p style={{width:'fit-content'}} className={"transform hover:scale-125 transition duration-10 hover:text-indigo-600"}>Commerce</p></Link></div></SwiperSlide>
+                <SwiperSlide><div style={{width:'fit-content'}}><Link className={"font-bold"} href="/" ><p style={{width:'fit-content'}} className={"transform hover:scale-125 transition duration-10 hover:text-indigo-600"}>Sport</p></Link></div></SwiperSlide>
+                <SwiperSlide><div style={{width:'fit-content'}}><Link className={"font-bold"} href="/" ><p style={{width:'fit-content'}} className={"transform hover:scale-125 transition duration-10 hover:text-indigo-600"}>Divertissement</p></Link></div></SwiperSlide>
+            </Swiper>
 
             <div className={"relative w-full"}>
                 <div className={"h-full w-full"}>
@@ -30,7 +52,7 @@ function Accueil(props) {
                        </p>
                    </div>
                     <div className={"my-10 flex md:flex-row flex-col md:space-x-2 md:space-y-0 space-y-10"}>
-                        <Link href={"/"}>
+                        <Link href={route("projet.create")}>
                            <button className={"btn hover:bg-opacity-70 md:text-lg sm:text-sm border bg-black hover:bg-indigo-600 text-white p-2 rounded duration-500 font-bold"}>
                                <TouchApp/>
                                Demarrer un projet
@@ -45,7 +67,7 @@ function Accueil(props) {
 
                     </div>
                     <div className={" flex justify-center md:mt-16 mt-2 text-white space-x-3 hidden md:flex "}>
-                        <Link href={"/"} className={"border-indigo-600  border-2 p-1 ml-10 w-60 md:text-xl  font-semibold bg-opacity-70 duration-500 hover:transform hover:scale-110"}>
+                        <Link href={"/"} className={"border-indigo-600  border-2 p-1 ml-10 w-60 md:text-xl font-semibold bg-opacity-70 duration-500 hover:transform hover:scale-110"}>
                             <div className={"bg-indigo-600 flex flex-col justify-between text-center h-full w-full p-4 bg-opacity-70"}>
                                 <div>
                                     <p>Postez vos projets en besoins de financement</p>
@@ -76,19 +98,8 @@ function Accueil(props) {
 
                 </div>
             </div>
-            <div className={"font-semibold flex justify-center"}>
-                <div className={"flex w-96 overflow-hidden"}>
-                    <div className={"p-3"}>Art</div>
-                    <div className={"p-3"}>Cinema</div>
-                    <div className={"p-3"}>Technologie</div>
-                    <div className={"p-3"}>Sport</div>
-                    <div className={"p-3"}>Agriculture</div>
-                    <div className={"p-3"}>Environnement</div>
-                    <div className={"p-3"}>Commerce</div>
-                    <div className={"p-3"}>Elevage</div>
-                    <div className={"p-3"}>Web</div>
-                </div>
-            </div>
+
+
 
 
         </Authenticated>

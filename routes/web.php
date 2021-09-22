@@ -28,6 +28,11 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::inertia("/accueil","Accueil")->name("accueil");
+Route::inertia("/accueil","Accueil")->middleware(['auth', 'verified'])->name("accueil");
+
+
+Route::resource("projet",\App\Http\Controllers\ProjetController::class)->middleware(['auth', 'verified']);
+Route::resource("contribution",\App\Http\Controllers\ContributionController::class)->middleware(['auth', 'verified']);
+
 
 require __DIR__.'/auth.php';

@@ -9,8 +9,8 @@ export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="bg-black  border-gray-100 fixed w-full z-10">
+        <div className="min-h-screen">
+            <nav className="bg-black fixed w-full z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
@@ -27,13 +27,10 @@ export default function Authenticated({ auth, header, children }) {
                                 <NavLink href={route('accueil')} active={route().current('accueil')}>
                                     Accueil
                                 </NavLink>
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashbord
-                                </NavLink>
-                                <NavLink href={route('dashboard')} active={route().current('projets')}>
+                                <NavLink href={route('projet.index')} active={route().current('projet.index')}>
                                     Mes projets
                                 </NavLink>
-                                <NavLink href={route('dashboard')} active={route().current('contributions')}>
+                                <NavLink href={route('contribution.index')} active={route().current('contribution.index')}>
                                     Mes contributions
                                 </NavLink>
                             </div>
@@ -106,13 +103,10 @@ export default function Authenticated({ auth, header, children }) {
                         <ResponsiveNavLink href={route('accueil')} active={route().current('accueil')}>
                             Accueil
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('projets')}>
+                        <ResponsiveNavLink href={route('projet.index')} active={route().current('projet.index')}>
                             Mes projets
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('contributions')}>
+                        <ResponsiveNavLink href={route('contribution.index')} active={route().current('contribution.index')}>
                             Mes contributions
                         </ResponsiveNavLink>
                     </div>
@@ -131,14 +125,7 @@ export default function Authenticated({ auth, header, children }) {
                     </div>
                 </div>
             </nav>
-
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
-                </header>
-            )}
-
-            <main style={{paddingTop:64}}>{children}</main>
+            <div style={{paddingTop:64}}>{children}</div>
         </div>
     );
 }
