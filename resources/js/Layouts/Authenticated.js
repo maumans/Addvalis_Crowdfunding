@@ -24,22 +24,28 @@ export default function Authenticated({ auth, header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink href={route('accueil')} active={route().current('accueil')}>
+                                <NavLink href={route('accueil')} active={route().current('accueil') || route().current('home')}>
                                     Accueil
                                 </NavLink>
-                                <NavLink href={route('projet.index')} active={route().current('projet.index')}>
-                                    Mes projets
-                                </NavLink>
-                                <NavLink href={route('contribution.index')} active={route().current('contribution.index')}>
-                                    Mes contributions
-                                </NavLink>
+                                {
+                                    auth.user &&
+                                        <>
+                                            <NavLink href={route('user.projet.index',auth.user.id)} active={route().current('user.projet.index')}>
+                                                Mes projets
+                                            </NavLink>
+                                            <NavLink href={route('contribution.index')} active={route().current('contribution.index')}>
+                                                Mes contributions
+                                            </NavLink>
+                                        </>
+                                }
                             </div>
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ml-6">
                             <div className="ml-3 relative">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
+                                {auth.user?
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
@@ -61,14 +67,24 @@ export default function Authenticated({ auth, header, children }) {
                                                 </svg>
                                             </button>
                                         </span>
-                                    </Dropdown.Trigger>
+                                        </Dropdown.Trigger>
 
-                                    <Dropdown.Content>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
+                                        <Dropdown.Content>
+                                            <Dropdown.Link href={route('logout')} method="post" as="button">
+                                                Deconnexion
+                                            </Dropdown.Link>
+                                        </Dropdown.Content>
+                                    </Dropdown>:
+                                    <>
+                                        <Link href={route('login')} className="text-sm text-white">
+                                            connexion
+                                        </Link>
+
+                                        <Link href={route('register')} className="ml-4 text-sm text-white">
+                                            Inscription
+                                        </Link>
+                                    </>
+                                }
                             </div>
                         </div>
 
@@ -100,29 +116,42 @@ export default function Authenticated({ auth, header, children }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('accueil')} active={route().current('accueil')}>
+                        <ResponsiveNavLink href={route('accueil')} active={route().current('accueil')||route().current('home')}>
                             Accueil
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('projet.index')} active={route().current('projet.index')}>
-                            Mes projets
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('contribution.index')} active={route().current('contribution.index')}>
-                            Mes contributions
-                        </ResponsiveNavLink>
+                        {auth.user &&
+                            <>
+                                <ResponsiveNavLink href={route('user.projet.index',[auth.user.id])} active={route().current('projet.index')}>
+                                    Mes projets
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('contribution.index')} active={route().current('contribution.index')}>
+                                    Mes contributions
+                                </ResponsiveNavLink>
+                            </>
+                        }
                     </div>
+                    {auth.user ?
+                        <div className="pt-4 pb-1 border-t border-gray-200">
+                            <div className="px-4">
+                                <div className="font-medium text-base text-white">{auth.user.name}</div>
+                                <div className="font-medium text-sm text-white">{auth.user.email}</div>
+                            </div>
 
-                    <div className="pt-4 pb-1 border-t border-gray-200">
-                        <div className="px-4">
-                            <div className="font-medium text-base text-white">{auth.user.name}</div>
-                            <div className="font-medium text-sm text-white">{auth.user.email}</div>
-                        </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                                Log Out
+                            <div className="mt-3 space-y-1">
+                                <ResponsiveNavLink method="post" href={route('logout')} as="button">
+                                    Deconnexion
+                                </ResponsiveNavLink>
+                            </div>
+                        </div>:
+                        <>
+                            <ResponsiveNavLink href={route('login')} as="button">
+                                Connexion
                             </ResponsiveNavLink>
-                        </div>
-                    </div>
+                            <ResponsiveNavLink href={route('register')} as="button">
+                                Inscription
+                            </ResponsiveNavLink>
+                        </>
+                    }
                 </div>
             </nav>
             <div style={{paddingTop:64}}>{children}</div>

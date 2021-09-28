@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Commentaire extends Model
 {
     use HasFactory;
+
+    protected $guarded=[];
+
+    public function projet()
+    {
+        return $this->belongsTo(Projet::class);
+    }
 }

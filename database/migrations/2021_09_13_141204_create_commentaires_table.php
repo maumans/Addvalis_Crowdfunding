@@ -17,6 +17,8 @@ class CreateCommentairesTable extends Migration
             $table->id();
             $table->string("libelle")->nullable();
             $table->date("date")->nullable();
+            $table->foreignId("user_id")->nullable()->constrained("users");
+            $table->foreignId("projet_id")->nullable()->constrained("projets");
 
             $table->timestamps();
         });

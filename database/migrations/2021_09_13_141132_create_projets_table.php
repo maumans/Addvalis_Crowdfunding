@@ -16,12 +16,16 @@ class CreateProjetsTable extends Migration
         Schema::create('projets', function (Blueprint $table) {
             $table->id();
             $table->string("titre")->nullable();
+            $table->string("image")->nullable();
             $table->string("description")->nullable();
             $table->date("dateDebut")->nullable();
             $table->date("dateFin")->nullable();
-            $table->integer("Montant")->nullable();
+            $table->integer("montantInitial")->nullable();
+            $table->integer("montantRechercher")->nullable();
             $table->string("Etat")->nullable();
-            $table->string("Details")->nullable();
+            $table->longText("details")->nullable();
+            $table->foreignId("secteur_id")->nullable()->constrained("secteurs")->cascadeOnDelete();
+            $table->foreignId("user_id")->nullable()->constrained("users")->cascadeOnDelete();
             $table->timestamps();
         });
     }

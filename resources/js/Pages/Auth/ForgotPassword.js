@@ -22,11 +22,10 @@ export default function ForgotPassword({ status }) {
 
     return (
         <Guest>
-            <Head title="Forgot Password" />
+            <Head title="Mot passe oublié" />
 
             <div className="mb-4 text-sm text-gray-500 leading-normal">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password
-                reset link that will allow you to choose a new one.
+                Avez vous oublié votre mot de passe? Pas de problème. Entrez votre adresse mail et nous vous enverrons par e-mail un lien de réinitialisation de mot de passe qui vous permettra d'en choisir un nouveau.
             </div>
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
@@ -45,7 +44,7 @@ export default function ForgotPassword({ status }) {
 
                 <div className="flex items-center justify-end mt-4">
                     <Button className="ml-4" processing={processing}>
-                        Email Password Reset Link
+                        Reinitialser le mot de passe par email
                     </Button>
                 </div>
             </form>
