@@ -90,8 +90,7 @@ export default function Login({ status, canResetPassword }) {
                     <Button className="ml-4" role="button">
                         <Link
                             href={route('register')}
-                            className="text-white hover:text-gray-20"
-                        >
+                            className="text-white hover:text-gray-20">
                             Inscription
                         </Link>
                     </Button>
