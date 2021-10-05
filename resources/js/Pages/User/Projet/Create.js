@@ -316,7 +316,7 @@ export default function Create(props) {
                                     Finance
                                 </button>
                             </div>
-                            <div className={"w-7/12"}>
+                            <div className={"md:w-7/12"}>
                                 <form action="" onSubmit={handleSubmit} className={"container mx-auto my-4"}>
                                     {
                                         switchActiveStep()
