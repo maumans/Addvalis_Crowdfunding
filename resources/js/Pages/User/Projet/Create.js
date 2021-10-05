@@ -125,7 +125,7 @@ export default function Create(props) {
 
             <div className={"flex justify-center"}>
                 <div className={"grid md:grid-cols-2 grid-cols-1 gap-3 my-4 md:mx-10 mx-10"}>
-                    <TextField style={{maxWidth:400}} value={data.titre}  onChange={e=>setData("titre",e.target.value)} label="titre du projet" />
+                    <TextField style={{maxWidth:400}} value={data.titre}  onChange={e=>setData("titre",e.target.value)} label="titre du projet"/>
                     <Autocomplete
                         style={{maxWidth:400}}
                         onChange={(e,val)=>setData("secteur",val?.id)}
@@ -137,7 +137,7 @@ export default function Create(props) {
                         renderInput={(params)=><TextField fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}></TextField>}
                     />
 
-                    <TextField style={{maxWidth:400}} value={data.montantInitial} onChange={e=>setData("montantInitial",e.target.value)} label="Montant initial" />
+                    <TextField  style={{maxWidth:400}} value={data.montantInitial} onChange={e=>setData("montantInitial",e.target.value)} label="Montant initial" />
                     <TextField style={{maxWidth:400}} value={data.montantRechercher} onChange={e=>setData("montantRechercher",e.target.value)} label="Montant à financer" />
                     <div style={{maxWidth:400}} className={"flex flex-col mt-3"}>
                         <label className={"text-gray-500 font-bold"} htmlFor="">
@@ -251,11 +251,19 @@ export default function Create(props) {
 
                         }}
                     />
-            <div>
-                <IconButton onClick={()=>setActiveStep(0)}><NavigateBefore/></IconButton>
-                    Coordonnés Bancaires
-                <IconButton onClick={()=>setActiveStep(2)}><NavigateNext/></IconButton>
-            </div>
+
+                <div>
+
+                    <IconButton onClick={()=>setActiveStep(0)}><NavigateBefore/></IconButton>
+                        Coordonnés Bancaires
+                    <IconButton onClick={()=>setActiveStep(2)}><NavigateNext/></IconButton>
+                </div>
+
+                <div className={"flex justify-center mx-5"}>
+                    <button style={{minWidth:380, maxWidth:410}} className={"btn bg-indigo-600 text-white my-4 p-2 rounded hover:bg-indigo-800 mt-3 md:w-full"}>
+                        Soumettre
+                    </button>
+                </div>
         </div>
     }
 
@@ -293,41 +301,36 @@ export default function Create(props) {
             auth={props.auth}
             errors={props.errors}>
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 ">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg ">
-                        <Stepper className="flex justify-center" activeStep={activeStep} connector={null} >
-                            <Step >
-                                <StepLabel StepIconComponent={()=>activeStep>0?<Check/>:<Settings/>}>Infos du projet</StepLabel>
-                            </Step>
-                            <Connector step={0}/>
-                            <Step >
-                                <StepLabel StepIconComponent={()=>activeStep>1?<Check/>:<Settings/>}>Details du projet</StepLabel>
-                            </Step>
-                            <Connector step={1}/>
-                            <Step >
-                                <StepLabel StepIconComponent={()=>activeStep>2?<Check/>:<Settings/>}>Coordonées Bancaires</StepLabel>
-                            </Step>
-                        </Stepper>
-                        <form action="" onSubmit={handleSubmit} className={"container mx-auto my-4"}>
-                            {
-                                switchActiveStep()
-                            }
-                            {
-                                progress && (
-                                    <progress value={progress.percentage} max={100}>
-                                        {progress.percentage}%
-                                    </progress>
-                                )
-                            }
+            <div className="py-12 flex justify-center">
+                <div className="max-w-9xl sm:px-6 lg:px-8 w-full flex justify-center">
 
-                           <div className={"flex justify-center mx-5"}>
-                               <button style={{minWidth:380, maxWidth:410}} className={"btn bg-indigo-600 text-white my-4 p-2 rounded hover:bg-indigo-800 mt-3 md:w-full"}>
-                                   Soumettre <Check/>
-                               </button>
-                           </div>
-                        </form>
-                    </div>
+                    <div className={"md:flex justify-center md:w-9/12"}>
+                            <div className={"md:border-r md:border-b-0 border-b pr-5 md:mr-5 md:space-y-5 md:space-x-0 space-x-5 flex md:flex-col md:justify-start justify-center pb-5 md:w-3/12"}>
+                                <button onClick={()=>setActiveStep(0)} className={activeStep===0?"text-white bg-indigo-600 p-2 rounded transition duration-500":"text-indigo-600 border border-indigo-600 p-2 rounded transition duration-500"}>
+                                    Infos
+                                </button>
+                                <button onClick={()=>setActiveStep(1)} className={activeStep===1?"text-white bg-indigo-600 p-2 rounded transition duration-500":activeStep===2?"text-indigo-600 border border-indigo-600 p-2 rounded transition duration-500":"text-gray-600 border border-gray-600 p-2 rounded transition duration-500"}>
+                                    Details
+                                </button>
+                                <button onClick={()=>setActiveStep(2)} className={activeStep===2?"text-white bg-indigo-600 p-2 rounded transition duration-500":"text-gray-600 border border-gray-600 p-2 rounded transition duration-500"}>
+                                    Finance
+                                </button>
+                            </div>
+                            <div className={"w-7/12"}>
+                                <form action="" onSubmit={handleSubmit} className={"container mx-auto my-4"}>
+                                    {
+                                        switchActiveStep()
+                                    }
+                                    {
+                                        progress && (
+                                            <progress value={progress.percentage} max={100}>
+                                                {progress.percentage}%
+                                            </progress>
+                                        )
+                                    }
+                                </form>
+                            </div>
+                        </div>
                 </div>
             </div>
         </Authenticated>

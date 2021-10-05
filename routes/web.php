@@ -42,6 +42,8 @@ Route::get("/accueil",function () {
 })->name("accueil");
 
 
+Route::resource("projet",\App\Http\Controllers\ProjetController::class)->middleware(['auth', 'verified']);
+Route::post("/projet/contribuer",[\App\Http\Controllers\ProjetController::class,"contribuer"])->middleware(['auth', 'verified']);
 Route::resource("user.projet",\App\Http\Controllers\User\ProjetController::class)->middleware(['auth', 'verified']);
 Route::resource("secteur",\App\Http\Controllers\SecteurController::class)->middleware(['auth', 'verified']);
 Route::resource("contribution",\App\Http\Controllers\ContributionController::class)->middleware(['auth', 'verified']);

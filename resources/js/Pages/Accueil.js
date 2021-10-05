@@ -50,7 +50,6 @@ function Accueil(props) {
     },[])
     useEffect(()=>{
         AOS.refresh()
-
     },[voirPlus])
 
     return (
@@ -68,9 +67,7 @@ function Accueil(props) {
             </Swiper>
 
             <div className={"relative w-full font"}>
-                <div className={"h-full w-full"}>
-                    <img src={img1} alt="" className={"w-full"} style={{maxHeight:"100vh"}} />
-                </div>
+                <img src="/images/4.jpg" alt="" className={"w-full"} style={{maxHeight:"100vh"}} />
                 <div className={"bg-black w-full h-full absolute top-0 opacity-50"}>
 
                 </div>
@@ -95,7 +92,7 @@ function Accueil(props) {
                         </Link>
 
                     </div>
-                    <div className={" flex justify-center md:mt-16 mt-2 text-white space-x-3 hidden md:flex "}>
+                    <div className={"flex justify-center md:mt-16 mt-2 text-white space-x-3 hidden md:flex "}>
                         <Link href={"/"} className={"border-indigo-600  border-2 p-1 ml-10 w-60 md:text-xl bg-opacity-70 duration-500 hover:transform hover:scale-110"}>
                             <div className={"bg-indigo-600 flex flex-col justify-between text-center h-full w-full p-4 bg-opacity-70"}>
                                 <div>
@@ -109,18 +106,11 @@ function Accueil(props) {
                         <Link href={"/"} className={"border-indigo-600 border-2 p-1 w-60 md:text-xl duration-500 hover:transform hover:scale-110"}>
                             <div className={"bg-indigo-600 flex flex-col justify-between text-center h-full w-full p-4 bg-opacity-70 "}>
                                 <div>
-                                    <p>Financez des projets afin de beneficier des royalties suivant les conditions imposées</p>
+                                    <p>Financez des projets et benefiez des retours sur investissement</p>
                                 </div>
                                 <div>
                                     <AttachMoney fontSize="large"></AttachMoney>
                                 </div>
-                            </div>
-                        </Link>
-                        <Link href={"/"} className={"border-indigo-600 border-2 p-1 mr-10 w-60 md:text-xl duration-500 hover:transform hover:scale-110"}>
-                            <div className={"bg-indigo-600 flex flex-col justify-between text-center h-full w-full p-4 bg-opacity-70"}>
-
-                                <div><p>Testez les possibilités d'investissements</p></div>
-                                <div><DoneAll fontSize="large"/></div>
                             </div>
                         </Link>
                     </div>
@@ -137,7 +127,7 @@ function Accueil(props) {
                     <div className={"grid md:grid-cols-3 gap-4 mx-10 mb-20"}>
                         {
                             projets.map((p,i)=>(
-                                <Link key={p.id} href={"/"}>
+                                <Link key={p.id} href={route("projet.show",p.id)}>
                                     <div data-aos={"zoom-in"} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col"} style={{maxWidth:350,height:400,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
                                         <div className={"flex space-x-2 bg-black p-2"}>
                                             <Avatar sx={{ bgcolor: red[600] }} className={"border-2 bg-indigo-600"}>
@@ -178,7 +168,16 @@ function Accueil(props) {
                         Voir plus
                     </button>
                 </div>
-                <div className={"my-10 bg-black"} style={{height:400}}>
+                <div className={"w-full px-5 my-10 bg-black flex space-x-5 justify-center text-white items-center"} style={{height:400}}>
+                    <div>
+                        AddvCrowd réunit le créateur et ses contributeurs autour du financement d'un projet.
+                    </div>
+                    <div>
+                        Les bénéfices ne sont pas garanties, mais le créateur s'engage à informer ses contributeurs régulièrement.
+                    </div>
+                    <div>
+                        Votre contribution n'est prélevée que si l'objectif de financement du projet est atteint avant la date limite.
+                    </div>
 
                 </div>
 

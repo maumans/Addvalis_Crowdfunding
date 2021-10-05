@@ -8,6 +8,7 @@ import { InertiaProgress } from '@inertiajs/progress';
 import AOS from "aos"
 import "aos/dist/aos.css"
 
+AOS.init()
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -18,6 +19,5 @@ createInertiaApp({
         return render(<App {...props} />, el);
     },
 });
-
 InertiaProgress.init({ color: 'white' });
-AOS.init()
+

@@ -31,11 +31,13 @@
         "@emotion/styled": "^11.3.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
+        "@mui/styles": "^5.0.1",
         "@tinymce/tinymce-react": "^3.12.6",
         "aos": "^2.3.4",
         "hero-slider": "^2.0.3",
         "react-html-parser": "^2.0.2",
         "react-material-ui-carousel": "^2.3.1",
+        "sweetalert2": "^11.1.7",
         "swiper": "^7.0.5",
         "tinymce": "^5.9.2"
     }

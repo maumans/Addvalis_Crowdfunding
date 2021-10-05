@@ -22,7 +22,7 @@ class ProjetController extends Controller
      */
     public function index()
     {
-        $projets=Projet::find(Auth::user()->id)->get();
+        $projets=Projet::where("user_id",Auth::user()->id)->orderBy("created_at","desc")->get();
 
         return Inertia::render("User/Projet/Index",["projets"=>$projets]);
     }
@@ -73,7 +73,7 @@ class ProjetController extends Controller
             "image"=>$imgUrl
         ]);
 
-        return redirect()->route("user.projet.index",Auth::user()->id);
+        return redirect()->route("user.projet.index",Auth::user()->id)->with("success","Projet crée");
     }
 
     /**

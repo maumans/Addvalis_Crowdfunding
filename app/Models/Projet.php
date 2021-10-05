@@ -18,7 +18,7 @@ class Projet extends Model
 
     public function contributeurs()
     {
-        return $this->belongsToMany(User::class,"contributions");
+        return $this->belongsToMany(User::class,"contributions")->withPivot("montant");
     }
 
     public function secteur()

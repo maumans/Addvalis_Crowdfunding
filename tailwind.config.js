@@ -13,21 +13,11 @@ module.exports = {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
+            width:{
+                "w-50-p":"50vw",
+                "w-30-p":"30vw"
+            }
         },
-        minWidth: {
-            '0': '0',
-            '1/4': '25%',
-            '1/2': '50%',
-            '3/4': '75%',
-            'full': '100%',
-        },
-        maxWidth: {
-            '0': '0',
-            '1/4': '25%',
-            '1/2': '50%',
-            '3/4': '75%',
-            'full': '100%',
-        }
     },
 
     variants: {

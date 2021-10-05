@@ -1,13 +1,19 @@
 import React, {useState,useEffect} from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import {Link, useForm} from "@inertiajs/inertia-react";
+ import Swal from 'sweetalert2'
 
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+export default function Index({auth,errors,projets,success}) {
 
-
-export default function Index({auth,errors,projets}) {
-
-
+    useEffect(()=>{
+        success && Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: success,
+            showConfirmButton: false,
+            timer: 2000
+        })
+    },[success])
 
     return (
         <Authenticated
@@ -40,9 +46,6 @@ export default function Index({auth,errors,projets}) {
                                                        <p className={"text-sm sm:text-sm md:text-lg text-white mt-5"} data-aos="flip-up" data-aos-delay="500" data-aos-duration="1000">{p?.description}</p>
                                                    </div>
                                                </div>
-                                           </div>
-                                           <div hidden={true}>
-                                               {ReactHtmlParser(p.details)}
                                            </div>
                                        </Link>
                                    </div>
