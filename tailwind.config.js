@@ -18,6 +18,10 @@ module.exports = {
                 "w-30-p":"30vw"
             }
         },
+        screens: {
+            'xs': {'min': '0px', 'max': '639px'},
+            ...defaultTheme.screens,
+        },
     },
 
     variants: {

@@ -67,8 +67,7 @@ import 'tinymce/plugins/toc';
 //LANGUE DE TINYMCE
 
 import "../../../lang/fr_FR"
-import {styles} from "dom7";
-import {maxWidth} from "@mui/system";
+import ValidationErrors from "@/Components/ValidationErrors";
 
 
 export default function Create(props) {
@@ -86,6 +85,20 @@ export default function Create(props) {
         details:"",
         image:""
     })
+
+    const [errorsSt,setErrorsSt]=useState({
+        titre: 'mau',
+        description: '',
+        secteur: "",
+        montantInitial: '',
+        montantRechercher: '',
+        dateDebut: "",
+        dateFin: "",
+        details:"",
+        image:""
+    })
+
+
     const [secteurs,setSecteurs]=useState([]);
 
     useEffect(()=>{
@@ -97,14 +110,11 @@ export default function Create(props) {
         setData("details",content)
     }
 
+    useEffect(()=>{
+        console.log(props.errors)
+    })
 
-    function Connector({step})
-    {
-        if(step<activeStep)
-            return <div className={"h-1 w-80 bg-gradient-to-r from-indigo-200 via-indigo-500 to-indigo-900"}/>
-        else
-            return <div className={"h-1 w-80 bg-gradient-to-r from-gray-200 via-gray-500 to-gray-900 transition duration-1000"}/>
-    }
+
     function switchActiveStep()
     {
         switch (activeStep)
@@ -121,69 +131,103 @@ export default function Create(props) {
 
     function infosProjet()
     {
-        return <div className={"ml-2 flex flex-col"}>
+        return <div className={"flex flex-col"}>
 
             <div className={"flex justify-center"}>
-                <div className={"grid md:grid-cols-2 grid-cols-1 gap-3 my-4 md:mx-10 mx-10"}>
-                    <TextField style={{maxWidth:400}} value={data.titre}  onChange={e=>setData("titre",e.target.value)} label="titre du projet"/>
-                    <Autocomplete
-                        style={{maxWidth:400}}
-                        onChange={(e,val)=>setData("secteur",val?.id)}
-                        disablePortal={true}
-                        id={"combo-box-demo"}
-                        options={secteurs}
-                        getOptionLabel={option=>option.libelle}
+                <div className={"grid md:grid-cols-2 gap-3 my-4 md:mx-10 mx-10"}>
+                    <div style={{maxWidth:400}}>
+                        <TextField className={"w-full"}  value={data.titre}  onChange={e=>setData("titre",e.target.value)} label="titre du projet"/>
+                        <div className={"text-red-600"}>{props.errors?.titre}</div>
+                    </div>
+                    <div style={{maxWidth:400}}>
+                        <Autocomplete
+                            onChange={(e,val)=>setData("secteur",val?.id)}
+                            disablePortal={true}
+                            id={"combo-box-demo"}
+                            options={secteurs}
+                            getOptionLabel={option=>option.libelle}
 
-                        renderInput={(params)=><TextField fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}></TextField>}
-                    />
+                            renderInput={(params)=><TextField fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}></TextField>}
+                        />
+                        <div className={"text-red-600"}>{props.errors?.secteur}</div>
 
-                    <TextField  style={{maxWidth:400}} value={data.montantInitial} onChange={e=>setData("montantInitial",e.target.value)} label="Montant initial" />
-                    <TextField style={{maxWidth:400}} value={data.montantRechercher} onChange={e=>setData("montantRechercher",e.target.value)} label="Montant à financer" />
-                    <div style={{maxWidth:400}} className={"flex flex-col mt-3"}>
-                        <label className={"text-gray-500 font-bold"} htmlFor="">
-                            Date de debut
-                        </label>
-                        <TextField
-                            value={data.dateDebut} onChange={e=>setData("dateDebut",e.target.value)}
-                            id="standard-search"
-                            type="date"
-                        />
                     </div>
-                    <div style={{maxWidth:400}} className={"flex flex-col mt-3"}>
-                        <label className={"text-gray-500 font-bold"} htmlFor="">
-                            Date de fin
-                        </label>
-                        <TextField
-                            value={data.dateFin} onChange={e=>setData("dateFin",e.target.value)}
-                            id="standard-search"
-                            type="date"
-                        />
+
+                    <div style={{maxWidth:400}}>
+                        <TextField className={"w-full"} value={data.montantInitial} onChange={e=>setData("montantInitial",e.target.value)} label="Montant initial" />
+
+                        <div className={"text-red-600"}>{props.errors?.montantInitial}</div>
                     </div>
-                    <div style={{maxWidth:400}} className={"flex flex-col mt-3"}>
-                        <label className={"text-gray-500 font-bold"} htmlFor="">
-                            Choisissez une image pour le projet
-                        </label>
-                        <TextField type={"file"} onChange={e=>setData("image",e.target.files[0])} />
+
+                    <div style={{maxWidth:400}}>
+                        <TextField className={"w-full"} value={data.montantRechercher} onChange={e=>setData("montantRechercher",e.target.value)} label="Montant à financer" />
+
+                        <div className={"text-red-600"}>{props.errors?.montantRechercher}</div>
                     </div>
-                    <div style={{maxWidth:800}} className={"flex flex-col mt-3"}>
-                        <label className={"text-gray-500 font-bold"} htmlFor="">
-                            Description du projet
-                        </label>
-                        <TextareaAutosize
-                            value={data.description} onChange={e=>setData("description",e.target.value)}
-                            aria-label="minimum height"
-                            maxRows={4}
-                            placeholder="Parlons peu parlons bien"
-                            style={{height:80}}
-                        />
-                        <p className={"my-2 text-indigo-600"}>
-                            135 caracteres max
-                        </p>
+
+                    <div style={{maxWidth:400}}>
+                        <div className={"flex flex-col mt-3"}>
+                            <label className={"text-gray-500 font-bold"} htmlFor="">
+                                Date de debut
+                            </label>
+                            <TextField
+                                value={data.dateDebut} onChange={e=>setData("dateDebut",e.target.value)}
+                                id="standard-search"
+                                type="date"
+                            />
+                        </div>
+
+                        <div className={"text-red-600"}>{props.errors?.dateDebut}</div>
                     </div>
+
+                    <div style={{maxWidth:400}}>
+                        <div className={"flex flex-col mt-3"}>
+                            <label className={"text-gray-500 font-bold"} htmlFor="">
+                                Date de fin
+                            </label>
+                            <TextField
+                                value={data.dateFin} onChange={e=>setData("dateFin",e.target.value)}
+                                id="standard-search"
+                                type="date"
+                            />
+                        </div>
+                        <div className={"text-red-600"}>{props.errors?.dateFin}</div>
+                    </div>
+
+
+                    <div style={{maxWidth:400}}>
+                        <div className={"flex flex-col mt-3"}>
+                            <label className={"text-gray-500 font-bold"} htmlFor="">
+                                Choisissez une image pour le projet
+                            </label>
+                            <TextField type={"file"} onChange={e=>setData("image",e.target.files[0])} />
+                        </div>
+
+                        <div className={"text-red-600"}>{props.errors?.image}</div>
+                    </div>
+
+
+                    <div style={{maxWidth:800}}>
+                        <div className={"flex flex-col mt-3"}>
+                            <label className={"text-gray-500 font-bold"} htmlFor="">
+                                Description du projet
+                            </label>
+                            <TextareaAutosize
+                                value={data.description} onChange={e=>setData("description",e.target.value)}
+                                aria-label="minimum height"
+                                maxRows={4}
+                                placeholder="Parlons peu parlons bien"
+                                style={{height:80}}
+                            />
+                        </div>
+
+                        <div className={"text-red-600"}>{props.errors?.description}</div>
+                    </div>
+
 
                     <div style={{maxWidth:400}} className={"mt-3"}>
                         Details du projets
-                        <IconButton onClick={()=>setActiveStep(1)}><NavigateNext/></IconButton>
+                        <IconButton role="button" onClick={()=>setActiveStep(1)}><NavigateNext/></IconButton>
                     </div>
 
 
@@ -194,12 +238,11 @@ export default function Create(props) {
     }
     function detailsProjet()
     {
-        return <div className={"ml-1"}>
-                    <div className={"text-2xl my-10"}>
+        return <div>
+                    <div>
                         Parlez nous en details de votre projet
                     </div>
                     <Editor
-                        placeholder={"hjkl"}
                         value={data.details} onEditorChange={handleEditorChange}
 
                         init={{
@@ -251,10 +294,10 @@ export default function Create(props) {
 
                         }}
                     />
+                <div className={"text-red-600"}>{props.errors?.details}</div>
+            <div>
 
-                <div>
-
-                    <IconButton onClick={()=>setActiveStep(0)}><NavigateBefore/></IconButton>
+                    <IconButton role="button" onClick={()=>setActiveStep(0)}><NavigateBefore/></IconButton>
                         Coordonnés Bancaires
                     <IconButton onClick={()=>setActiveStep(2)}><NavigateNext/></IconButton>
                 </div>
@@ -274,8 +317,8 @@ export default function Create(props) {
             <div className={"text-area"}>
 
             </div>
-            <IconButton onClick={()=>setActiveStep(1)}><NavigateBefore/></IconButton>
-            <IconButton onClick={()=>setActiveStep(0)}><NavigateNext/></IconButton>
+            <IconButton role="button" onClick={()=>setActiveStep(1)}><NavigateBefore/></IconButton>
+            <IconButton role="button" onClick={()=>setActiveStep(0)}><NavigateNext/></IconButton>
         </div>
     }
 
@@ -317,7 +360,7 @@ export default function Create(props) {
                                 </button>
                             </div>
                             <div className={"md:w-7/12"}>
-                                <form action="" onSubmit={handleSubmit} className={"container mx-auto my-4"}>
+                                <form action="" onSubmit={handleSubmit} className={"mx-auto my-4"}>
                                     {
                                         switchActiveStep()
                                     }

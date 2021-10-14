@@ -51,4 +51,17 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Projet::class,"contributions");
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class,"role_user");
+    }
+
+    public function isAdmin()
+    {
+        if($this->roles->where("libelle","admin")->first())
+            return true;
+        else return false;
+
+    }
 }

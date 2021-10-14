@@ -100,7 +100,7 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                     </div>
                 </div>
             </div>
-            <div className={"flex  justify-center space-x-10 mt-20 text-center projetfont"}>
+            <div className={"flex xs:flex-col justify-center space-x-10 xs:space-x-0 xs:space-y-5 mt-20 text-center projetfont"}>
                 <div data-aos={"fade-up"} data-aos-duration={1000}>
                     <div className={"text-2xl text-indigo-600 font"}>{numberFormat(projet.montantRechercher)} FG</div>
                     <div>
@@ -123,10 +123,10 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                         jours restants
                     </div>
                 </div>
-                <div data-aos={"fade-up"} data-aos-duration={1000} className={"mr-20"}>
-                    <span>
+                <div data-aos={"fade-up"} data-aos-duration={1000} className={"mr-20 xs:mr-0 flex flex-col items-center "}>
+                    <div>
                         Financé à {Math.round(pourcentage)} %
-                    </span>
+                    </div>
                     <div className={"border border-indigo-600 w-60 rounded overflow-hidden"}>
                         <div className={"h-5 bg-indigo-600 taille"} style={{width:`${Math.round(pourcentage)}%`}}>
 

@@ -7,6 +7,7 @@ import { Link } from '@inertiajs/inertia-react';
 
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const [isAdmin, SetIsAdmin] = useState(false);
 
     return (
         <div className="min-h-screen">
@@ -33,9 +34,15 @@ export default function Authenticated({ auth, header, children }) {
                                             <NavLink href={route('user.projet.index',auth.user.id)} active={route().current('user.projet.index')}>
                                                 Mes projets
                                             </NavLink>
-                                            <NavLink href={route('contribution.index')} active={route().current('contribution.index')}>
+                                            <NavLink href={route('user.contribution.index',auth.user.id)} active={route().current('user.contribution.index')}>
                                                 Mes contributions
                                             </NavLink>
+                                            {
+                                                auth?.admin &&
+                                                <NavLink href={route('admin.projet.index',auth.user.id)} active={route().current('admin.projet.index')}>
+                                                    Administration
+                                                </NavLink>
+                                            }
                                         </>
                                 }
                             </div>
@@ -124,7 +131,7 @@ export default function Authenticated({ auth, header, children }) {
                                 <ResponsiveNavLink href={route('user.projet.index',[auth.user.id])} active={route().current('projet.index')}>
                                     Mes projets
                                 </ResponsiveNavLink>
-                                <ResponsiveNavLink href={route('contribution.index')} active={route().current('contribution.index')}>
+                                <ResponsiveNavLink href={route('user.contribution.index',auth.user.id)} active={route().current('user.contribution.index')}>
                                     Mes contributions
                                 </ResponsiveNavLink>
                             </>
@@ -137,20 +144,20 @@ export default function Authenticated({ auth, header, children }) {
                                 <div className="font-medium text-sm text-white">{auth.user.email}</div>
                             </div>
 
-                            <div className="mt-3 space-y-1">
+                            <div className="mt-3 space-y-1 z-20">
                                 <ResponsiveNavLink method="post" href={route('logout')} as="button">
                                     Deconnexion
                                 </ResponsiveNavLink>
                             </div>
                         </div>:
-                        <>
+                        <div className={"z-20"}>
                             <ResponsiveNavLink href={route('login')} as="button">
                                 Connexion
                             </ResponsiveNavLink>
                             <ResponsiveNavLink href={route('register')} as="button">
                                 Inscription
                             </ResponsiveNavLink>
-                        </>
+                        </div>
                     }
                 </div>
             </nav>

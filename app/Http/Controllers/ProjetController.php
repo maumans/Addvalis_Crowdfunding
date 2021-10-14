@@ -98,6 +98,9 @@ class ProjetController extends Controller
 
     public function contribuer(Request $request)
     {
+        $request->validate([
+            "montant" =>"required|integer|min:1|max:100000000"
+        ]);
 
         $projet=Projet::find($request->projetId);
         $projet->contributeurs()->syncWithoutDetaching([auth()->user()->id=>["montant"=>$request->montant]]);

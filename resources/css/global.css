@@ -2,3 +2,27 @@
 {
     --tw-ring-color: transparent;
 }
+
+.MuiDrawer-paper
+{
+    margin-top: 64px;
+}
+
+h1 {
+    font-family: 'Changa One', sans-serfif;
+    font-size: 1.75em;
+}
+
+h2 {
+    font-family: 'Changa One', sans-serfif;
+    font-size: 1.50em;
+}
+
+h3 {
+    font-family: 'Changa One', sans-serfif;
+    font-size: 1.25em;
+}
+h4 {
+    font-family: 'Changa One', sans-serfif;
+    font-size: 1.1em;
+}

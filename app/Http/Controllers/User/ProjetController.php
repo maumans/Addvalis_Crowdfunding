@@ -10,6 +10,7 @@ use App\Models\Projet;
 use App\Models\Secteur;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -46,16 +47,36 @@ class ProjetController extends Controller
      */
     public function store(Request $request)
     {
+        //dd(strtotime($request->dateFin)-strtotime($request->dateDebut));
         $request->validate([
             "titre"=>"required|string",
-            "description"=>"required|string|max:135",
+            "description"=>"required|string|max:100",
             "montantInitial"=>"required|integer",
             "montantRechercher"=>"required|integer",
             "dateDebut"=>"required|date",
-            "dateFin"=>"required|date",
+            "dateFin"=>"required|date|gte:dateDebut",
             "details"=>"required",
-            "secteur"=>"required"
-        ]);
+            "secteur"=>"required",
+            "image"=>"required"
+        ],
+        [
+            "titre.required"=>"Le titre est requis",
+            "description.required"=>"La description est requise",
+            "montantInitial.required"=>"Le montant initial est requis",
+            "montantRechercher.required"=>"Le montant recherché est requis",
+            "dateDebut.required"=>"La date de debut est requise",
+            "dateFin.required"=>"La date de fin est requise",
+            "details.required"=>"Les details sont requis",
+            "secteur.required"=>"Le secteur sont requis",
+            "image.required"=>"L'image est requise",
+            "description.max"=>"100 caracteres max",
+            "montantInitial.integer"=>"Le montant initial est un nombre",
+            "montantRechercher.integer"=>"Le montant recherché est un nombre",
+            "dateFin.gte"=>"La date de fin doit etre supérieure à la date de debut",
+
+
+        ]
+        );
 
         $nom=$request->file("image")->store("ProjetImage","public");
         $imgUrl=Storage::url($nom);
@@ -70,10 +91,11 @@ class ProjetController extends Controller
             "details"=>$request->details,
             "secteur_id"=>$request->secteur,
             "user_id"=>Auth::user()->id,
-            "image"=>$imgUrl
+            "image"=>$imgUrl,
+            "etat"=>"attente"
         ]);
 
-        return redirect()->route("user.projet.index",Auth::user()->id)->with("success","Projet crée");
+        return Inertia::render("User/Projet/Attente")->with("success","Projet crée");
     }
 
     /**
@@ -84,7 +106,18 @@ class ProjetController extends Controller
      */
     public function show(User $user,Projet $projet)
     {
-        return Inertia::render("User/Projet/Show", ["projet"=>$projet]);
+        $user=$projet->user;
+        $contributeurs=$projet->contributeurs->count();
+
+        $montantFinance=0;
+        foreach($projet->contributeurs as $c)
+        {
+            $montantFinance=$montantFinance+$c->pivot->montant;
+        }
+
+        $pourcentage=$montantFinance*100/+$projet->montantRechercher;
+
+        return Inertia::render("User/Projet/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance]);
     }
 
     /**

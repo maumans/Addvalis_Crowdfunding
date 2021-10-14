@@ -6,7 +6,6 @@ import TouchApp from "@mui/icons-material/TouchApp"
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"
 import AttachMoney from "@mui/icons-material/AttachMoney"
 import AccountBalance from "@mui/icons-material/AccountBalance"
-import DoneAll from "@mui/icons-material/DoneAll"
 
 
 //SWIPER
@@ -58,9 +57,9 @@ function Accueil(props) {
             errors={props.errors}
         >
             <Head title="Accueil" />
-            <Swiper className={"my-3"} slidesPerView={5} autoplay={{delay:5000}} navigation={true}>
+            <Swiper className={"my-3 w-full"} slidesPerView={5} autoplay={{delay:5000}} navigation={true}>
                 {secteurs.map((s)=>(
-                    <SwiperSlide key={s.id} >
+                    <SwiperSlide key={s.id}>
                         <div style={{width:'fit-content'}}><Link className={"font-bold"} href={route("secteur.show",s.id)} ><p style={{width:'fit-content'}} className={"transform hover:scale-125  transition duration-10 hover:text-indigo-600"}>{s.libelle}</p></Link></div>
                     </SwiperSlide>
                 ))}
@@ -106,7 +105,7 @@ function Accueil(props) {
                         <Link href={"/"} className={"border-indigo-600 border-2 p-1 w-60 md:text-xl duration-500 hover:transform hover:scale-110"}>
                             <div className={"bg-indigo-600 flex flex-col justify-between text-center h-full w-full p-4 bg-opacity-70 "}>
                                 <div>
-                                    <p>Financez des projets et benefiez des retours sur investissement</p>
+                                    <p>Financez des projets et beneficiez des retours sur investissement</p>
                                 </div>
                                 <div>
                                     <AttachMoney fontSize="large"></AttachMoney>
@@ -124,7 +123,7 @@ function Accueil(props) {
                 </div>
                 <div className={"flex justify-center"}>
 
-                    <div className={"grid md:grid-cols-3 gap-4 mx-10 mb-20"}>
+                    <div className={"grid md:grid-cols-3 gap-4 mx-10 mb-20 w-auto"}>
                         {
                             projets.map((p,i)=>(
                                 <Link key={p.id} href={route("projet.show",p.id)}>
