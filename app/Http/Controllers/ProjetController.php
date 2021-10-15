@@ -99,7 +99,13 @@ class ProjetController extends Controller
     public function contribuer(Request $request)
     {
         $request->validate([
-            "montant" =>"required|integer|min:1|max:100000000"
+            "montant" =>"required|integer|min:10000|max:100000000"
+        ],
+        [
+            "montant.required" =>"Le montant est requis",
+            "montant.integer" =>"Le montant doit etre un entier",
+            "montant.max" =>"Le montant max est 100.000.000",
+            "montant.min" =>"Le montant min est 10.000",
         ]);
 
         $projet=Projet::find($request->projetId);

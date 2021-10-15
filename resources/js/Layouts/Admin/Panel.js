@@ -51,23 +51,20 @@ function ResponsiveDrawer(props) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <List>
-                        <Link href={route("admin.projet.index",1)}>
+                        <Link href={route("admin.projet.index",props.auth.user.id)}>
                             <ListItem sx={props.sousActive==="listeProjets"?{backgroundColor:"#4f46e5",color:"white"}:null}>
                                 <ListItemText primary={"Liste des projets"} />
                             </ListItem>
                         </Link>
-                        <Link href={route("admin.projet.validation.index",1)}>
+                        <Link href={route("admin.projet.validation.index",props.auth.user.id)}>
                             <ListItem   sx={props.sousActive==="validation"?{backgroundColor:"#4f46e5",color:"white"}:null}>
                                 <ListItemText primary={"Projets à valider"} />
                             </ListItem>
                         </Link>
-                        <ListItem sx={props.active==="secteur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Gestion des secteurs"} />
-                        </ListItem>
                     </List>
                 </AccordionDetails>
             </Accordion>
-            <Accordion>
+            <Accordion defaultExpanded={props.active==="utilisateur"}>
                 <AccordionSummary
                     sx={props.active==="utilisateur"?{backgroundColor:"#4f46e5",color:"white"}:null}
                     expandIcon={<ExpandMoreIcon className={props.active==="utilisateur"?"text-white":null} />}
@@ -79,18 +76,15 @@ function ResponsiveDrawer(props) {
                 <AccordionDetails>
                     <List>
                         <ListItem   sx={props.active==="projet"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Gestion des projets"} />
+                            <ListItemText primary={"Listes des utilisateurs"} />
                         </ListItem>
                         <ListItem sx={props.active==="utilisateur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
                             <ListItemText primary={"Gestion des utilisateurs"} />
                         </ListItem>
-                        <ListItem sx={props.active==="secteur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Gestion des secteurs"} />
-                        </ListItem>
                     </List>
                 </AccordionDetails>
             </Accordion>
-            <Accordion>
+            <Accordion defaultExpanded={props.active==="secteur"}>
                 <AccordionSummary
                     sx={props.active==="secteur"?{backgroundColor:"#4f46e5",color:"white"}:null}
                     expandIcon={<ExpandMoreIcon className={props.active==="secteur"?"text-white":null} />}
@@ -101,13 +95,16 @@ function ResponsiveDrawer(props) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <List>
-                        <ListItem   sx={props.active==="secteur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Gestion des projets"} />
-                        </ListItem>
-                        <ListItem sx={props.active==="utilisateur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                        <Link href={route("admin.secteur.index",props.auth.user.id)}>
+                            <ListItem sx={props.sousActive==="listeSecteurs"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                                <ListItemText primary={"Liste des secteurs"} />
+                            </ListItem>
+                        </Link>
+
+                        <ListItem sx={props.sousActive==="utilisateur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
                             <ListItemText primary={"Gestion des utilisateurs"} />
                         </ListItem>
-                        <ListItem sx={props.active==="secteur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                        <ListItem sx={props.sousActive==="secteur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
                             <ListItemText primary={"Gestion des secteurs"} />
                         </ListItem>
                     </List>
@@ -201,7 +198,7 @@ function Panel(props) {
         >
 
             <div className="relative">
-                <ResponsiveDrawer sousActive={props.sousActive} active={props.active} children={props.children}/>
+                <ResponsiveDrawer auth={props.auth} sousActive={props.sousActive} active={props.active} children={props.children}/>
             </div>
 
         </Authenticated>

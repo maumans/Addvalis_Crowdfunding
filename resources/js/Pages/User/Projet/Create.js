@@ -221,7 +221,7 @@ export default function Create(props) {
                             />
                         </div>
 
-                        <div className={"text-red-600"}>{props.errors?.description}</div>
+                        <div hidden={data.description.length <=100} className={"text-red-600"}>caractères max 100</div>
                     </div>
 
 

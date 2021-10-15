@@ -101,10 +101,18 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                 </div>
             </div>
             <div className={"flex xs:flex-col justify-center space-x-10 xs:space-x-0 xs:space-y-5 mt-20 text-center projetfont"}>
-                <div data-aos={"fade-up"} data-aos-duration={1000}>
-                    <div className={"text-2xl text-indigo-600 font"}>{numberFormat(projet.montantRechercher)} FG</div>
+                <div data-aos={"fade-up"} data-aos-duration={1000} className={"space-y-5"}>
+                    <div >
+                        <div className={"text-2xl text-indigo-600 font"}>{numberFormat(projet.montantRechercher)} FG</div>
+                        <div>
+                            à financer au Total
+                        </div>
+                    </div>
                     <div>
-                        à financer au Total
+                        <div className={"text-2xl text-indigo-600 font"}>{numberFormat(projet.montantInitial)} FG</div>
+                        <div>
+                            montant Initial
+                        </div>
                     </div>
                 </div>
                 <div data-aos={"fade-up"} data-aos-duration={1000}>
@@ -154,8 +162,9 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                                label={"montant"}
                                variant={"standard"}
                            />
+                           <div className={"text-red-600"}>{errors?.montant}</div>
 
-                          <button type={"submit"} className={"text-white border border-white p-2 rounded hover:text-indigo-600 hover:bg-white"}>
+                           <button type={"submit"} className={"text-white border border-white p-2 rounded hover:text-indigo-600 hover:bg-white"}>
                                 financer
                           </button>
 
