@@ -35,11 +35,14 @@ class SecteurController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request,$userId)
     {
-        //
+        Secteur::create([
+            "libelle"=>$request->libelle
+        ]);
+        return redirect()->back()->with("success","secteur ajouté avec succès");
     }
 
     /**
@@ -69,11 +72,18 @@ class SecteurController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $user,Secteur $secteur)
     {
-        //
+        $request->validate([
+            "libelle"=>"required"
+        ]);
+
+        $secteur->libelle = $request->libelle;
+        $secteur->save();
+
+        return redirect()->back()->with('success', "secteur modifié avec succès");
     }
 
     /**
@@ -82,8 +92,10 @@ class SecteurController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($user,Secteur $secteur)
     {
-        //
+        $secteur->delete();
+
+        return redirect()->back()->with("success","secteur supprimé avec succès");
     }
 }

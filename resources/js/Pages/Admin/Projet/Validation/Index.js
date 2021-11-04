@@ -44,7 +44,7 @@ function Validation({projets,auth})
                 <div className={"grid md:grid-cols-3 xs:grid-cols-1 gap-4 mb-20 w-full xs:w-auto"}>
             {
                 projets.map((p,i)=>(
-                    <div key={p.id} data-aos-once={true} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:350,height:400,boxShadow:"2px 5px 5px gray"}}>
+                    <div key={p.id} data-aos-once={true} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:400,minWidth:"auto",height:400,boxShadow:"2px 5px 5px gray"}}>
                         <div className={"flex space-x-2 bg-black p-2"}>
                             <Avatar sx={{ bgcolor: red[600] }} className={"border-2 bg-indigo-600"}>
                                 M
@@ -64,7 +64,7 @@ function Validation({projets,auth})
                             <div className={"flex space-x-2 ml-5 py-2 "}>
                                 <FavoriteIcon/>
                                 <div>
-                                    12
+                                    {p.likeurs.length}
                                 </div>
                             </div>
                         </div>

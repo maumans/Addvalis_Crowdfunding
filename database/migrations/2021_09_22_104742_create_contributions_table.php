@@ -15,6 +15,7 @@ class CreateContributionsTable extends Migration
     {
         Schema::create('contributions', function (Blueprint $table) {
             $table->id();
+            $table->integer("montant")->nullable();
             $table->foreignId("user_id")->nullable()->constrained("users")->cascadeOnDelete();
             $table->foreignId("projet_id")->nullable()->constrained("projets")->cascadeOnDelete();
             $table->timestamps();

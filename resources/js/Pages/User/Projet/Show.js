@@ -8,6 +8,7 @@ import {withStyles} from "@mui/styles";
 import {useForm} from "@inertiajs/inertia-react";
 import Swal from 'sweetalert2';
 import Avatar from "@mui/material/Avatar";
+import {Inertia} from "@inertiajs/inertia";
 
 
 const TextFieldCustom = withStyles({
@@ -89,6 +90,7 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
         <Authenticated
             auth={auth}
             errors={errors}
+            active={"projets"}
         >
 
 
@@ -143,9 +145,23 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                     </div>
                 </div>
             </div>
+            <div className={"flex justify-center mt-10"}>
+                <div className={"flex items-center flex-col space-y-4"}>
+                   <div data-aos-once={true} data-aos={"fade-up"} data-aos-duration={1000}>
+                       <button onClick={()=>Inertia.get(route("user.projet.edit",[auth.user.id,projet.id]))} className={"border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition duration-500 rounded py-2 px-10"} >
+                           Editer
+                       </button>
+                   </div>
+                   <div data-aos-once={true} data-aos={"fade-up"} data-aos-duration={1000}>
+                       <button onClick={()=>confirm("Voulez-vous supprimer ce projet") && Inertia.delete(route("user.projet.destroy",[auth.user.id,projet.id]))} className={"border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition duration-500 rounded py-2 px-10"} >
+                           Supprimer
+                       </button>
+                   </div>
+                </div>
+            </div>
 
             <div data-aos-once={true} data-aos={"fade-up"} data-aos-duration={1000} className={"flex justify-center mt-10"}>
-                <button onClick={handleSoutienClick} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded py-2 px-10"} >
+                <button hidden={projet.contributeurs.length===0} onClick={handleSoutienClick} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded py-2 px-10"} >
                     {voirSoutien?"Fermer":"Voir les contributeurs"}
                 </button>
             </div>

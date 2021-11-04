@@ -1,10 +1,15 @@
 .projetfont{
-    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 .font{
-    font-family: 'lato', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 .changaOne
 {
-    font-family: 'Changa One', sans-serfif;
+    font-family: 'Changa One', sans-serif;
+}
+
+.crimson
+{
+    font-family: 'Crimson Text', serif;
 }

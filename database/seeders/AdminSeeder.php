@@ -23,6 +23,7 @@ class AdminSeeder extends Seeder
             'name' => "maurice mansaré",
             'email' => "mauricemansare@admin.com",
             'password' => Hash::make("Mm29101997"),
+            "status"=>"actif"
         ]);
 
 

@@ -18,7 +18,7 @@ class ProjetController extends Controller
      */
     public function index()
     {
-        $projets =Projet::where("etat","valide")->orderBy("updated_at","desc")->get();
+        $projets =Projet::where("etat","valide")->orderBy("updated_at","desc")->with("likeurs")->get();
 
          return Inertia::render("Admin/Projet/Index",["projets"=>$projets]);
     }
@@ -101,13 +101,13 @@ class ProjetController extends Controller
     public function destroy(string $user,Projet $projet)
     {
         $projet->delete();
-        return redirect()->back()->with("success","Projet supprimé");
+        return redirect()->route("admin.projet.index",Auth::id())->with("success","Projet supprimé avec succès");
     }
 
     public function validationIndex()
     {
 
-        $projets=Projet::where("etat","attente")->orderBy("created_at","desc")->get();
+        $projets=Projet::where("etat","attente")->orderBy("created_at","desc")->with("likeurs")->get();
 
         return Inertia::render("Admin/Projet/Validation/Index",["projets"=>$projets]);
     }
@@ -136,7 +136,7 @@ class ProjetController extends Controller
         $projet->Etat="valide";
         $projet->save();
 
-        $projets =Projet::where("etat","valide")->orderBy("updated_at","desc")->get();
+        $projets =Projet::where("etat","valide")->orderBy("updated_at","desc")->with("likeurs")->get();
 
         return Inertia::render("Admin/Projet/Index",["projets"=>$projets])->with("success","Projet validé avec succès");
     }

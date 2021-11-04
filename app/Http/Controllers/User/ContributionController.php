@@ -19,7 +19,7 @@ class ContributionController extends Controller
      */
     public function index()
     {
-        $projets=User::find(Auth::id())->projetFinances;
+        $projets=User::find(Auth::id())->projetFinances()->with("likeurs")->get();
 
         return Inertia::render("User/Contribution/Index",["projets"=>$projets]);
     }

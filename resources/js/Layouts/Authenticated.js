@@ -1,17 +1,91 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/inertia-react';
+import {Inertia} from "@inertiajs/inertia";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchIcon from "@mui/icons-material/Search";
+import Typography from "@mui/material/Typography";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Accordion from "@mui/material/Accordion";
+import {Popover, TextField} from "@mui/material";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from '@mui/icons-material/Close';
+import {withStyles} from "@mui/styles";
 
-export default function Authenticated({ auth, header, children }) {
+
+const TextFieldCustom = withStyles({
+    root: {
+        '& label.Mui-focused': {
+            color: 'white',
+        },
+        '& label': {
+            color: 'white',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'white',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'white',
+            },
+            '&:hover fieldset': {
+                borderColor: 'white',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'yellow',
+            },
+        },
+        '& .MuiInput-underline:before': {
+            borderBottomColor: 'white',
+            color: 'white',
+        },
+        '& .MuiInput-underline': {
+            borderBottomColor: 'white',
+            color: 'white',
+        },
+
+    },
+})(TextField);
+
+export default function Authenticated({ auth, header, children,active }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [isAdmin, SetIsAdmin] = useState(false);
 
+
+    const [anchorEl, setAnchorEl] = useState(false);
+
+    const handleClick = (event) => {
+        setAnchorEl(true)
+    };
+
+    const handleClose = () => {
+        setAnchorEl(false)
+    };
+
     return (
-        <div className="min-h-screen">
-            <nav className="bg-black fixed w-full z-10">
+        <div className="min-h-screen flex flex-col justify-between z-50">
+            <div hidden={!anchorEl} data-aos={"fade-up"} data-aos-duration={1000} className="z-50 fixed w-full bg-black" style={{height:66}}>
+                <div className="flex h-full justify-center items-center">
+                    <div className="flex w-6/12 space-x-5">
+                        <TextFieldCustom className="w-full" variant={"standard"} label="Nom de projet ou de secteur"/>
+                        <div>
+                            <IconButton onClick={handleClose}>
+                                <CloseIcon className="text-white"/>
+                            </IconButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav className="bg-black fixed w-full z-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
@@ -24,31 +98,66 @@ export default function Authenticated({ auth, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 md:-my-px md:ml-10 md:flex">
                                 <NavLink href={route('accueil')} active={route().current('accueil') || route().current('home')}>
                                     Accueil
                                 </NavLink>
                                 {
                                     auth.user &&
                                         <>
-                                            <NavLink href={route('user.projet.index',auth.user.id)} active={route().current('user.projet.index')}>
-                                                Mes projets
-                                            </NavLink>
-                                            <NavLink href={route('user.contribution.index',auth.user.id)} active={route().current('user.contribution.index')}>
+                                            <div
+                                                className={
+                                                    active&&active==="projets"
+                                                        ? 'flex items-center  border-b-4  border-indigo-600 text-sm font-medium leading-5 text-indigo-600 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
+                                                        : 'flex items-center border-b-2 border-transparent text-sm font-medium leading-5 text-white hover:text-gray-400 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out'
+                                                }
+                                            >
+                                                <Dropdown>
+                                                    <Dropdown.Trigger>
+                                                        <div className="flex items-center" role={"button"}>
+                                                            <button className={"text-white text-sm h-full py-5"}>Projets</button>
+                                                            <ArrowDropDownIcon className={"text-white"}/>
+                                                        </div>
+                                                    </Dropdown.Trigger>
+
+                                                    <Dropdown.Content>
+                                                        <Dropdown.Link href={route('user.projet.create',auth.user.id)} method="get" as="button">
+                                                            Créer un projet
+                                                        </Dropdown.Link>
+                                                        <Dropdown.Link href={route('user.projet.index',auth.user.id)} method="get" as="button">
+                                                            Mes projets
+                                                        </Dropdown.Link>
+                                                        <Dropdown.Link href={route('user.projet.save',auth.user.id)} method="get" as="button">
+                                                            Projets enregistrés
+                                                        </Dropdown.Link>
+
+                                                    </Dropdown.Content>
+                                                </Dropdown>
+                                            </div>
+
+                                            <NavLink href={route('user.contribution.index',auth.user.id)} active={active&&active==="contributions"}>
                                                 Mes contributions
                                             </NavLink>
                                             {
+
                                                 auth?.admin &&
-                                                <NavLink href={route('admin.projet.index',auth.user.id)} active={route().current('admin.projet.index')}>
+                                                <NavLink href={route('admin.projet.index',auth.user.id)} active={route().current().split('.')[0]==="admin"}>
                                                     Administration
                                                 </NavLink>
                                             }
+                                            <div className="h-full flex items-center">
+                                                <div>
+                                                    <IconButton onClick={handleClick}>
+                                                       <SearchIcon className="text-white"/>
+                                                    </IconButton>
+                                                </div>
+                                            </div>
                                         </>
                                 }
                             </div>
                         </div>
 
-                        <div className="hidden sm:flex sm:items-center sm:ml-6">
+                        <div className="hidden md:flex md:items-center md:ml-6">
                             <div className="ml-3 relative">
                                 {auth.user?
                                     <Dropdown>
@@ -95,7 +204,7 @@ export default function Authenticated({ auth, header, children }) {
                             </div>
                         </div>
 
-                        <div className="-mr-2 flex items-center sm:hidden">
+                        <div className="-mr-2 flex items-center md:hidden">
                             <button
                                 onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
@@ -121,20 +230,50 @@ export default function Authenticated({ auth, header, children }) {
                     </div>
                 </div>
 
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
+                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' md:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('accueil')} active={route().current('accueil')||route().current('home')}>
                             Accueil
                         </ResponsiveNavLink>
                         {auth.user &&
                             <>
-                                <ResponsiveNavLink href={route('user.projet.index',[auth.user.id])} active={route().current('projet.index')}>
-                                    Mes projets
-                                </ResponsiveNavLink>
-                                <ResponsiveNavLink href={route('user.contribution.index',auth.user.id)} active={route().current('user.contribution.index')}>
+                                <Accordion
+                                    defaultExpanded={active==="projets"}
+                                >
+                                    <AccordionSummary
+                                        className={"hover:border-l-5 border-indigo-600"}
+                                        sx={active==="projets"?{backgroundColor:"white",color:"black",borderLeft:"5px solid #3949AB"}:{backgroundColor:"black",color:"white", "&:hover":{borderLeft:"5px solid #757575",backgroundColor:"white",color:"black"}}}
+                                        expandIcon={<ExpandMoreIcon className={"text-white"} />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>Projets</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails className={"bg-black"}>
+                                        <List>
+                                            <ResponsiveNavLink href={route('user.projet.create',auth.user.id)} active={route().current()==="user.projet.create"}>
+                                                Créer un projet
+                                            </ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('user.projet.index',[auth.user.id])} active={route().current()==="user.projet.index"}>
+                                                Mes projets
+                                            </ResponsiveNavLink>
+                                            <ResponsiveNavLink href={route('user.projet.save',auth.user.id)} active={route().current()==="user.projet.save"}>
+                                                Projets enregitrés
+                                            </ResponsiveNavLink>
+                                        </List>
+                                    </AccordionDetails>
+                                </Accordion>
+                                <ResponsiveNavLink href={route('user.contribution.index',auth.user.id)} active={active&&active==="contributions"}>
                                     Mes contributions
                                 </ResponsiveNavLink>
                             </>
+                        }
+                        {
+
+                            auth?.admin &&
+                            <ResponsiveNavLink href={route('admin.projet.index',auth.user.id)} active={route().current().split('.')[0]==="admin"}>
+                                Administration
+                            </ResponsiveNavLink>
                         }
                     </div>
                     {auth.user ?
@@ -162,6 +301,12 @@ export default function Authenticated({ auth, header, children }) {
                 </div>
             </nav>
             <div style={{paddingTop:64}}>{children}</div>
+
+            <div className="w-full bg-black">
+                <div className="text-center text-white font-bold">
+                    © Copyright Addvalis crowdfunding - GUINÉE - Tous droits réservés.
+                </div>
+            </div>
         </div>
     );
 }

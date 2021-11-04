@@ -13,7 +13,10 @@ function Attente({auth,errors,success}) {
         })
     },[success])
     return (
-        <Authenticated auth={auth} errors={errors} >
+        <Authenticated
+            auth={auth} errors={errors}
+            active={"projets"}
+            >
             <div className={"flex justify-center"}>
                 <div className={"mt-10 text-indigo-600 text-xl max-w-4xl"}>
                     <p>

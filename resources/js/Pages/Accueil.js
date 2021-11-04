@@ -45,11 +45,28 @@ function Accueil(props) {
     useEffect(()=>{
         setSecteurs(props.secteurs);
         setProjets(props.projets);
+        console.log(props.projets);
 
     },[])
     useEffect(()=>{
         AOS.refresh()
     },[voirPlus])
+
+    function onLike(p) {
+        props.auth.user?Inertia.visit(route('likes.liker',[props.auth.user?.id,p?.id]),{preserveScroll:true,preserveState:true}):confirm("connectez-vous avant de liker")&& Inertia.visit(route('login'))
+
+    }
+
+    function onEnregistre(p) {
+        props.auth.user?Inertia.visit(route('save.enregistrer',[props.auth.user?.id,p?.id]),{preserveScroll:true,preserveState:true}):confirm("connectez-vous avant d'enregister")&& Inertia.visit(route('login'))
+    }
+
+    function soutenir(e, p) {
+        Inertia.get(route("projet.show",p.id))
+
+    }
+
+
 
     return (
         <Authenticated
@@ -57,7 +74,7 @@ function Accueil(props) {
             errors={props.errors}
         >
             <Head title="Accueil" />
-            <Swiper className={"my-3 w-full"} slidesPerView={5} autoplay={{delay:5000}} navigation={true}>
+            <Swiper hidden={true} className={"my-3 w-full"} slidesPerView={5} autoplay={{delay:5000}} navigation={true}>
                 {secteurs.map((s)=>(
                     <SwiperSlide key={s.id}>
                         <div style={{width:'fit-content'}}><Link className={"font-bold"} href={route("secteur.show",s.id)} ><p style={{width:'fit-content'}} className={"transform hover:scale-125  transition duration-10 hover:text-indigo-600"}>{s.libelle}</p></Link></div>
@@ -65,99 +82,90 @@ function Accueil(props) {
                 ))}
             </Swiper>
 
-            <div className={"relative w-full font"}>
-                <img src="/images/4.jpg" alt="" className={"w-full"} style={{maxHeight:"100vh"}} />
-                <div className={"bg-black w-full h-full absolute top-0 opacity-50"}>
-
-                </div>
-                <div className={"absolute top-0 w-full h-full flex flex-col items-center"}>
-                   <div className={"mt-8 "}>
-                       <p className={"md:text-5xl text-2xl text-white p-2"}>
-                           Donnons de l'avenir à vos projets
+            <div className={"relative w-full font flex justify-center"}>
+                <img src="/images/5.jpg" alt="" className={"w-full"} style={{maxHeight:500,objectFit:"cover"}}  />
+               <div className={"absolute z-10 h-full flex items-center text-center"}>
+                   <div className={"space-y-5"}>
+                       <p className={"text-white md:text-4xl text-2xl"}>
+                           Les travaux créatifs révèlent un monde de possibilités.
                        </p>
-                   </div>
-                    <div className={"my-10 flex md:flex-row flex-col md:space-x-2 md:space-y-0 space-y-10"}>
-                        <Link href={route("user.projet.create",props.auth.user?.id||0)}>
-                           <button className={"btn hover:bg-opacity-70 md:text-lg sm:text-sm border bg-black hover:bg-indigo-600 text-white p-2 rounded duration-500 font-bold"}>
-                               <TouchApp/>
-                               Demarrer un projet
-                           </button>
-                        </Link>
-                        <Link href={"/"}>
-                            <button className={"btn hover:bg-opacity-70 md:text-lg sm:text-sm border bg-black hover:bg-indigo-600 text-white p-2 rounded duration-500 font-bold"}>
-                                <MonetizationOnIcon/>
-                                Soutenir un projet
-                            </button>
-                        </Link>
+                       <div className={"text-white md:text-xl"}>
+                           Financez-les ici
+                       </div>
 
-                    </div>
-                    <div className={"flex justify-center md:mt-16 mt-2 text-white space-x-3 hidden md:flex "}>
-                        <Link href={"/"} className={"border-indigo-600  border-2 p-1 ml-10 w-60 md:text-xl bg-opacity-70 duration-500 hover:transform hover:scale-110"}>
-                            <div className={"bg-indigo-600 flex flex-col justify-between text-center h-full w-full p-4 bg-opacity-70"}>
-                                <div>
-                                    <p>Postez vos projets en besoins de financement</p>
-                                </div>
-                                <div>
-                                    <AccountBalance fontSize="large"/>
-                                </div>
-                            </div>
-                        </Link>
-                        <Link href={"/"} className={"border-indigo-600 border-2 p-1 w-60 md:text-xl duration-500 hover:transform hover:scale-110"}>
-                            <div className={"bg-indigo-600 flex flex-col justify-between text-center h-full w-full p-4 bg-opacity-70 "}>
-                                <div>
-                                    <p>Financez des projets et beneficiez des retours sur investissement</p>
-                                </div>
-                                <div>
-                                    <AttachMoney fontSize="large"></AttachMoney>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
+                       <button onClick={()=>props.auth.user?Inertia.get(route('user.projet.create',props.auth.user.id)):Inertia.get(route('login'))} className={"md:p-4 p-2 md:text-xl text-sm rounded border border-white font-bold text-white hover:border-0 hover:bg-black hover:text-white transition duration-500"}>
+                           demarrer un projet
+                       </button>
+                   </div>
+               </div>
+                <div className={"absolute top-0 w-full h-full flex flex-col items-center bg-black opacity-30"}>
+
 
                 </div>
             </div>
 
+           <div className={"flex w-full justify-center text-center"}>
+               <div className={"md:w-8/12 w-10/12 md:flex md:space-x-5 my-32 md:space-y-0 space-y-5 font"}>
+                   <img hidden={true} src="/images/1.jpg" className={"flex-1"} alt="" style={{objectFit:"contain",minWidth:300}} />
+                   <div data-aos={"fade-up"} data-aos-duration={1000} className={"flex-1 md:text-xl text-lg font"}>
+                       Un projet AddvCrowd, c'est bien plus qu'une collecte de fonds. Mobilisez toute une communauté autour de votre idée
+                   </div>
+                   <div data-aos={"fade-up"} data-aos-duration={1000} className={"flex-1 md:text-xl text-lg font"}>
+                       Vous recherchez des solutions de financement pour vos projets ?
+                       Nous pouvons vous aider en capital, en mobilisant une communauté d’investisseurs
+                   </div>
+                   <div data-aos={"fade-up"} data-aos-duration={1000} className={"flex-1 md:text-xl text-lg font"}>
+                       AddvCrowd fait partie des plateformes qui offrent un espace de travail ouvert à ceux qui vous connaissent, qui aiment votre travail et qui vous soutiennent
+                   </div>
+               </div>
+           </div>
+
+            <div hidden={true} className={"w-full"}>
+                <div className={"md:text-3xl sm:text-2xl text-xl font-bold my-10 text-center font"}>
+                    COMMENT ÇA MARCHE ?
+                </div>
+
+            </div>
+
             <div>
-                <div className={"md:text-4xl sm:text-3xl text-2xl font-bold my-10 text-center font"}>
+                <div className={"md:text-3xl underline sm:text-2xl text-xl font-bold my-10 text-center font"}>
                     PROJETS EN COURS
                 </div>
                 <div className={"flex justify-center"}>
 
-                    <div className={"grid md:grid-cols-3 gap-4 mx-10 mb-20 w-auto"}>
+                    <div className={"grid md:grid-cols-3 grid-cols-1 gap-4 mx-10 mb-20 w-auto"}>
                         {
-                            projets.map((p,i)=>(
-                                <Link key={p.id} href={route("projet.show",p.id)}>
-                                    <div data-aos={"zoom-in"} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col"} style={{maxWidth:350,height:400,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
-                                        <div className={"flex space-x-2 bg-black p-2"}>
-                                            <Avatar sx={{ bgcolor: red[600] }} className={"border-2 bg-indigo-600"}>
-                                                M
-                                            </Avatar>
-                                            <div>
-                                                <div className={"font text-white"}>{p.titre}</div>
-                                                <span className={"text-white"}>{p.created_at.split("T")[0]}</span>
-                                            </div>
-                                        </div>
+                            props?.projets.map((p,i)=>(
+                                    <div key={p.id} data-aos={"zoom-in"} data-aos-once={true} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col"} style={{maxWidth:400,minWidth:"auto",height:450,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
                                         <div className={"overflow-hidden"}>
                                             <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:200,width:"100%",objectFit:"cover"}}/>
                                         </div>
-                                        <div className={"p-2"}>
+                                        <div className={"text-xl p-2"}>
+                                            {p.titre}
+                                        </div>
+                                        <div className={"p-2"} style={{height:50}}>
                                             {capitalize(p.description.toLowerCase())}
                                         </div>
-                                        <div className={"mt-auto"}>
-                                            <IconButton>
-                                                <FavoriteIcon />
-                                            </IconButton>
-                                            <IconButton>
-                                                <BookmarkBorderIcon/>
-                                            </IconButton>
+                                        <div className={"mt-auto flex justify-between border-b border-t p-2"}>
+                                            <div>
+                                                <IconButton onClick={()=> onLike(p)}>
+                                                    <FavoriteIcon className={p.like?"text-indigo-600":""}/>
+                                                </IconButton>
+                                                {p.likeurs.length}
+                                            </div>
+                                            <button onClick={()=> onEnregistre(p)} className={p.enregistre?"text-indigo-600 border border-indigo-600 rounded px-2 flex items-center":"border px-2 flex items-center"}>
+                                                <BookmarkBorderIcon className={p.enregistre?"text-indigo-600":""}/>
+                                                {
+                                                    p.enregistre?"Enregistré":"Rappel"
+                                                }
+                                            </button>
                                         </div>
                                         <div className={"mt-auto ml-2 mb-2"}>
-                                            <button className={"text-white bg-indigo-600 hover:bg-indigo-800 transition duration-500 rounded p-2"}>
-                                                Soutenir le projet
+                                            <button onClick={(e)=>soutenir(e,p)} className={"text-white bg-indigo-600 hover:bg-indigo-800 transition duration-500 rounded p-2"}>
+                                                Consulter le projet
                                             </button>
                                         </div>
                                     </div>
-                                </Link>
                             ))
                         }
                     </div>

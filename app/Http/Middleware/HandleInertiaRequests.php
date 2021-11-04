@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Secteur;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -41,6 +42,7 @@ class HandleInertiaRequests extends Middleware
                 'admin'=>$request->user() && $request->user()->isAdmin()
             ],
             'success' => session('success'),
+            'secteurs' => Secteur::all()
         ]);
     }
 }

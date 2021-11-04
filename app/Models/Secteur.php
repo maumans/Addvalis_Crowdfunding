@@ -9,7 +9,7 @@ class Secteur extends Model
 {
     use HasFactory;
 
-    protected $guards = [];
+    protected $guarded = [];
 
     public function projets()
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Projet;
 use App\Models\Secteur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class SecteurController extends Controller
@@ -50,6 +51,10 @@ class SecteurController extends Controller
     {
         $secteur=Secteur::where('id', $id)->with("projets")->first();
 
+        foreach($secteur->projets as $p)
+        {
+            $p->like=$p->likeurs->contains(Auth::user());
+        }
         return Inertia::render("Secteur/Show",["secteur" => $secteur]);
     }
 

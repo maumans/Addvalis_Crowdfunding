@@ -101,6 +101,14 @@ export default function Register() {
                     <Button className="ml-4" processing={processing}>
                         S'inscrire
                     </Button>
+
+                    <Button className="ml-4" role="button">
+                        <Link
+                            href={route('login')}
+                            className="text-white hover:text-gray-20">
+                            SE CONNECTER
+                        </Link>
+                    </Button>
                 </div>
             </form>
         </Guest>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contribution;
 use App\Models\Projet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ProjetController extends Controller
@@ -48,18 +49,26 @@ class ProjetController extends Controller
      */
     public function show(Projet $projet)
     {
+
         $user=$projet->user;
         $contributeurs=$projet->contributeurs->count();
 
         $montantFinance=0;
+
         foreach($projet->contributeurs as $c)
         {
             $montantFinance=$montantFinance+$c->pivot->montant;
         }
 
-        $pourcentage=$montantFinance*100/+$projet->montantRechercher;
+        $projet->enregistre=$projet->enregistreurs->contains(Auth::user());
 
-        return Inertia::render("Projet/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance]);
+
+        $pourcentage=$montantFinance*100/$projet->montantRechercher;
+
+        $contributeur=$projet->contributeurs()->where("user_id",Auth::id())->first();
+
+
+        return Inertia::render("Projet/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance,"contributeur"=>$contributeur]);
     }
 
     /**

@@ -57,6 +57,15 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class,"role_user");
     }
 
+    public function liker()
+    {
+        return $this->belongsToMany(Projet::class,"likes");
+    }
+    public function enregistrer()
+    {
+        return $this->belongsToMany(Projet::class,"save");
+    }
+
     public function isAdmin()
     {
         if($this->roles->where("libelle","admin")->first())

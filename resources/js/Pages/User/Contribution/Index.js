@@ -28,21 +28,25 @@ function Index(props) {
     },[props.success])
 
     return (
-        <Authenticated auth={props.auth}>
+        <Authenticated
+            auth={props.auth}
+            active={"contributions"}
+        >
            <div className={"mt-20"}>
-               <div data-aos={"zoom-in"} className={"self-start my-8 ml-10 md:text-3xl text-xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
-                   <div className={"m-2 p-1 bg-indigo-600 text-white"}>
-                       MES CONTRIBUTIONS
+               <div className="md:ml-10 md:justify-start flex justify-center">
+                   <div data-aos={"zoom-in"} className={"my-8 md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
+                       <div className={"m-2 p-1 bg-indigo-600 text-white"}>
+                           Mes contributions
+                       </div>
                    </div>
                </div>
            </div>
-            <div className={"flex"}>
+            <div className={"flex xs:justify-center"}>
 
                 <div className={"projetfont grid md:grid-cols-3 sm:grid-cols-2  grid-cols-1 gap-2 mx-10 mb-10"}>
                     {
                         projets.map((p,i)=>(
-
-                                <div key={p.id} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:350,height:400,boxShadow:"2px 5px 5px gray"}}>
+                                <div key={p.id} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:400,minWidth:350,height:400,boxShadow:"2px 5px 5px gray"}}>
                                     <div className={"flex space-x-2 bg-black p-2"}>
                                         <Avatar sx={{ bgcolor: red[600] }} className={"border-2 bg-indigo-600"}>
                                             M
@@ -59,9 +63,11 @@ function Index(props) {
                                         {capitalize(p.description.toLowerCase())}
                                     </div>
                                     <div className={"mt-auto"}>
-                                        <IconButton>
-                                            <FavoriteIcon />
-                                        </IconButton>
+                                        <div className="ml-2">
+                                            {
+                                                p.likeurs.length
+                                            } {p.likeurs.length>1?"personnes aiment":"personne aime"}
+                                        </div>
                                     </div>
                                     <div className={"mt-auto ml-2 mb-2"}>
                                         <button onClick={()=>Inertia.delete(route("user.contribution.destroy",[props.auth.user.id,p?.id]))} className={"mr-5 text-white bg-indigo-600 hover:bg-indigo-800 transition duration-500 rounded p-2"} href={route("projet.show",p.id)}>

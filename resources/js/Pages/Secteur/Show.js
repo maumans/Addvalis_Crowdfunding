@@ -18,6 +18,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Authenticated from "@/Layouts/Authenticated";
+import {Inertia} from "@inertiajs/inertia";
 
 /////////
 
@@ -25,11 +26,19 @@ import Authenticated from "@/Layouts/Authenticated";
 function Show(props) {
     const [secteur,setSecteur]=useState({});
 
-    console.log(props.secteur.projets)
-
     useEffect(()=>{
         setSecteur(props.secteur);
     },[])
+
+    function onLike(p) {
+        Inertia.visit(route('likes.liker',[props.auth.user.id,p?.id]),{preserveScroll:true,preserveState:true})
+    }
+
+    function soutenir(e, p) {
+
+        p.user_id===props.auth.user.id?alert("Vous ne pouvez pas soutenir un projet que vous avez créé"):
+            Inertia.get(route("projet.show",p.id))
+    }
 
     return (
        <Authenticated
@@ -72,13 +81,13 @@ function Show(props) {
                                            </Typography>
                                        </CardContent>
                                        <CardActions disableSpacing>
-                                           <IconButton aria-label="add to favorites">
-                                               <FavoriteIcon />
+                                           <IconButton onClick={()=> onLike(p)}>
+                                               <FavoriteIcon className={p.like?"text-indigo-600":""}/>
                                            </IconButton>
-                                           <IconButton aria-label="share">
-                                               <ShareIcon />
-                                           </IconButton>
-                                           <button className={"ml-auto text-white bg-indigo-600 rounded p-2"}>
+                                           <div>
+                                               { p.likeurs.length}
+                                           </div>
+                                           <button onClick={(e)=> soutenir(e, p)} className={"ml-auto text-white bg-indigo-600 rounded p-2"}>
                                                Soutenir le projet
                                            </button>
 

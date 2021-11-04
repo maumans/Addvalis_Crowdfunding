@@ -75,12 +75,11 @@ function ResponsiveDrawer(props) {
                 </AccordionSummary>
                 <AccordionDetails>
                     <List>
-                        <ListItem   sx={props.active==="projet"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Listes des utilisateurs"} />
-                        </ListItem>
-                        <ListItem sx={props.active==="utilisateur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Gestion des utilisateurs"} />
-                        </ListItem>
+                        <Link href={route("admin.utilisateur.index",props.auth.user.id)}>
+                            <ListItem   sx={props.sousActive==="listeUtilisateurs"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                                <ListItemText primary={"Liste des utilisateurs"} />
+                            </ListItem>
+                        </Link>
                     </List>
                 </AccordionDetails>
             </Accordion>
@@ -101,12 +100,6 @@ function ResponsiveDrawer(props) {
                             </ListItem>
                         </Link>
 
-                        <ListItem sx={props.sousActive==="utilisateur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Gestion des utilisateurs"} />
-                        </ListItem>
-                        <ListItem sx={props.sousActive==="secteur"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                            <ListItemText primary={"Gestion des secteurs"} />
-                        </ListItem>
                     </List>
                 </AccordionDetails>
             </Accordion>
