@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Critere;
 use App\Models\Projet;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -66,6 +67,8 @@ class ProjetController extends Controller
 
         $pourcentage=$montantFinance*100/+$projet->montantRechercher;
 
+
+
         return Inertia::render("Admin/Projet/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance]);
     }
 
@@ -119,6 +122,7 @@ class ProjetController extends Controller
 
         $contributeurs=$projet->contributeurs->count();
 
+
         $montantFinance=0;
         foreach($projet->contributeurs as $c)
         {
@@ -127,18 +131,27 @@ class ProjetController extends Controller
 
         $pourcentage=$montantFinance*100/+$projet->montantRechercher;
 
-        return Inertia::render("Admin/Projet/Validation/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance]);
+        $criteres=Critere::all();
+
+
+        return Inertia::render("Admin/Projet/Validation/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance,"criteres"=>$criteres]);
     }
 
-    public function valider(int $userId,int $projetId)
+    public function valider(Request $request,int $userId,int $projetId)
     {
         $projet=Projet::find($projetId);
+
+        foreach($request->notes as $id => $note)
+        {
+            $projet->criteres()->syncWithoutDetaching([$id=>["note"=>$note]]);
+        }
+
         $projet->Etat="valide";
         $projet->save();
 
         $projets =Projet::where("etat","valide")->orderBy("updated_at","desc")->with("likeurs")->get();
 
-        return Inertia::render("Admin/Projet/Index",["projets"=>$projets])->with("success","Projet validé avec succès");
+        return redirect()->route("admin.projet.index",Auth::id())->with("success","Projet validé avec succès");
     }
 
     public function validationDestroy($user,Projet $projet)

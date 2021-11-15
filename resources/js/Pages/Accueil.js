@@ -72,6 +72,7 @@ function Accueil(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
+            AllProjets={props.AllProjets}
         >
             <Head title="Accueil" />
             <Swiper hidden={true} className={"my-3 w-full"} slidesPerView={5} autoplay={{delay:5000}} navigation={true}>
@@ -104,8 +105,8 @@ function Accueil(props) {
                 </div>
             </div>
 
-           <div className={"flex w-full justify-center text-center"}>
-               <div className={"md:w-8/12 w-10/12 md:flex md:space-x-5 my-32 md:space-y-0 space-y-5 font"}>
+           <div className={"flex w-full justify-center text-justify"}>
+               <div className={"md:w-8/12 w-10/12 md:flex md:space-x-10 my-32 md:space-y-0 space-y-5 font"}>
                    <img hidden={true} src="/images/1.jpg" className={"flex-1"} alt="" style={{objectFit:"contain",minWidth:300}} />
                    <div data-aos={"fade-up"} data-aos-duration={1000} className={"flex-1 md:text-xl text-lg font"}>
                        Un projet AddvCrowd, c'est bien plus qu'une collecte de fonds. Mobilisez toute une communauté autour de votre idée
@@ -128,12 +129,13 @@ function Accueil(props) {
             </div>
 
             <div>
-                <div className={"md:text-3xl underline sm:text-2xl text-xl font-bold my-10 text-center font"}>
-                    PROJETS EN COURS
-                </div>
+
                 <div className={"flex justify-center"}>
 
                     <div className={"grid md:grid-cols-3 grid-cols-1 gap-4 mx-10 mb-20 w-auto"}>
+                        <div className={"md:col-span-3 md:text-xl underline sm:text-xl text-lg font-bold my-10 font"}>
+                            PROJETS EN COURS
+                        </div>
                         {
                             props?.projets.map((p,i)=>(
                                     <div key={p.id} data-aos={"zoom-in"} data-aos-once={true} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col"} style={{maxWidth:400,minWidth:"auto",height:450,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
@@ -174,18 +176,6 @@ function Accueil(props) {
                     <button onClick={()=>setVoirPlus(voirPlus+3)} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded py-2 px-10 mb-10"} >
                         Voir plus
                     </button>
-                </div>
-                <div className={"w-full px-5 my-10 bg-black flex space-x-5 justify-center text-white items-center"} style={{height:400}}>
-                    <div>
-                        AddvCrowd réunit le créateur et ses contributeurs autour du financement d'un projet.
-                    </div>
-                    <div>
-                        Les bénéfices ne sont pas garanties, mais le créateur s'engage à informer ses contributeurs régulièrement.
-                    </div>
-                    <div>
-                        Votre contribution n'est prélevée que si l'objectif de financement du projet est atteint avant la date limite.
-                    </div>
-
                 </div>
 
             </div>

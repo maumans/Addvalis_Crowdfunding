@@ -32,27 +32,21 @@ function Index(props) {
             auth={props.auth}
             active={"contributions"}
         >
-           <div className={"mt-20"}>
-               <div className="md:ml-10 md:justify-start flex justify-center">
-                   <div data-aos={"zoom-in"} className={"my-8 md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
-                       <div className={"m-2 p-1 bg-indigo-600 text-white"}>
-                           Mes contributions
-                       </div>
-                   </div>
-               </div>
-           </div>
-            <div className={"flex xs:justify-center"}>
+            <div className={"flex justify-center mt-20"}>
 
-                <div className={"projetfont grid md:grid-cols-3 sm:grid-cols-2  grid-cols-1 gap-2 mx-10 mb-10"}>
+                <div className={"projetfont grid grid md:grid-cols-3 grid-cols-1 gap-4 mx-10 mb-20 w-auto"}>
+
+                    <div data-aos={"zoom-in"} className={"my-8 md:col-span-3 font md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
+                        <div className={"m-2 p-1 bg-indigo-600 text-white"}>
+                            Mes contributions
+                        </div>
+                    </div>
                     {
                         projets.map((p,i)=>(
-                                <div key={p.id} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:400,minWidth:350,height:400,boxShadow:"2px 5px 5px gray"}}>
+                                <div key={p.id} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:400,height:500,boxShadow:"2px 5px 5px gray"}}>
                                     <div className={"flex space-x-2 bg-black p-2"}>
-                                        <Avatar sx={{ bgcolor: red[600] }} className={"border-2 bg-indigo-600"}>
-                                            M
-                                        </Avatar>
                                         <div>
-                                            <div className={"font text-white"}>{p.titre}</div>
+                                            <div className={"font text-white text-xl"}>{p.titre}</div>
                                             <span className={"text-white"}>{p.created_at.split("T")[0]}</span>
                                         </div>
                                     </div>
@@ -62,20 +56,19 @@ function Index(props) {
                                     <div className={"p-2"}>
                                         {capitalize(p.description.toLowerCase())}
                                     </div>
-                                    <div className={"mt-auto"}>
-                                        <div className="ml-2">
-                                            {
-                                                p.likeurs.length
-                                            } {p.likeurs.length>1?"personnes aiment":"personne aime"}
+                                    <div className={"flex space-x-2 ml-5 py-2 mt-auto border-b border-t"}>
+                                        <FavoriteIcon/>
+                                        <div>
+                                            {p.likeurs.length}
                                         </div>
                                     </div>
                                     <div className={"mt-auto ml-2 mb-2"}>
                                         <button onClick={()=>Inertia.delete(route("user.contribution.destroy",[props.auth.user.id,p?.id]))} className={"mr-5 text-white bg-indigo-600 hover:bg-indigo-800 transition duration-500 rounded p-2"} href={route("projet.show",p.id)}>
                                            Annuler
                                         </button>
-                                        <Link className={"text-white bg-blue-600 hover:bg-blue-800 transition duration-500 rounded p-2"} href={route("projet.show",p.id)}>
+                                        <button className={"text-white bg-blue-600 hover:bg-blue-800 transition duration-500 rounded p-2"} onClick={()=>Inertia.get(route("projet.show",p.id))}>
                                             voir plus
-                                        </Link>
+                                        </button>
                                     </div>
                                 </div>
 

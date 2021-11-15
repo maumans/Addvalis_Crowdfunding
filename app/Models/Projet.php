@@ -77,5 +77,9 @@ class Projet extends Model
         return $this->belongsToMany(User::class,"save");
     }
 
+    public function criteres()
+    {
+        return $this->belongsToMany(Critere::class,"projet_critere");
+    }
 
 }

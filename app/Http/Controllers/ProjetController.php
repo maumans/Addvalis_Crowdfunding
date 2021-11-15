@@ -53,12 +53,9 @@ class ProjetController extends Controller
         $user=$projet->user;
         $contributeurs=$projet->contributeurs->count();
 
-        $montantFinance=0;
+        $montantFinance=$projet->contributeurs()->sum("montant");
 
-        foreach($projet->contributeurs as $c)
-        {
-            $montantFinance=$montantFinance+$c->pivot->montant;
-        }
+
 
         $projet->enregistre=$projet->enregistreurs->contains(Auth::user());
 

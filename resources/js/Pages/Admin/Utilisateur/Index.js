@@ -82,7 +82,7 @@ function Index({success,utilisateurs,auth}) {
                                     <StyledTableCell align="right">{u.status}</StyledTableCell>
                                     <StyledTableCell align="right">
                                         <div className={"flex space-x-1 w-full justify-center"}>
-                                            <button onClick={()=>confirm(`Voulez-vous ${u.status==="actif"? "bloquer":"debloquer"} ce projet`) && Inertia.delete(route("admin.utilisateur.destroy",[auth.user.id,u?.id]))} className={`rounded text-white ${u.status==="actif"?" bg-red-600":"bg-green-600"}  p-2`}>
+                                            <button onClick={()=>confirm(`Voulez-vous ${u.status==="actif"? "bloquer":"debloquer"} ce utilisateur`) && Inertia.delete(route("admin.utilisateur.destroy",[auth.user.id,u?.id]))} className={`rounded text-white ${u.status==="actif"?" bg-red-600":"bg-green-600"}  p-2`}>
                                                 {u.status==="actif"? "bloquer":"debloquer"}
                                             </button>
                                         </div>

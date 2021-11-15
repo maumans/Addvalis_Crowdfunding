@@ -61,6 +61,11 @@ function ResponsiveDrawer(props) {
                                 <ListItemText primary={"Projets à valider"} />
                             </ListItem>
                         </Link>
+                        <Link href={route("admin.projet.validation.index",props.auth.user.id)}>
+                            <ListItem   sx={props.sousActive==="selection"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                                <ListItemText primary={"Selection des projets"} />
+                            </ListItem>
+                        </Link>
                     </List>
                 </AccordionDetails>
             </Accordion>
@@ -97,6 +102,26 @@ function ResponsiveDrawer(props) {
                         <Link href={route("admin.secteur.index",props.auth.user.id)}>
                             <ListItem sx={props.sousActive==="listeSecteurs"?{backgroundColor:"#4f46e5",color:"white"}:null}>
                                 <ListItemText primary={"Liste des secteurs"} />
+                            </ListItem>
+                        </Link>
+
+                    </List>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion defaultExpanded={props.active==="critere"}>
+                <AccordionSummary
+                    sx={props.active==="critere"?{backgroundColor:"#4f46e5",color:"white"}:null}
+                    expandIcon={<ExpandMoreIcon className={props.active==="critere"?"text-white":null} />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography>Gestion des criteres</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <List>
+                        <Link href={route("admin.critere.index",props.auth.user.id)}>
+                            <ListItem sx={props.sousActive==="listeCriteres"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                                <ListItemText primary={"Liste des criteres"} />
                             </ListItem>
                         </Link>
 
@@ -153,7 +178,7 @@ function ResponsiveDrawer(props) {
                     }}
                     sx={{
                         display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth},
                     }}
                 >
                     {drawer}
@@ -162,7 +187,7 @@ function ResponsiveDrawer(props) {
                     variant="permanent"
                     sx={{
                         display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth,zIndex:1 },
                     }}
                     open
                 >

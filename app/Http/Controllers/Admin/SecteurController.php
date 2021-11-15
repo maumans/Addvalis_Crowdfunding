@@ -39,9 +39,13 @@ class SecteurController extends Controller
      */
     public function store(Request $request,$userId)
     {
+        $request->validate([
+            "libelle" =>"required|unique:secteurs"
+        ]);
         Secteur::create([
             "libelle"=>$request->libelle
         ]);
+
         return redirect()->back()->with("success","secteur ajouté avec succès");
     }
 

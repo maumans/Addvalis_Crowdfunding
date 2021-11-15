@@ -62,13 +62,14 @@ import 'tinymce/plugins/textpattern';
 import 'tinymce/plugins/imagetools';
 import 'tinymce/plugins/codesample';
 import 'tinymce/plugins/toc';
+import 'tinymce/plugins/autoresize';
 
 
 //LANGUE DE TINYMCE
 
 import "../../../lang/fr_FR"
 import ValidationErrors from "@/Components/ValidationErrors";
-import {maxWidth} from "@mui/system";
+import {maxWidth, minWidth} from "@mui/system";
 
 
 export default function Create(props) {
@@ -432,29 +433,29 @@ export default function Create(props) {
                             <span className="text-xl font-bold">
                                 Details du projet
                             </span>
-                            <p style={{maxWidth:500}}>
+                            <p>
                                 Décrivez ce que vous souhaitez financier en évoquant l'importance que votre projet revêt à vos yeux et comment vous comptez le réaliser. Parlez aussi un peu de vous. Une description complète informe les contributeurs sur l'ensemble de votre projet. Si possible, ajoutez des images pour montrer votre travail.
                             </p>
 
                         </div>
-                        <div>
+                        <div className="w-full">
                             <Editor
                                 value={data.details} onEditorChange={handleEditorChange}
 
                                 init={{
                                         plugins: [
-                                            'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                                            'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
                                             'searchreplace wordcount visualblocks visualchars code fullscreen',
                                             'insertdatetime media nonbreaking save table directionality',
                                             'template paste textpattern imagetools codesample toc help image code'
                                         ],
                                         language:'fr_FR',
-                                        height:500,
+                                        min_height:700,
                                         toolbar: 'undo redo | formatselect | link image media | code ' +
                                             'bold italic backcolor | alignleft aligncenter ' +
                                             'alignright alignjustify | bullist numlist outdent indent | ' +
                                             'removeformat | help',
-                                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                                        content_style: 'img {max-width: 600px;height:"auto";},body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                                         // enable title field in the Image dialog
                                         image_title: true,
                                         // enable automatic uploads of images represented by blob or data URIs
@@ -467,7 +468,9 @@ export default function Create(props) {
                                         convert_urls: false,
                                         images_upload_url: "/uploadImage",
                                         image_advtab: true,
-                                        images_upload_handler:example_image_upload_handler
+                                        images_upload_handler:example_image_upload_handler,
+                                        image_dimensions:false,
+
 
                                     }
                                 }

@@ -22,7 +22,7 @@ export default function Index({auth,errors,projets,success}) {
             active={"projets"}
         >
 
-           <div className={"mb-20"}>
+           <div className={"mb-64"}>
               <div className="md:ml-10 md:justify-start ml-0 flex justify-center">
                   <div data-aos={"zoom-in"} className={"my-8 md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
                       <div className={"m-2 p-1 bg-indigo-600 text-white"}>

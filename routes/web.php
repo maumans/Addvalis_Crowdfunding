@@ -80,9 +80,10 @@ Route::resource("user.contribution",\App\Http\Controllers\User\ContributionContr
 Route::resource("admin.projet",\App\Http\Controllers\Admin\ProjetController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::resource("admin.secteur",\App\Http\Controllers\Admin\SecteurController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::resource("admin.utilisateur",\App\Http\Controllers\Admin\UtilisateurController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
+Route::resource("admin.critere",\App\Http\Controllers\Admin\CritereController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::get("/admin/{userId}/projet/validation/index",[\App\Http\Controllers\Admin\ProjetController::class,"validationIndex"])->name("admin.projet.validation.index")->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::get("/admin/{userId}/projet/validation/{projetId}/show",[\App\Http\Controllers\Admin\ProjetController::class,"validationShow"])->name("admin.projet.validation.show")->middleware(['auth', 'verified',"userIsAdmin"]);
-Route::get("/admin/{userId}/projet/{projetId}/validation",[\App\Http\Controllers\Admin\ProjetController::class,"valider"])->name("admin.projet.validation")->middleware(['auth', 'verified',"userIsAdmin"]);
+Route::post("/admin/{userId}/projet/{projetId}/validation",[\App\Http\Controllers\Admin\ProjetController::class,"valider"])->name("admin.projet.validation")->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::delete("/admin/{user}/projet/{projet}/validation",[\App\Http\Controllers\Admin\ProjetController::class,"validationDestroy"])->name("admin.projet.validation.destroy")->middleware(['auth', 'verified',"userIsAdmin"]);
 
 

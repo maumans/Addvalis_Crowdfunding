@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Projet;
 use App\Models\Secteur;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,14 +36,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
                 'admin'=>$request->user() && $request->user()->isAdmin()
             ],
             'success' => session('success'),
-            'secteurs' => Secteur::all()
+            'secteurs' => Secteur::all(),
+            'AllProjets'=>Projet::get(['id',"titre","image","description"])
         ]);
     }
 }

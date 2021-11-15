@@ -135,7 +135,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                     <div className={"xs:mr-0 flex md:w-6/12 h-full flex-col items-between justify-between"}>
                        <div className={"flex w-full"}>
                            <div className={"border border-indigo-600 w-full rounded overflow-hidden"}>
-                               <div className={"h-full bg-indigo-600 taille"} style={{width:`${Math.round(pourcentage)}%`}}>
+                               <div className={"h-full bg-indigo-600 animePourcentage"} style={{width:`${Math.round(pourcentage)}%`}}>
 
                                </div>
                            </div>
@@ -143,7 +143,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                        </div>
                         <div>
                             <div className="text-indigo-600 text-2xl font font-bold">
-                                243653 FG
+                                {montantFinance} FG
                             </div>
                             <span>
                                 financé sur {numberFormat(projet.montantRechercher)} FG

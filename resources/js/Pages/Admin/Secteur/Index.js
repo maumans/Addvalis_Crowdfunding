@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 
 import Panel from "@/Layouts/Admin/Panel";
 import Table from '@mui/material/Table';
@@ -55,7 +55,7 @@ function Index({success,auth,secteurs}) {
         setData({"libelle":""})
     },[success,secteurs])
 
-    const [projetSelect,setProjetSelect] =useState(null)
+    const [secteurSelect,setSecteurSelect] =useState(null)
     const [data,setData] =useState({
         "libelle":""
     })
@@ -63,10 +63,16 @@ function Index({success,auth,secteurs}) {
         "libelle":""
     })
 
+    const textFieldEl=useRef(null)
+
     function handleSubmit(e){
         e.preventDefault();
         Inertia.post(route("admin.secteur.store",auth.user.id),dataAdd)
     }
+
+    useEffect(()=>{
+        secteurSelect && console.log(textFieldEl.current)
+    },[secteurSelect])
 
     return (
         <Panel
@@ -77,7 +83,7 @@ function Index({success,auth,secteurs}) {
 
         >
             <div className="flex flex-col space-y-5">
-                <div className={"flex space-x-2"}>
+                <div className={"flex justify-center"}>
                     <form onSubmit={handleSubmit}>
                         <TextField onChange={(e)=> setDataAdd({"libelle":e.target.value})} variant={"standard"} label={"ajouter un secteur"}/>
                         <button type={"submit"} className={"text-white rounded bg-indigo-600 p-2 font-bold"}>
@@ -91,7 +97,7 @@ function Index({success,auth,secteurs}) {
                             <TableRow>
                                 <StyledTableCell>ID</StyledTableCell>
                                 <StyledTableCell align="right">Libelle</StyledTableCell>
-                                <StyledTableCell hidden={!projetSelect} align="right"></StyledTableCell>
+                                <StyledTableCell hidden={!secteurSelect} align="right"></StyledTableCell>
                                 <StyledTableCell align="right">Actions</StyledTableCell>
                             </TableRow>
                         </TableHead>
@@ -106,8 +112,8 @@ function Index({success,auth,secteurs}) {
                                     </StyledTableCell>
                                     <StyledTableCell align="right">{s.libelle}</StyledTableCell>
                                     <StyledTableCell align="right">
-                                        <div hidden={s.id!==projetSelect?.id}>
-                                            <TextField value={data.libelle} onChange={(e)=>setData({"libelle":e.target.value})} variant="standard"/>
+                                        <div hidden={s.id!==secteurSelect?.id}>
+                                            <TextField inputRef={textFieldEl} value={data.libelle} onChange={(e)=>setData({"libelle":e.target.value})} variant="standard"/>
                                         </div>
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
@@ -115,17 +121,18 @@ function Index({success,auth,secteurs}) {
                                             <button onClick={()=>confirm("Voulez-vous supprimer ce secteur") && Inertia.delete(route("admin.secteur.destroy",[auth.user.id,s?.id]),{preserveScroll:true})} className={"rounded bg-red-600 p-2"}>
                                                 <DeleteIcon className={"text-white"}/>
                                             </button>
-                                            <button hidden={projetSelect && s.id===projetSelect?.id} onClick={()=>{
-                                                setProjetSelect(s)
+                                            <button hidden={secteurSelect && s.id===secteurSelect?.id} onClick={()=>{
+                                                setSecteurSelect(s)
                                                 setData({"libelle":s.libelle})
+
                                             }}  className={"rounded bg-indigo-600 p-2"}>
                                                 <EditIcon className={"text-white"}/>
                                             </button>
                                             <button onClick={()=>{
-                                                setProjetSelect(null)
+                                                setSecteurSelect(null)
                                                 Inertia.patch(route("admin.secteur.update",[auth.user.id,s.id]),data,{preserveScroll:true})
                                             }}
-                                                    hidden={!projetSelect || s.id!==projetSelect?.id} className={"rounded bg-green-600 p-2"}>
+                                                    hidden={!secteurSelect || s.id!==secteurSelect?.id} className={"rounded bg-green-600 p-2"}>
                                                 <CheckIcon className={"text-white"}/>
                                             </button>
                                         </div>

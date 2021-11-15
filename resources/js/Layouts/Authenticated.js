@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
+import React, {useEffect, useRef, useState} from 'react';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/inertia-react';
+import {Link, usePage} from '@inertiajs/inertia-react';
 import {Inertia} from "@inertiajs/inertia";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -12,11 +11,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import Accordion from "@mui/material/Accordion";
-import {Popover, TextField} from "@mui/material";
-import Button from "@mui/material/Button";
+import {TextField} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
 import {withStyles} from "@mui/styles";
@@ -56,27 +52,65 @@ const TextFieldCustom = withStyles({
     },
 })(TextField);
 
-export default function Authenticated({ auth, header, children,active }) {
+export default function Authenticated({ auth, header, children,active, }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [isAdmin, SetIsAdmin] = useState(false);
-
+    const {AllProjets,secteurs}=usePage().props
 
     const [anchorEl, setAnchorEl] = useState(false);
+    const [see, setSee] = useState(false);
 
-    const handleClick = (event) => {
+
+
+    const [searchProjetList, setSearchProjetList] = useState(null);
+    const [searchSecteurList, setSearchSecteurList] = useState(null);
+    const [search, setSearch] = useState("");
+    const inputEl = useRef(null);
+
+    useEffect(() => {
+        see && inputEl.current.focus();
+    },[see])
+
+
+    function handleClick(){
+        setSee(true)
         setAnchorEl(true)
-    };
+        inputEl.current.focus()
+    }
 
-    const handleClose = () => {
-        setAnchorEl(false)
-    };
+    function handleClose(){
+        setSee(false)
+        setTimeout(() =>{
+                setAnchorEl(false)
+                setSearch("")
+            },500
+        )
+    }
+
+    function handleSearchChange(e) {
+        setSearch(e.target.value)
+    }
+
+    useEffect(()=>{
+        setSearchProjetList(search===""?null:AllProjets.filter((p)=>p.titre.toLowerCase().indexOf(search.toLowerCase()) > -1))
+        setSearchSecteurList(search===""?null:secteurs.filter((s)=>s.libelle.toLowerCase().indexOf(search.toLowerCase()) > -1))
+    },[search])
+
+   const unFocusSearch=()=> {
+        setSee(false)
+        setTimeout(() =>{
+                setAnchorEl(false)
+                setSearch("")
+            },500
+        )
+    }
 
     return (
-        <div className="min-h-screen flex flex-col justify-between z-50">
-            <div hidden={!anchorEl} data-aos={"fade-up"} data-aos-duration={1000} className="z-50 fixed w-full bg-black" style={{height:66}}>
-                <div className="flex h-full justify-center items-center">
+        <div className="min-h-screen flex flex-col justify-between z-40">
+            <div onBlur={unFocusSearch} hidden={!anchorEl} className="z-50 fixed w-full bg-black font" style={{height:66}}>
+                <div className={`${see?"search":"searchHidden"} flex h-full justify-center items-center searchZindex`}>
                     <div className="flex w-6/12 space-x-5">
-                        <TextFieldCustom className="w-full" variant={"standard"} label="Nom de projet ou de secteur"/>
+                        <TextFieldCustom  inputRef={inputEl} value={search} onChange={handleSearchChange} className="w-full" variant={"standard"} label="Rechercher un projet ou un secteur"/>
                         <div>
                             <IconButton onClick={handleClose}>
                                 <CloseIcon className="text-white"/>
@@ -84,7 +118,55 @@ export default function Authenticated({ auth, header, children,active }) {
                         </div>
                     </div>
                 </div>
+                {(searchProjetList!==null || searchSecteurList!==null)&&
+                <div  className={`${see?"search":"searchHidden"} flex flex-col items-center bg-gray-100 overflow-auto`}>
+
+                    {
+                        searchSecteurList.length > 0 &&
+                        <div className="w-6/12 text-black p-2 border-b">
+                            <span>Secteurs</span>
+                            {
+                                searchSecteurList.map((s)=>(
+                                        <div role={"button"} onClick={()=>Inertia.get(route("secteur.show",s.id))} key={s.id} className="w-full p-2 hover:bg-blue-600 hover:text-white transition duration-500">
+                                            {s.libelle}
+                                        </div>
+                                    )
+                                )
+                            }
+                        </div>
+
+                    }
+
+                    {
+                        searchProjetList.length > 0 &&  <div className="w-6/12 text-black p-2">
+                            <span>Projets</span>
+                            {
+                                searchProjetList.map((p)=>(
+
+                                        <div role="button" onClick={()=>Inertia.get(route("projet.show",p.id))} key={p.id} className="w-full p-2 hover:bg-blue-600 hover:text-white transform hover:scale-105 transition duration-500 flex">
+                                            <div className={"w-5/12"}>
+                                                <img src={p.image} alt="" className="w-full h-4/12" style={{objectFit:"cover"}}/>
+                                            </div>
+                                            <div className="space-y-2 ml-2 w-full">
+                                                <p className="font-bold">
+                                                    {p.titre}
+                                                </p>
+                                                <p>
+                                                    {p.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
+                                )
+                            }
+                        </div>
+                    }
+
+                </div>
+
+                }
             </div>
+
             <nav className="bg-black fixed w-full z-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
@@ -205,6 +287,14 @@ export default function Authenticated({ auth, header, children,active }) {
                         </div>
 
                         <div className="-mr-2 flex items-center md:hidden">
+                            <div className="h-full flex items-center">
+                                <div>
+                                    <IconButton onClick={handleClick}>
+                                        <SearchIcon className="text-white"/>
+                                    </IconButton>
+                                </div>
+                            </div>
+
                             <button
                                 onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
@@ -300,10 +390,10 @@ export default function Authenticated({ auth, header, children,active }) {
                     }
                 </div>
             </nav>
-            <div style={{paddingTop:64}}>{children}</div>
+            <div  className={"flex-1"} style={{paddingTop:64}}>{children}</div>
 
-            <div className="w-full bg-black">
-                <div className="text-center text-white font-bold">
+            <div className="w-full bg-black z-10 h-full">
+                <div className="text-center xs:text-xs text-white font-bold">
                     © Copyright Addvalis crowdfunding - GUINÉE - Tous droits réservés.
                 </div>
             </div>
