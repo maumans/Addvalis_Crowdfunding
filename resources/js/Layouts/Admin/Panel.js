@@ -69,6 +69,32 @@ function ResponsiveDrawer(props) {
                     </List>
                 </AccordionDetails>
             </Accordion>
+            <Accordion
+                defaultExpanded={props.active==="programme"}
+            >
+                <AccordionSummary
+                    sx={props.active==="programme"?{backgroundColor:"#4f46e5",color:"white"}:null}
+                    expandIcon={<ExpandMoreIcon className={props.active==="programme"?"text-white":null}/>}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography>Gestion des programmes</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <List>
+                        <Link href={route("admin.programme.index",props.auth.user.id)}>
+                            <ListItem sx={props.sousActive==="listeProgrammes"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                                <ListItemText primary={"Liste des programmes"} />
+                            </ListItem>
+                        </Link>
+                        <Link href={route("admin.programme.create",props.auth.user.id)}>
+                            <ListItem sx={props.sousActive==="creationProgramme"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                                <ListItemText primary={"Creation de programme"} />
+                            </ListItem>
+                        </Link>
+                    </List>
+                </AccordionDetails>
+            </Accordion>
             <Accordion defaultExpanded={props.active==="utilisateur"}>
                 <AccordionSummary
                     sx={props.active==="utilisateur"?{backgroundColor:"#4f46e5",color:"white"}:null}
@@ -140,8 +166,8 @@ function ResponsiveDrawer(props) {
             <AppBar
                 position="fixed"
                 sx={{
-                    width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    ml: { sm: `${drawerWidth}px` },
+                    width: { md: `calc(100% - ${drawerWidth}px)` },
+                    ml: { md: `${drawerWidth}px` },
                     marginTop:"64px",
                     backgroundColor:"#4f46e5",
                     zIndex:1
@@ -153,7 +179,7 @@ function ResponsiveDrawer(props) {
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
+                        sx={{ mr: 2, display: { md: 'none' } }}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -164,7 +190,7 @@ function ResponsiveDrawer(props) {
             </AppBar>
             <Box
                 component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
                 aria-label="mailbox folders"
             >
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -177,7 +203,7 @@ function ResponsiveDrawer(props) {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
+                        display: { xs: 'block', md: 'none' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth},
                     }}
                 >
@@ -186,7 +212,7 @@ function ResponsiveDrawer(props) {
                 <Drawer
                     variant="permanent"
                     sx={{
-                        display: { xs: 'none', sm: 'block' },
+                        display: { xs: 'none', md: 'block' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth,zIndex:1 },
                     }}
                     open

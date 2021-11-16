@@ -53,7 +53,6 @@ import 'tinymce/plugins/paste';
 import 'tinymce/plugins/pagebreak';
 import 'tinymce/plugins/visualchars';
 import 'tinymce/plugins/save';
-//import 'tinymce/plugins/contextmenu';
 import 'tinymce/plugins/directionality';
 import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/textcolor';
@@ -68,8 +67,6 @@ import 'tinymce/plugins/autoresize';
 //LANGUE DE TINYMCE
 
 import "../../../lang/fr_FR"
-import ValidationErrors from "@/Components/ValidationErrors";
-import {maxWidth, minWidth} from "@mui/system";
 
 
 export default function Create(props) {
@@ -134,9 +131,6 @@ export default function Create(props) {
 
         xhr.send(formData);
     };
-
-
-
 
     const [secteurs,setSecteurs]=useState([]);
 

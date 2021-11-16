@@ -16,6 +16,9 @@ class CreateCriteresTable extends Migration
         Schema::create('criteres', function (Blueprint $table) {
             $table->id();
             $table->string("description");
+            $table->integer("notemax")->nullable();
+            $table->boolean("choix")->nullable();
+            $table->foreignId("type_critere_id")->nullable()->constrained("type_criteres")->cascadeOnDelete();
             $table->timestamps();
         });
     }

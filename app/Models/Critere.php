@@ -15,4 +15,14 @@ class Critere extends Model
     {
         return $this->belongsToMany(Projet::class,"projet_critere");
     }
+
+    public function typeCritere()
+    {
+        return $this->belongsTo(TypeCritere::class);
+    }
+
+    public function programmes()
+    {
+        return $this->belongsToMany(programmes::class);
+    }
 }

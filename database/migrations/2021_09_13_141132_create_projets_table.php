@@ -26,6 +26,13 @@ class CreateProjetsTable extends Migration
             $table->longText("details")->nullable();
             $table->foreignId("secteur_id")->nullable()->constrained("secteurs")->cascadeOnDelete();
             $table->foreignId("user_id")->nullable()->constrained("users")->cascadeOnDelete();
+
+
+            $table->string("telephone")->nullable();
+            $table->string("statusJuridique")->nullable();
+            $table->foreignId("adresse_id")->nullable()->constrained("adresses");
+            $table->foreignId("type_projet_id")->nullable()->constrained("type_projets")->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

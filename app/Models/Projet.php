@@ -82,4 +82,20 @@ class Projet extends Model
         return $this->belongsToMany(Critere::class,"projet_critere");
     }
 
+    public function programmes()
+    {
+        return $this->belongsToMany(Programme::class,"programme_projet");
+    }
+
+    public function adresse()
+    {
+        return $this->belongsTo(Adresse::class);
+    }
+
+    public function typeProjet()
+    {
+        return $this->belongsTo(TypeProjet::class);
+    }
+
+
 }

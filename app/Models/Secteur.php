@@ -15,4 +15,9 @@ class Secteur extends Model
     {
         return $this->hasMany(Projet::class);
     }
+
+    public function programmes()
+    {
+        return $this->belongsToMany(Programme::class,"programme_secteur");
+    }
 }

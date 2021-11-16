@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Critere;
+use App\Models\TypeCritere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -18,16 +19,20 @@ class CritereSeeder extends Seeder
         DB::table('criteres')->delete();
 
         Critere::create([
-            "description"=>"Lisibilité du projet"
-        ]);
+            "description"=>"Lisibilité du projet",
+            "notemax"=>10
+        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
         Critere::create([
-            "description"=>"Clarté du projet"
-        ]);
+            "description"=>"Clarté du projet",
+            "notemax"=>10
+        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
         Critere::create([
-            "description"=>"Pertinence du projet"
-        ]);
+            "description"=>"Pertinence du projet",
+            "notemax"=>10
+        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
         Critere::create([
-            "description"=>"Realisation du projet"
-        ]);
+            "description"=>"Realisation du projet",
+            "notemax"=>10
+        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
     }
 }
