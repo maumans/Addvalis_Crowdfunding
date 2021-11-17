@@ -18,7 +18,7 @@ use App\Models\Secteur;
 |
 */
 
-Route::get('/', function () {
+Route::get('/mau', function () {
 
     $secteurs=Secteur::all();
     $projets=Projet::where("etat","valide")->orderBy('created_at',"desc")->with("user")->get();
