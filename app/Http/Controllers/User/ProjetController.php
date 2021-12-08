@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Adresse;
+use App\Models\Programme;
+use App\Models\Region;
+use App\Models\Ville;
 use Illuminate\Http\Request;
 
 
@@ -23,9 +27,7 @@ class ProjetController extends Controller
      */
     public function index()
     {
-
-
-        $projets=Projet::where("user_id",Auth::user()->id)->orderBy("created_at","desc")->get();
+        $projets=Projet::where("user_id",Auth::user()->id)->orderBy("created_at","desc")->get(["id","titre","description","image"]);
 
         return Inertia::render("User/Projet/Index",["projets"=>$projets]);
     }
@@ -38,17 +40,20 @@ class ProjetController extends Controller
     public function create()
     {
         $secteurs=Secteur::all();
-        return Inertia::render("User/Projet/Create",["secteurs"=>$secteurs]);
+        $regions=Region::with("villes")->get();
+        $villes=Ville::with("region")->get();
+        return Inertia::render("User/Projet/Create",["secteurs"=>$secteurs,"regions"=>$regions,"villes"=>$villes]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Inertia\Response
      */
     public function store(Request $request)
     {
+
         //dd(strtotime($request->dateFin)-strtotime($request->dateDebut));
         $request->validate([
             "titre"=>"required|string",
@@ -59,7 +64,9 @@ class ProjetController extends Controller
             "dateFin"=>"required|date",
             "details"=>"required",
             "secteur"=>"required",
-            "image"=>"required"
+            "image"=>"required",
+            "telephone"=>"required",
+            "statusJuridique"=>"required",
         ],
         [
             "titre.required"=>"Le titre est requis",
@@ -75,8 +82,8 @@ class ProjetController extends Controller
             "montantInitial.integer"=>"Le montant initial est un nombre",
             "montantRechercher.integer"=>"Le montant recherché est un nombre",
             "dateFin.gte"=>"La date de fin doit etre supérieure à la date de debut",
-
-
+            "telephone.required"=>"Le numero de telephone est requis",
+            "statusJuridique.required"=>"Le status juridique est requis"
         ]
         );
 
@@ -94,8 +101,33 @@ class ProjetController extends Controller
             "secteur_id"=>$request->secteur,
             "user_id"=>Auth::user()->id,
             "image"=>$imgUrl,
-            "etat"=>"attente"
+            "etat"=>"attente",
+            "telephone"=>$request->telephone,
+            "statusJuridique"=>$request->statusJuridique["libelle"],
         ]);
+
+        $adresse=Adresse::create()->ville()->associate(Ville::find($request->ville["id"]))->save();
+        $projet->adresse()->associate($adresse)->save();
+
+        if($request->programmeId)
+        {
+            $programme=Programme::where("id",$request->programmeId)->with("regions","criteres","secteurs")->first();
+            if($request->region)
+                $region=$programme->regions->where("libelle",$request->region["libelle"]);
+
+            $secteur=$programme->secteurs()->find($request->secteur);
+
+            if($request->region==null)
+            {
+                $region=$programme->regions()->whereRelation("villes","id",Ville::find($request->ville["id"])->region->id)->first();
+            }
+
+            if($region && $secteur)
+            {
+                $programme->projets()->syncWithoutDetaching($projet);
+            }
+
+        }
 
         return Inertia::render("User/Projet/Attente")->with("success","Projet crée");
     }
@@ -130,9 +162,12 @@ class ProjetController extends Controller
      */
     public function edit($user,Projet $projet)
     {
+        $regions=Region::with("villes")->get();
+        $villes=Ville::with("region")->get();
         $secteurs = Secteur::all();
         $secteur=$projet->secteur;
-        return Inertia::render("User/Projet/Edit",["projet"=>$projet,"secteur"=>$secteur,"secteurs"=>$secteurs]);
+        $projet->adresse->ville->region;
+        return Inertia::render("User/Projet/Edit",["projet"=>$projet,"secteur"=>$secteur,"secteurs"=>$secteurs,"regions"=>$regions,"villes"=>$villes]);
     }
 
     /**

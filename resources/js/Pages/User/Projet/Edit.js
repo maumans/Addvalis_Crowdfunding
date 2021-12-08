@@ -90,6 +90,9 @@ function Edit(props) {
         details:props.projet.details,
         image:"",
         prevImage:"",
+        region:0,
+        ville:0,
+        villes:[],
     })
 
     useEffect(()=>{
@@ -177,6 +180,19 @@ function Edit(props) {
         })
     }
 
+    useEffect(()=>{
+        if(data.region)
+        {
+            setData("villes",data.region.villes)
+        }
+        else
+        {
+            setData("villes",props.villes)
+        }
+
+
+    },[data.region])
+
     return (
         <Authenticated
             auth={props.auth}
@@ -197,31 +213,29 @@ function Edit(props) {
                                 <div className={"flex justify-center"}>
                                     <div className={"grid md:grid-cols-2 gap-3 my-4 md:mx-10 mx-10"}>
                                         <div style={{maxWidth:400}}>
-                                            <TextField className={"w-full"}  value={data.titre}  onChange={e=>setData("titre",e.target.value)} label="titre du projet"/>
+                                            <TextField variant={"standard"} className={"w-full"}  value={data.titre}  onChange={e=>setData("titre",e.target.value)} label="titre du projet"/>
                                             <div className={"text-red-600"}>{props.errors["projet.titre"]}</div>
                                         </div>
                                         <div style={{maxWidth:400}}>
                                             <Autocomplete
                                                 onChange={(e,val)=>setData("secteur",val?.id)}
                                                 disablePortal={true}
-                                                id={"combo-box-demo"}
                                                 options={props.secteurs}
                                                 getOptionLabel={option=>option.libelle}
-
-                                                renderInput={(params)=><TextField fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}></TextField>}
+                                                renderInput={(params)=><TextField fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}/>}
                                             />
                                             <div className={"text-red-600"}>{props.errors?.secteur}</div>
 
                                         </div>
 
                                         <div style={{maxWidth:400}}>
-                                            <TextField className={"w-full"} value={data.montantInitial} onChange={e=>setData("montantInitial",e.target.value)} label="Montant initial" />
+                                            <TextField variant={"standard"} className={"w-full"} value={data.montantInitial} onChange={e=>setData("montantInitial",e.target.value)} label="Montant initial" />
 
                                             <div className={"text-red-600"}>{props.errors["projet.montantInitial"]}</div>
                                         </div>
 
                                         <div style={{maxWidth:400}}>
-                                            <TextField className={"w-full"} value={data.montantRechercher} onChange={e=>setData("montantRechercher",e.target.value)} label="Montant à financer" />
+                                            <TextField variant={"standard"} className={"w-full"} value={data.montantRechercher} onChange={e=>setData("montantRechercher",e.target.value)} label="Montant à financer" />
 
                                             <div className={"text-red-600"}>{props.errors["projet.montantRechercher"]}</div>
                                         </div>
@@ -235,6 +249,7 @@ function Edit(props) {
                                                     value={data.dateDebut} onChange={e=>setData("dateDebut",e.target.value)}
                                                     id="standard-search"
                                                     type="date"
+                                                    variant={"standard"}
                                                 />
                                             </div>
 
@@ -250,6 +265,46 @@ function Edit(props) {
                                                     value={data.dateFin} onChange={e=>setData("dateFin",e.target.value)}
                                                     id="standard-search"
                                                     type="date"
+                                                    variant={"standard"}
+                                                />
+                                            </div>
+                                            <div className={"text-red-600"}>{props.errors["projet.dateFin"]}</div>
+                                        </div>
+
+                                        <div style={{maxWidth:400}}>
+                                            <div className={"flex flex-col mt-3"}>
+                                                <label className={"text-gray-500 font-bold"} htmlFor="">
+                                                    Region
+                                                </label>
+                                                <Autocomplete
+                                                    defaultValue={props.projet.adresse.ville.region}
+                                                    onChange={(e,val)=>{
+                                                        setData("region",val)
+                                                    }}
+                                                    disablePortal={true}
+                                                    options={props.regions}
+                                                    getOptionLabel={option=>option.libelle}
+                                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                    renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"region"} label={params?.libelle} />}
+                                                />
+                                            </div>
+
+                                            <div className={"text-red-600"}>{props.errors["projet.dateDebut"]}</div>
+                                        </div>
+
+                                        <div style={{maxWidth:400}}>
+                                            <div className={"flex flex-col mt-3"}>
+                                                <label className={"text-gray-500 font-bold"} htmlFor="">
+                                                    Ville
+                                                </label>
+                                                <Autocomplete
+                                                    defaultValue={props.projet.adresse.ville}
+                                                    onChange={(e,val)=>setData("ville",val)}
+                                                    disablePortal={true}
+                                                    options={data.villes}
+                                                    getOptionLabel={option=>option.libelle}
+                                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                    renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"ville"} label={params?.libelle}/>}
                                                 />
                                             </div>
                                             <div className={"text-red-600"}>{props.errors["projet.dateFin"]}</div>
@@ -317,6 +372,8 @@ function Edit(props) {
                                             menubar: true
                                         },
                                         language:'fr_FR',
+                                        skin: false,
+                                        content_css: false,
                                         height:600,
                                         toolbar_sticky: true,
                                         toolbar: 'undo redo | formatselect | link image media | code ' +

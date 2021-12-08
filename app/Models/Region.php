@@ -15,4 +15,9 @@ class Region extends Model
     {
         return $this->hasMany(Ville::class);
     }
+
+    public function programmes()
+    {
+        return $this->belongsToMany(Programme::class,"programme_region");
+    }
 }

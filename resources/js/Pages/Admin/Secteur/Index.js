@@ -82,7 +82,7 @@ function Index({success,auth,secteurs}) {
             sousActive={"listeSecteurs"}
 
         >
-            <div className="flex flex-col space-y-5">
+            <div className="flex flex-col space-y-5 p-5">
                 <div className={"flex justify-center"}>
                     <form onSubmit={handleSubmit}>
                         <TextField onChange={(e)=> setDataAdd({"libelle":e.target.value})} variant={"standard"} label={"ajouter un secteur"}/>

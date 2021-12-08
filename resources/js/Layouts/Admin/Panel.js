@@ -37,7 +37,6 @@ function ResponsiveDrawer(props) {
 
     const drawer = (
         <div className={"z-0"}>
-            <Toolbar className={"bg-indigo-600"}/>
             <Accordion
                 defaultExpanded={props.active==="projet"}
             >
@@ -59,11 +58,6 @@ function ResponsiveDrawer(props) {
                         <Link href={route("admin.projet.validation.index",props.auth.user.id)}>
                             <ListItem   sx={props.sousActive==="validation"?{backgroundColor:"#4f46e5",color:"white"}:null}>
                                 <ListItemText primary={"Projets à valider"} />
-                            </ListItem>
-                        </Link>
-                        <Link href={route("admin.projet.validation.index",props.auth.user.id)}>
-                            <ListItem   sx={props.sousActive==="selection"?{backgroundColor:"#4f46e5",color:"white"}:null}>
-                                <ListItemText primary={"Selection des projets"} />
                             </ListItem>
                         </Link>
                     </List>
@@ -162,15 +156,15 @@ function ResponsiveDrawer(props) {
 
     return (
         <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
             <AppBar
                 position="fixed"
                 sx={{
+                    display: { xs: 'block', md: 'none' },
                     width: { md: `calc(100% - ${drawerWidth}px)` },
                     ml: { md: `${drawerWidth}px` },
                     marginTop:"64px",
                     backgroundColor:"#4f46e5",
-                    zIndex:1
+                    zIndex:2
                 }}
             >
                 <Toolbar>
@@ -220,8 +214,8 @@ function ResponsiveDrawer(props) {
                     {drawer}
                 </Drawer>
             </Box>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <Toolbar />
+            <Box component="main" sx={{ flexGrow: 1}}>
+                <Toolbar sx={{display: { xs: 'block', md: 'none'}}} />
                <div>
                    {props.children}
                </div>
@@ -241,7 +235,7 @@ function Panel(props) {
             errors={props.errors}
         >
 
-            <div className="relative">
+            <div className="relative font">
                 <ResponsiveDrawer auth={props.auth} sousActive={props.sousActive} active={props.active} children={props.children}/>
             </div>
 

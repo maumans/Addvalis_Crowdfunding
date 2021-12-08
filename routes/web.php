@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProgrammeController;
+use App\Models\Programme;
 use App\Models\Projet;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +24,7 @@ Route::get('/', function () {
 
     $secteurs=Secteur::all();
     $projets=Projet::where("etat","valide")->orderBy('created_at',"desc")->with("user")->get();
+    $programmes=Programme::all();
 
     foreach($projets as $p)
     {
@@ -33,6 +36,7 @@ Route::get('/', function () {
     return Inertia::render('Accueil', [
         "secteurs"=>$secteurs,
         "projets"=>$projets,
+        "programmes"=>$programmes,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -48,6 +52,7 @@ Route::get("/accueil",function () {
 
     $secteurs=Secteur::all();
     $projets=Projet::where("etat","valide")->orderBy('created_at',"desc")->with("user")->get();
+    $programmes=Programme::all();
 
     foreach($projets as $p)
     {
@@ -55,24 +60,24 @@ Route::get("/accueil",function () {
         $p->enregistre=$p->enregistreurs->contains(Auth::user());
     }
 
-    return Inertia::render("Accueil",["secteurs"=>$secteurs, "projets"=>$projets]);
+    return Inertia::render("Accueil",["secteurs"=>$secteurs, "projets"=>$projets,"programmes"=>$programmes]);
 })->name("accueil");
 
 
 Route::resource("projet",\App\Http\Controllers\ProjetController::class)->except("show")->middleware(['auth', 'verified']);
-Route::resource("projet",\App\Http\Controllers\ProjetController::class)->only("show");
+Route::resource("projet",\App\Http\Controllers\ProjetController::class)->only("show")->middleware(["projectIsValidated"]);
 Route::post("/projet/contribuer",[\App\Http\Controllers\ProjetController::class,"contribuer"])->middleware(['auth', 'verified']);
 
 //User route
 Route::resource("user.projet",\App\Http\Controllers\User\ProjetController::class)->middleware(['auth', 'verified']);
-Route::get("user/{user}/save",[\App\Http\Controllers\SaveController::class,"index"])->middleware(['auth', 'verified'])->name("user.projet.save");
+Route::get("user/{user}/save",[\App\Http\Controllers\SaveController::class,"index"])->name("user.projet.save")->middleware(['auth', 'verified']);
 
 
 Route::inertia("user/projet/attente","User/Projet/Attente",["success"=>"projet crée"])->name("attente")->middleware(['auth', 'verified']);
 Route::post("/uploadImage",[\App\Http\Controllers\User\ProjetController::class,"uploadImage"])->name("uploadImage")->middleware(['auth', 'verified']);;
 
 
-Route::resource("secteur",\App\Http\Controllers\SecteurController::class)->middleware(['auth', 'verified']);
+Route::resource("secteur",\App\Http\Controllers\SecteurController::class);
 Route::resource("user.contribution",\App\Http\Controllers\User\ContributionController::class)->middleware(['auth', 'verified']);
 
 
@@ -86,6 +91,17 @@ Route::get("/admin/{userId}/projet/validation/index",[\App\Http\Controllers\Admi
 Route::get("/admin/{userId}/projet/validation/{projetId}/show",[\App\Http\Controllers\Admin\ProjetController::class,"validationShow"])->name("admin.projet.validation.show")->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::post("/admin/{userId}/projet/{projetId}/validation",[\App\Http\Controllers\Admin\ProjetController::class,"valider"])->name("admin.projet.validation")->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::delete("/admin/{user}/projet/{projet}/validation",[\App\Http\Controllers\Admin\ProjetController::class,"validationDestroy"])->name("admin.projet.validation.destroy")->middleware(['auth', 'verified',"userIsAdmin"]);
+
+//Admin Programme Projet route
+Route::resource("admin.programme.projet",\App\Http\Controllers\Admin\Programme\ProjetController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
+
+
+
+
+////Programme route
+Route::resource("programme",ProgrammeController::class)->middleware(['auth', 'verified'])->except("index","show");
+Route::resource("programme",ProgrammeController::class)->only("index","show");
+Route::get("programme/{programme}/projet",[ProgrammeController::class,"createProject"])->middleware(['auth', 'verified'])->name("programme.projet");
 
 
 //Likes route

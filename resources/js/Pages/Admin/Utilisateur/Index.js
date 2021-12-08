@@ -58,7 +58,7 @@ function Index({success,utilisateurs,auth}) {
 
         >
 
-            <TableContainer  className={"flex justify-center w-full"}>
+            <TableContainer  className={"flex justify-center w-full p-5"}>
                 <Table sx={{ maxWidth: 650}} className={"border border-indigo-600 rounded"} aria-label="simple table">
                     <TableHead>
                         <TableRow>

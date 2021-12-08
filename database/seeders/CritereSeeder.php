@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Critere;
+use App\Models\GenreCritere;
 use App\Models\TypeCritere;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -18,21 +19,45 @@ class CritereSeeder extends Seeder
     {
         DB::table('criteres')->delete();
 
-        Critere::create([
+        $critere=Critere::create([
             "description"=>"Lisibilité du projet",
             "notemax"=>10
-        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
-        Critere::create([
-            "description"=>"Clarté du projet",
-            "notemax"=>10
-        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
-        Critere::create([
+        ])->typeCritere()->associate(TypeCritere::where("libelle","selection")->first());
+
+        $critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
+
+        $critere = Critere::create([
             "description"=>"Pertinence du projet",
             "notemax"=>10
-        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
-        Critere::create([
-            "description"=>"Realisation du projet",
+        ])->typeCritere()->associate(TypeCritere::where("libelle","preselection")->first());
+
+        $critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
+
+        $critere=Critere::create([
+            "description"=>"Impact du projet",
             "notemax"=>10
-        ])->typeCritere()->associate(TypeCritere::where("libelle","note")->first())->save();
+        ])->typeCritere()->associate(TypeCritere::where("libelle","selection")->first());
+
+        $critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
+
+        $critere = Critere::create([
+            "description"=>"Cout de la realisation du projet",
+            "notemax"=>10
+        ])->typeCritere()->associate(TypeCritere::where("libelle","preselection")->first());
+
+        $critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
+
+        $critere=Critere::create([
+            "description"=>"realisable",
+        ])->typeCritere()->associate(TypeCritere::where("libelle","selection")->first());
+
+        $critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save();
+
+        $critere = Critere::create([
+            "description"=>"Benefique",
+        ])->typeCritere()->associate(TypeCritere::where("libelle","preselection")->first());
+
+        $critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save();
+
     }
 }

@@ -13,7 +13,7 @@ class Secteur extends Model
 
     public function projets()
     {
-        return $this->hasMany(Projet::class);
+        return $this->hasMany(Projet::class)->where("etat","valide");
     }
 
     public function programmes()

@@ -19,11 +19,11 @@ export default function Index({auth,errors,projets,success}) {
         <Authenticated
             auth={auth}
             errors={errors}
-            active={"projets"}
+            active={"mesProjets"}
         >
 
            <div className={"mb-64"}>
-              <div className="md:ml-10 md:justify-start ml-0 flex justify-center">
+              <div className="ml-10 md:justify-start">
                   <div data-aos={"zoom-in"} className={"my-8 md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
                       <div className={"m-2 p-1 bg-indigo-600 text-white"}>
                           Mes projets
@@ -39,20 +39,20 @@ export default function Index({auth,errors,projets,success}) {
                                                p.etat==="valide"?"validé":"en attente"
                                            }
                                        </div>
-                                       <Link href={route("user.projet.show",[auth.user.id,p?.id])}>
+                                       <Link href={route("user.projet.show",[auth.user.id,p.id])}>
                                            <div className={"text-center relative h-full"}>
 
-                                               <img src={p?.image} alt="" style={{objectFit:"cover"}} className={"h-full w-full transform hover:scale-110 transition duration-300"}/>
+                                               <img src={p.image} alt="" style={{objectFit:"cover"}} className={"h-full w-full transform hover:scale-110 transition duration-300"}/>
                                                <div className={"absolute bottom-0 w-full bg-gradient-to-t from-black pb-5"}>
                                                    <div className={"bg-transparent"}>
-                                                       <p data-aos="fade-up" data-aos-duration="1000">
+                                                       <p data-aos-ounce={true} data-aos="fade-up" data-aos-duration="1000">
                                                          <span className={" text-lg sm:text-xl md:text-2xl text-white border-2 border-indigo-600 p-2 "} >
                                                              <span className={"p-1 bg-transparent bg-indigo-600"}>
-                                                                 {p?.titre}
+                                                                 {p.titre}
                                                              </span>
                                                          </span>
                                                        </p>
-                                                       <p className={"text-sm sm:text-sm md:text-lg text-white mt-5"} data-aos="flip-up" data-aos-delay="500" data-aos-duration="1000">{p?.description}</p>
+                                                       <p className={"text-sm sm:text-sm md:text-lg text-white mt-5"} data-aos="flip-up" data-aos-delay="500" data-aos-duration="1000">{p.description}</p>
                                                    </div>
                                                </div>
                                            </div>

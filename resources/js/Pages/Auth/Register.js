@@ -5,8 +5,9 @@ import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import Authenticated from "@/Layouts/Authenticated";
 
-export default function Register() {
+export default function Register({auth,AllProjets}) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -31,86 +32,91 @@ export default function Register() {
     };
 
     return (
-        <Guest>
-            <Head title="Register" />
+        <Authenticated
+            auth={auth}
+            AllProjets={AllProjets}
+        >
+            <Guest>
+                <Head title="Register" />
 
-            <ValidationErrors errors={errors} />
+                <ValidationErrors errors={errors} />
 
-            <form onSubmit={submit}>
-                <div>
-                    <Label forInput="name" value="Nom" />
+                <form onSubmit={submit}>
+                    <div>
+                        <Label forInput="name" value="Nom" />
 
-                    <Input
-                        type="text"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
+                        <Input
+                            type="text"
+                            name="name"
+                            value={data.name}
+                            className="mt-1 block w-full"
+                            autoComplete="name"
+                            isFocused={true}
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
 
-                <div className="mt-4">
-                    <Label forInput="email" value="Email" />
+                    <div className="mt-4">
+                        <Label forInput="email" value="Email" />
 
-                    <Input
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
+                        <Input
+                            type="email"
+                            name="email"
+                            value={data.email}
+                            className="mt-1 block w-full"
+                            autoComplete="username"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
 
-                <div className="mt-4">
-                    <Label forInput="password" value="Mot de passe" />
+                    <div className="mt-4">
+                        <Label forInput="password" value="Mot de passe" />
 
-                    <Input
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
+                        <Input
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            className="mt-1 block w-full"
+                            autoComplete="new-password"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
 
-                <div className="mt-4">
-                    <Label forInput="password_confirmation" value="Confirmer le mot de passe" />
+                    <div className="mt-4">
+                        <Label forInput="password_confirmation" value="Confirmer le mot de passe" />
 
-                    <Input
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
+                        <Input
+                            type="password"
+                            name="password_confirmation"
+                            value={data.password_confirmation}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
 
-                <div className="flex items-center justify-end mt-4">
-                    <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
-                       Déjà inscrit?
-                    </Link>
-
-                    <Button className="ml-4" processing={processing}>
-                        S'inscrire
-                    </Button>
-
-                    <Button className="ml-4" role="button">
-                        <Link
-                            href={route('login')}
-                            className="text-white hover:text-gray-20">
-                            SE CONNECTER
+                    <div className="flex items-center justify-end mt-4">
+                        <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
+                           Déjà inscrit?
                         </Link>
-                    </Button>
-                </div>
-            </form>
-        </Guest>
+
+                        <Button className="ml-4" processing={processing}>
+                            S'inscrire
+                        </Button>
+
+                        <Button className="ml-4" role="button">
+                            <Link
+                                href={route('login')}
+                                className="text-white hover:text-gray-20">
+                                SE CONNECTER
+                            </Link>
+                        </Button>
+                    </div>
+                </form>
+            </Guest>
+        </Authenticated>
     );
 }

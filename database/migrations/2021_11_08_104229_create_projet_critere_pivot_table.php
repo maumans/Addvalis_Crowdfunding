@@ -29,6 +29,6 @@ class CreateProjetCriterePivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projet_critere_pivot');
+        Schema::dropIfExists('projet_critere');
     }
 }

@@ -15,6 +15,7 @@ class Projet extends Model
     protected $enregistre;
     protected $pourcentage;
     protected $joursRestant;
+    protected $montantFinance;
 
 
     public function getLikeAttribute(){
@@ -45,7 +46,14 @@ class Projet extends Model
         $this->joursRestant = $joursRestant;
     }
 
-    protected $appends = ['like','enregistre','pourcentage',"joursRestant"];
+    public function getMontantFinanceAttribute(){
+        return $this->montantFinance;
+    }
+    public function setMontantFinanceAttribute($montantFinance){
+        $this->montantFinance = $montantFinance;
+    }
+
+    protected $appends = ['like','enregistre','pourcentage',"joursRestant","montantFinance"];
 
     public function user()
     {

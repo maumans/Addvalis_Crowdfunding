@@ -13,6 +13,6 @@ class TypeCritere extends Model
 
     public function criteres()
     {
-        return $this->hasMany(TypeCritere::class);
+        return $this->hasMany(Critere::class);
     }
 }

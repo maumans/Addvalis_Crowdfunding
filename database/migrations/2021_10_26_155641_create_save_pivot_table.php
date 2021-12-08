@@ -28,6 +28,6 @@ class CreateSavePivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('save_pivot');
+        Schema::dropIfExists('save');
     }
 }

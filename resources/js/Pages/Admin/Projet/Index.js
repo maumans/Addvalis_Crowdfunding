@@ -11,6 +11,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {Inertia} from "@inertiajs/inertia";
 import Swal from "sweetalert2";
+import ShowMoreText from "react-show-more-text";
+
 
 function Index(props) {
     useEffect(()=>{
@@ -41,27 +43,30 @@ function Index(props) {
 function Validation({projets,auth})
 {
 
-    return <div className={"flex xs:items-center justify-center w-full"}>
+    return <div className={"flex xs:items-center justify-center w-full p-5"}>
         <div className={"grid md:grid-cols-3 grid-cols-1 gap-4 mb-20"}>
             {
                 projets.map((p,i)=>(
-                    <div key={p.id} data-aos-once={true} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:400,minWidth:"auto",height:400,boxShadow:"2px 5px 5px gray"}}>
+                    <div key={p.id} data-aos-once={true} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col overflow-hidden"} style={{maxWidth:400,minWidth:"auto",height:500,boxShadow:"2px 5px 5px gray"}}>
                         <div className={"flex space-x-2 bg-black p-2"}>
-                            <Avatar sx={{ bgcolor: red[600] }} className={"border-2 bg-indigo-600"}>
-                                M
-                            </Avatar>
                             <div>
-                                <div className={"font text-white"}>{p.titre}</div>
+                                <div className={"font text-white font-bold"}>{p.titre}</div>
                                 <span className={"text-white"}>{p.created_at.split("T")[0]}</span>
                             </div>
                         </div>
                         <div className={"overflow-hidden"}>
                             <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:200,width:"100%",objectFit:"cover"}}/>
                         </div>
-                        <div className={"p-2"}>
-                            {capitalize(p.description.toLowerCase())}
+                        <div className={"p-2"} style={{height:55}}>
+                            <ShowMoreText
+                                more=""
+                                lines={3}
+                                className={"w-full"}
+                            >
+                                {capitalize(p.description.toLowerCase())}
+                            </ShowMoreText>
                         </div>
-                        <div className={"mt-auto w-11/12 border-b border-t mx-5 self-center"}>
+                        <div className={"mt-auto border-b border-t px-5"}>
                             <div className={"flex space-x-2 ml-5 py-2 "}>
                                 <FavoriteIcon/>
                                 <div>

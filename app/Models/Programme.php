@@ -21,8 +21,13 @@ class Programme extends Model
         return $this->belongsToMany(Secteur::class,"programme_secteur");
     }
 
+    public function regions()
+    {
+        return $this->belongsToMany(Region::class,"programme_region");
+    }
+
     public function criteres()
     {
-        return $this->belongsToMany(Critere::class,"programme_critere");
+        return $this->belongsToMany(Critere::class,"programme_critere")->with(["typeCritere","genreCritere"]);
     }
 }

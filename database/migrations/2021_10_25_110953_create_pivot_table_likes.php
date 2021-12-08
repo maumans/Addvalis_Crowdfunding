@@ -28,6 +28,6 @@ class CreatePivotTableLikes extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pivot_table_likes');
+        Schema::dropIfExists('likes');
     }
 }

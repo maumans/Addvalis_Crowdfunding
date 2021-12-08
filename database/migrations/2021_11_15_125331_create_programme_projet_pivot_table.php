@@ -15,8 +15,8 @@ class CreateProgrammeProjetPivotTable extends Migration
     {
         Schema::create('programme_projet', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("programme_id")->nullable()->constrained("programmes");
-            $table->foreignId("projet_id")->nullable()->constrained("projets");
+            $table->foreignId("programme_id")->nullable()->constrained("programmes")->cascadeOnDelete();
+            $table->foreignId("projet_id")->nullable()->constrained("projets")->cascadeOnDelete();
             $table->timestamps();
         });
     }

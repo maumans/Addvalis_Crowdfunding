@@ -18,6 +18,6 @@ class Adresse extends Model
 
     public function projets()
     {
-        return $this->hasMany(Projets::class);
+        return $this->hasMany(Projet::class);
     }
 }

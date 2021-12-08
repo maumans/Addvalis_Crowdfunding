@@ -21,8 +21,13 @@ class Critere extends Model
         return $this->belongsTo(TypeCritere::class);
     }
 
+    public function genreCritere()
+    {
+        return $this->belongsTo(GenreCritere::class);
+    }
+
     public function programmes()
     {
-        return $this->belongsToMany(programmes::class);
+        return $this->belongsToMany(Programme::class);
     }
 }

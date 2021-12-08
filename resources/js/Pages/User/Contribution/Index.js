@@ -10,6 +10,8 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import {Inertia} from "@inertiajs/inertia";
 import Swal from "sweetalert2";
 
+import ShowMoreText from "react-show-more-text";
+
 function Index(props) {
     const [projets,setProjets]=useState([]);
 
@@ -27,54 +29,77 @@ function Index(props) {
         })
     },[props.success])
 
+    function onLike(p) {
+        props.auth.user?Inertia.visit(route('likes.liker',[props.auth.user?.id,p?.id]),{preserveScroll:true,preserveState:true}):confirm("connectez-vous avant de liker")&& Inertia.visit(route('login'))
+    }
+
+    function onEnregistre(p) {
+        props.auth.user?Inertia.visit(route('save.enregistrer',[props.auth.user?.id,p?.id]),{preserveScroll:true,preserveState:true}):confirm("connectez-vous avant d'enregister")&& Inertia.visit(route('login'))
+    }
+
+    function soutenir(e, p) {
+        e.preventDefault()
+        Inertia.get(route("projet.show", p.id))
+    }
+
     return (
         <Authenticated
             auth={props.auth}
             active={"contributions"}
         >
-            <div className={"flex justify-center mt-20"}>
-
-                <div className={"projetfont grid grid md:grid-cols-3 grid-cols-1 gap-4 mx-10 mb-20 w-auto"}>
-
-                    <div data-aos={"zoom-in"} className={"my-8 md:col-span-3 font md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
+            <div className={"flex justify-center"}>
+                <div className={"grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12 font"}>
+                    <div data-aos={"zoom-in"} className={"my-8 md:col-span-3 sm:col-span-2 xs:col-span-1 font md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
                         <div className={"m-2 p-1 bg-indigo-600 text-white"}>
                             Mes contributions
                         </div>
                     </div>
                     {
                         projets.map((p,i)=>(
-                                <div key={p.id} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:400,height:500,boxShadow:"2px 5px 5px gray"}}>
-                                    <div className={"flex space-x-2 bg-black p-2"}>
-                                        <div>
-                                            <div className={"font text-white text-xl"}>{p.titre}</div>
-                                            <span className={"text-white"}>{p.created_at.split("T")[0]}</span>
-                                        </div>
-                                    </div>
-                                    <div className={"overflow-hidden"}>
-                                        <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:200,width:"100%",objectFit:"cover"}}/>
-                                    </div>
-                                    <div className={"p-2"}>
-                                        {capitalize(p.description.toLowerCase())}
-                                    </div>
-                                    <div className={"flex space-x-2 ml-5 py-2 mt-auto border-b border-t"}>
-                                        <FavoriteIcon/>
-                                        <div>
-                                            {p.likeurs.length}
-                                        </div>
-                                    </div>
-                                    <div className={"mt-auto ml-2 mb-2"}>
-                                        <button onClick={()=>Inertia.delete(route("user.contribution.destroy",[props.auth.user.id,p?.id]))} className={"mr-5 text-white bg-indigo-600 hover:bg-indigo-800 transition duration-500 rounded p-2"} href={route("projet.show",p.id)}>
-                                           Annuler
-                                        </button>
-                                        <button className={"text-white bg-blue-600 hover:bg-blue-800 transition duration-500 rounded p-2"} onClick={()=>Inertia.get(route("projet.show",p.id))}>
-                                            voir plus
-                                        </button>
-                                    </div>
+                            <div key={p.id} data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} className={"flex flex-col overflow-hidden"} style={{height:500,boxShadow:"2px 5px 5px gray"}}>
+                                <div className={"overflow-hidden"}>
+                                    <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:250,width:"100%",objectFit:"cover"}}/>
                                 </div>
+                                <div className={"text-xl p-2"}>
+                                    {p.titre}
+                                </div>
+                                <div className={"p-2"} style={{height:55}}>
+                                    <ShowMoreText
+                                        more=""
+                                        lines={3}
+                                        className={"w-full"}
+                                    >
 
+                                        {capitalize(p.description.toLowerCase())}
+                                    </ShowMoreText>
+                                </div>
+                                <div className={"mt-auto flex justify-between border-b border-t p-2"}>
+                                    <div>
+                                        <IconButton onClick={()=> onLike(p)}>
+                                            <FavoriteIcon className={p.like?"text-indigo-600":""}/>
+                                        </IconButton>
+                                        {p.likeurs.length}
+                                    </div>
+                                    <button onClick={()=> onEnregistre(p)} className={p.enregistre?"text-indigo-600 border border-indigo-600 rounded px-2 flex items-center":"border px-2 flex items-center"}>
+                                        <BookmarkBorderIcon className={p.enregistre?"text-indigo-600":""}/>
+                                        {
+                                            p.enregistre?"Enregistré":"Rappel"
+                                        }
+                                    </button>
+                                </div>
+                                <div className={"mt-auto ml-2 mb-2 space-y-2"}>
+                                    <button onClick={()=>Inertia.delete(route("user.contribution.destroy",[props.auth.user.id,p?.id]))} className={"mr-5 text-white bg-red-600 hover:bg-red-800 transition duration-500 rounded p-2"} href={route("projet.show",p.id)}>
+                                        Annuler
+                                    </button>
+                                    <button onClick={(e)=>soutenir(e,p)} className={"text-white bg-indigo-600 hover:bg-indigo-800 transition duration-500 rounded p-2"}>
+                                        Voir plus
+                                    </button>
+                                </div>
+                            </div>
                         ))
                     }
                 </div>
+
             </div>
 
         </Authenticated>

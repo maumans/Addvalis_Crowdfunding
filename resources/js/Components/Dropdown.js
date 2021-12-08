@@ -73,13 +73,13 @@ const Content = ({ align = 'right', width = '48', contentClasses = 'py-1 bg-blac
     );
 };
 
-const DropdownLink = ({ href, method = 'post', as = 'a', children }) => {
+const DropdownLink = ({ href, method = 'post', as = 'a', children,active,className }) => {
     return (
         <Link
             href={href}
             method={method}
             as={as}
-            className="block w-full px-4 py-2 text-left text-sm leading-5 text-white hover:text-indigo-600 focus:outline-none transition duration-150 ease-in-out"
+            className={`block w-full px-4 py-2 text-left text-sm leading-5 text-white hover:text-indigo-600 focus:outline-none transition duration-150 ease-in-out ${active?"bg-white text-indigo-600":""} ${className}`}
         >
             {children}
         </Link>

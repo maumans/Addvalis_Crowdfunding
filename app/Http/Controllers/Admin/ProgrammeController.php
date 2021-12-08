@@ -3,8 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Critere;
+use App\Models\Programme;
+use App\Models\Region;
+use App\Models\Secteur;
 use App\Models\User;
+use App\Models\Ville;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProgrammeController extends Controller
@@ -16,7 +24,8 @@ class ProgrammeController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Admin/Programme/Index");
+        $programmes=Programme::orderBy("created_at","desc")->get();
+        return Inertia::render("Admin/Programme/Index",["programmes"=>$programmes]);
     }
 
     /**
@@ -26,7 +35,12 @@ class ProgrammeController extends Controller
      */
     public function create()
     {
-        return Inertia::render("Admin/Programme/Create");
+        $criteresPreselections=Critere::whereRelation("typeCritere","libelle","preselection")->get();
+        $criteresSelections=Critere::whereRelation("typeCritere","libelle","selection")->get();
+        $secteurs=Secteur::all();
+        $regions=Region::all();
+
+        return Inertia::render("Admin/Programme/Create",["criteresPreselections"=>$criteresPreselections,"criteresSelections"=>$criteresSelections,"secteurs"=>$secteurs,"regions"=>$regions]);
     }
 
     /**
@@ -34,22 +48,73 @@ class ProgrammeController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param User $user
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request,User $user)
     {
-        dd(1);
+        $request->validate([
+            "titre" =>"required",
+            "description" =>"required",
+            "dateDebut" =>"required|date",
+            "dateFin" =>"required|date",
+            "details" =>"required",
+            "image" =>"required"
+        ]);
+
+        $nom=$request->file("image")->store("ProgrammeImage","public");
+        $image=Storage::url($nom);
+
+
+        $programme=Programme::create([
+            "titre" =>$request->titre,
+            "description" =>$request->description,
+            "dateDebut" =>$request->dateDebut,
+            "dateFin" =>$request->dateFin,
+            "details" =>$request->details,
+            "image" =>$image
+        ]);
+
+        foreach($request->criteresPreselections as $key => $value)
+        {
+            $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
+
+        }
+
+        foreach($request->criteresSelections as $key => $value)
+        {
+            $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
+
+        }
+
+        foreach($request->regions as $key => $value)
+        {
+            $programme->regions()->syncWithoutDetaching(Region::find($value["id"]));
+        }
+
+        foreach($request->secteurs as $key => $value)
+        {
+            $programme->secteurs()->syncWithoutDetaching(Secteur::find($value["id"]));
+
+        }
+
+        return redirect()->route('admin.programme.index',Auth::id())->with("success","Programme ajouté avec succès");
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $userId
+     * @param $programmeId
+     * @return \Inertia\Response
      */
-    public function show($id)
+    public function show($userId, $programmeId)
     {
-        //
+        $programme = Programme::where("id",$programmeId)->with(["criteres","regions","secteurs"])->first();
+        $criteres = $programme->criteres()->with("typeCritere")->get();
+
+        return Inertia::render("Admin/Programme/Show",["programme"=>$programme,"criteres"=>$criteres]);
+
     }
 
     /**

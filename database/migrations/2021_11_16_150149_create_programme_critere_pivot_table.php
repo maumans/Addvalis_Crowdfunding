@@ -15,8 +15,8 @@ class CreateProgrammeCriterePivotTable extends Migration
     {
         Schema::create('programme_critere', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("programme_id")->nullable()->constrained("programmes");
-            $table->foreignId("critere_id")->nullable()->constrained("criteres");
+            $table->foreignId("programme_id")->nullable()->constrained("programmes")->cascadeOnDelete();
+            $table->foreignId("critere_id")->nullable()->constrained("criteres")->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateProgrammeCriterePivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('programme_critere_pivot');
+        Schema::dropIfExists('programme_critere');
     }
 }

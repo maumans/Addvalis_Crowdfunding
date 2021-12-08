@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head } from '@inertiajs/inertia-react';
 import {AccessAlarm,Settings,NavigateNext,NavigateBefore,Check} from "@mui/icons-material"
@@ -82,7 +82,13 @@ export default function Create(props) {
         dateDebut: today(),
         dateFin: today(),
         details:"",
-        image:""
+        image:"",
+        region:0,
+        ville:0,
+        villes:[],
+        telephone:"",
+        statusJuridique:"",
+        programmeId:props.programmeId,
     })
 
     function example_image_upload_handler (blobInfo, success, failure, progress) {
@@ -134,16 +140,28 @@ export default function Create(props) {
 
     const [secteurs,setSecteurs]=useState([]);
 
-    useEffect(()=>{
+    useEffect(() =>{
         setSecteurs(props.secteurs);
     },[])
+
+    useEffect(()=>{
+        if(data.region)
+        {
+            setData("villes",data.region.villes)
+        }
+        else
+        {
+            setData("villes",props.villes)
+        }
+
+
+    },[data.region])
+
 
     function handleEditorChange(content)
     {
         setData("details",content)
     }
-
-
 
     function switchActiveStep()
     {
@@ -302,111 +320,82 @@ export default function Create(props) {
                     </div>
                 </div>
 
+                <div className={"grid md:grid-cols-2 grid-cols-1 gap-5 border-t py-2 w-full"} style={{maxWidth:1000}}>
+                    <div className={"flex flex-col space-y-3"}>
+                        <span className={"text-xl font-bold"}>Adresse du projet</span>
+                        <span>
+                            Choisissez l'adresse du projet
+                        </span>
+                    </div>
+
+                    <div className={"grid grid-cols-2 gap-2"}>
+                        <div>
+                            <Autocomplete
+                                onChange={(e,val)=>{
+                                    setData("region",val)
+                                }}
+                                disablePortal={true}
+                                options={props.regions}
+                                getOptionLabel={option=>option.libelle}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"region"} label={params?.libelle} />}
+                            />
+                            <div className={"text-red-600"}>{props.errors?.region}</div>
+                        </div>
+                        <div>
+                            <Autocomplete
+                                onChange={(e,val)=>setData("ville",val)}
+                                disablePortal={true}
+                                options={data.villes}
+                                getOptionLabel={option=>option.libelle}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"ville"} label={params?.libelle}/>}
+                            />
+                            <div className={"text-red-600"}>{props.errors?.ville}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={"grid md:grid-cols-2 grid-cols-1 gap-5 border-t py-2 w-full"} style={{maxWidth:1000}}>
+                    <div className={"flex flex-col space-y-3"}>
+                        <span className={"text-xl font-bold"}>Numéro de téléphone</span>
+                        <span>Saisissez le numero de téléphone sur lequel vous joindre</span>
+                    </div>
+                    <div>
+                        <TextField variant={"standard"} className={"w-full"} value={data.telephone} onChange={e=>setData("telephone",e.target.value)} label="Numero de telephone" />
+
+                        <div className={"text-red-600"}>{props.errors?.telephone}</div>
+                    </div>
+                </div>
+
+                <div className={"grid md:grid-cols-2 grid-cols-1 gap-5 border-t py-2 w-full"} style={{maxWidth:1000}}>
+                    <div className={"flex flex-col space-y-3"}>
+                        <span className={"text-xl font-bold"}>Status juridique</span>
+                        <span>Saisissez votre status juridique</span>
+                    </div>
+                    <div>
+                        <Autocomplete
+                            onChange={(e,val)=>{
+                                setData("statusJuridique",val)
+                            }}
+                            disablePortal={true}
+                            id={"combo-box-demo"}
+                            options={[{"libelle":"personne"},{"libelle":"groupe"}]}
+                            getOptionLabel={option=>option.libelle}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"Status juridique"} label={params.libelle}/>}
+                        />
+                        <div className={"text-red-600"}>{props.errors?.statusJuridique}</div>
+                    </div>
+                </div>
+
+
                 <div className="self-end mt-5">
                     <button onClick={()=>setActiveStep(1)} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-blue-600 hover:text-white transition duration-500 rounded p-2"}>
                         Details du projets <NavigateNext/>
                     </button>
                 </div>
             </div>
-
-
-            <div className={"flex justify-center"}>
-                <div className={"grid md:grid-cols-2 gap-3 my-4 md:mx-10 mx-10"}>
-                    <div hidden={true} style={{maxWidth:400}}>
-                        <TextField className={"w-full"}  value={data.titre}  onChange={e=>setData("titre",e.target.value)} label="titre du projet"/>
-                        <div className={"text-red-600"}>{props.errors?.titre}</div>
-                    </div>
-                    <div hidden={true} style={{maxWidth:400}}>
-                        <Autocomplete
-                            onChange={(e,val)=>setData("secteur",val?.id)}
-                            disablePortal={true}
-                            id={"combo-box-demo"}
-                            options={secteurs}
-                            getOptionLabel={option=>option.libelle}
-
-                            renderInput={(params)=><TextField fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}></TextField>}
-                        />
-                        <div className={"text-red-600"}>{props.errors?.secteur}</div>
-
-                    </div>
-
-                    <div hidden={true} style={{maxWidth:400}}>
-                        <TextField className={"w-full"} value={data.montantInitial} onChange={e=>setData("montantInitial",e.target.value)} label="Montant initial" />
-
-                        <div className={"text-red-600"}>{props.errors?.montantInitial}</div>
-                    </div>
-
-                    <div hidden={true} style={{maxWidth:400}}>
-                        <TextField className={"w-full"} value={data.montantRechercher} onChange={e=>setData("montantRechercher",e.target.value)} label="Montant à financer" />
-
-                        <div className={"text-red-600"}>{props.errors?.montantRechercher}</div>
-                    </div>
-
-                    <div hidden={true} style={{maxWidth:400}}>
-                        <div className={"flex flex-col mt-3"}>
-                            <label className={"text-gray-500 font-bold"} htmlFor="">
-                                Date de debut
-                            </label>
-                            <TextField
-                                value={data.dateDebut} onChange={e=>setData("dateDebut",e.target.value)}
-                                id="standard-search"
-                                type="date"
-                            />
-                        </div>
-
-                        <div className={"text-red-600"}>{props.errors?.dateDebut}</div>
-                    </div>
-
-                    <div hidden={true} style={{maxWidth:400}}>
-                        <div className={"flex flex-col mt-3"}>
-                            <label className={"text-gray-500 font-bold"} htmlFor="">
-                                Date de fin
-                            </label>
-                            <TextField
-                                value={data.dateFin} onChange={e=>setData("dateFin",e.target.value)}
-                                id="standard-search"
-                                type="date"
-                            />
-                        </div>
-                        <div className={"text-red-600"}>{props.errors?.dateFin}</div>
-                    </div>
-
-
-                    <div hidden={true} style={{maxWidth:400}}>
-                        <div className={"flex flex-col mt-3"}>
-                            <label className={"text-gray-500 font-bold"} htmlFor="">
-                                Choisissez une image pour le projet
-                            </label>
-
-                            <TextField type={"file"} onChange={e=>setData("image",e.target.files[0])} />
-                        </div>
-
-                        <div className={"text-red-600"}>{props.errors?.image}</div>
-                    </div>
-
-
-                    <div hidden={true} style={{maxWidth:800}}>
-                        <div className={"flex flex-col mt-3"}>
-                            <label className={"text-gray-500 font-bold"} htmlFor="">
-                                Description du projet
-                            </label>
-                            <TextareaAutosize
-                                value={data.description} onChange={e=>setData("description",e.target.value)}
-                                aria-label="minimum height"
-                                maxRows={4}
-                                placeholder="Decrivez brièvement votre projet"
-                                style={{height:80}}
-                            />
-                        </div>
-
-                        <div hidden={data.description.length <=100} className={"text-red-600"}>caractères max 100</div>
-                    </div>
-
-
-
-                </div>
-            </div>
-
         </div>
     }
     function detailsProjet()
@@ -443,6 +432,12 @@ export default function Create(props) {
                                             'insertdatetime media nonbreaking save table directionality',
                                             'template paste textpattern imagetools codesample toc help image code'
                                         ],
+                                        mobile: {
+                                            menubar: true
+                                        },
+                                        skin: false,
+                                        content_css: false,
+
                                         language:'fr_FR',
                                         min_height:700,
                                         toolbar: 'undo redo | formatselect | link image media | code ' +
@@ -523,7 +518,7 @@ export default function Create(props) {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
-            active={"projets"}
+            active={"creerProjet"}
         >
 
             <div className="py-12 flex justify-center font">

@@ -15,8 +15,8 @@ class CreateProgrammeSecteurPivotTable extends Migration
     {
         Schema::create('programme_secteur', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("programme_id")->nullable()->constrained("programmes");
-            $table->foreignId("secteur_id")->nullable()->constrained("secteurs");
+            $table->foreignId("programme_id")->nullable()->constrained("programmes")->cascadeOnDelete();
+            $table->foreignId("secteur_id")->nullable()->constrained("secteurs")->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateProgrammeSecteurPivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('programme_secteur_pivot');
+        Schema::dropIfExists('programme_secteur');
     }
 }

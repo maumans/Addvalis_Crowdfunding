@@ -17,9 +17,10 @@ class CreateProgrammesTable extends Migration
             $table->id();
             $table->string("titre")->nullable();
             $table->string("description")->nullable();
+            $table->string("image")->nullable();
             $table->string("dateDebut")->nullable();
             $table->string("dateFin")->nullable();
-            $table->string("details")->nullable();
+            $table->longText("details")->nullable();
             $table->string("organisation")->nullable();
             $table->timestamps();
         });

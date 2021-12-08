@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import {Inertia} from "@inertiajs/inertia";
+import ShowMoreText from "react-show-more-text";
 
 function Index(props) {
 
@@ -30,11 +31,11 @@ function Index(props) {
             auth={props.auth}
             active={"projets"}
         >
-            <div className={"flex ml-10 xs:justify-center sm:justify-center"}>
+            <div className={"flex justify-center"}>
 
-                <div className={"grid md:grid-cols-4 sm:grid-cols-3 grid-cols-1 gap-4 mb-20 w-auto"}>
+                <div className={"grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12 font"}>
 
-                    <div data-aos={"zoom-in"} className={"my-8 md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2 md:col-span-4 sm:col-span-3 font"} style={{width:"fit-content"}}>
+                    <div data-aos={"zoom-in"} className={"my-8 md:col-span-3 sm:col-span-2 xs:col-span-1 font md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
                         <div className={"m-2 p-1 bg-indigo-600 text-white"}>
                             Projets enregistrés
                         </div>
@@ -42,7 +43,7 @@ function Index(props) {
 
                     {
                         props?.projets.map((p,i)=>(
-                            <div key={p.id} data-aos={"zoom-in"} data-aos-once={true} data-aos-duration={500} className={"flex flex-col"} style={{maxWidth:400,minWidth:"auto",height:600,boxShadow:"2px 5px 5px gray"}}>
+                            <div key={p.id} data-aos={"zoom-in"} data-aos-once={true} data-aos-duration={500} className={"flex flex-col"} style={{height:600,boxShadow:"2px 5px 5px gray"}}>
                                 <div className={"flex space-x-2 bg-black p-2"}>
                                     <div>
                                         <div className={"font text-white text-xl"}>{p.titre}</div>
@@ -52,8 +53,14 @@ function Index(props) {
                                 <div className={"overflow-hidden"}>
                                     <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:200,width:"100%",objectFit:"cover"}}/>
                                 </div>
-                                <div className={"p-2"}>
-                                    {capitalize(p.description.toLowerCase())}
+                                <div className={"p-2"} style={{height:55}}>
+                                    <ShowMoreText
+                                        more=""
+                                        lines={3}
+                                        className={"w-full"}
+                                    >
+                                        {capitalize(p.description.toLowerCase())}
+                                    </ShowMoreText>
                                 </div>
                                 <div className={"mt-auto flex justify-between mx-2"}>
                                     <div className={"flex items-center space-x mr-4"}>

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Adresse;
 use App\Models\Contribution;
 use App\Models\Projet;
+use App\Models\Region;
+use App\Models\Ville;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -13,11 +17,27 @@ class ProjetController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        //
+        $projets=Projet::where("etat","valide")->orderBy('created_at',"desc")->with(["user","secteur","adresse"])->get();
+        foreach($projets as $projet)
+        {
+            $projet->adresse->ville->region;
+            $montantFinance=$projet->contributeurs()->sum("montant");
+            $pourcentage=$montantFinance*100/$projet->montantRechercher;
+            $projet->pourcentage=$pourcentage;
+
+            $projet->joursRestant=Carbon::parse($projet->dateFin)->diffInDays(Carbon::parse($projet->dateDebut));
+            $projet->montantFinance=$montantFinance;
+
+            $projet->like=$projet->likeurs->contains(Auth::user());
+            $projet->enregistre=$projet->enregistreurs->contains(Auth::user());
+        }
+        $regions=Region::all();
+
+        return Inertia::render("Projet/Index",["projets"=>$projets,"regions"=>$regions]);
     }
 
     /**
@@ -116,7 +136,7 @@ class ProjetController extends Controller
 
         $projet=Projet::find($request->projetId);
         $projet->contributeurs()->syncWithoutDetaching([auth()->user()->id=>["montant"=>$request->montant]]);
-        return redirect()->back()->with('success', 'Contribution effectuée');
+        return redirect()->back()->with('success', 'Vous avez contribué à ce projet avec succès');
 
     }
 }

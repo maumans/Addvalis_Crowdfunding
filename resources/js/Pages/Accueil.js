@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {Head, Link} from "@inertiajs/inertia-react";
 import Authenticated from "@/Layouts/Authenticated";
 import img1 from "../img/4.jpg"
@@ -20,6 +20,8 @@ import IconButton from '@mui/material/IconButton';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import CloudOffIcon from '@mui/icons-material/CloudOff';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 /////////
 
@@ -34,23 +36,28 @@ SwiperCore.use([Pagination,Navigation,Autoplay]);
 //SWIPER
 
 import AOS from "aos"
+import ShowMoreText from "react-show-more-text";
 
 
 function Accueil(props) {
 
     const [secteurs,setSecteurs]=useState([]);
     const [projets,setProjets]=useState([]);
+    const [programmes,setProgrammes]=useState([]);
     const [voirPlus,setVoirPlus]=useState(3)
+    const [voirPlusProgramme,setVoirPlusProgramme]=useState(2)
 
     useEffect(()=>{
         setSecteurs(props.secteurs);
         setProjets(props.projets);
-        console.log(props.projets);
+        setProgrammes(props.programmes)
 
-    },[])
+    },[props])
+
+
     useEffect(()=>{
         AOS.refresh()
-    },[voirPlus])
+    },[voirPlus,voirPlusProgramme])
 
     function onLike(p) {
         props.auth.user?Inertia.visit(route('likes.liker',[props.auth.user?.id,p?.id]),{preserveScroll:true,preserveState:true}):confirm("connectez-vous avant de liker")&& Inertia.visit(route('login'))
@@ -67,6 +74,9 @@ function Accueil(props) {
     }
 
 
+    function handleProgramme(e, p) {
+        Inertia.get(route("programme.show",p.id))
+    }
 
     return (
         <Authenticated
@@ -75,26 +85,19 @@ function Accueil(props) {
             AllProjets={props.AllProjets}
         >
             <Head title="Accueil" />
-            <Swiper hidden={true} className={"my-3 w-full"} slidesPerView={5} autoplay={{delay:5000}} navigation={true}>
-                {secteurs.map((s)=>(
-                    <SwiperSlide key={s.id}>
-                        <div style={{width:'fit-content'}}><Link className={"font-bold"} href={route("secteur.show",s.id)} ><p style={{width:'fit-content'}} className={"transform hover:scale-125  transition duration-10 hover:text-indigo-600"}>{s.libelle}</p></Link></div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
 
             <div className={"relative w-full font flex justify-center"}>
                 <img src="/images/5.jpg" alt="" className={"w-full"} style={{maxHeight:500,objectFit:"cover"}}  />
                <div className={"absolute z-10 h-full flex items-center text-center"}>
                    <div className={"space-y-5"}>
-                       <p className={"text-white md:text-4xl text-2xl"}>
+                       <p className={"text-white md:text-4xl sm:text-3xl text-2xl"}>
                            Les travaux créatifs révèlent un monde de possibilités.
                        </p>
                        <div className={"text-white md:text-xl"}>
                            Financez-les ici
                        </div>
 
-                       <button onClick={()=>props.auth.user?Inertia.get(route('user.projet.create',props.auth.user.id)):Inertia.get(route('login'))} className={"md:p-4 p-2 md:text-xl text-sm rounded border border-white font-bold text-white hover:border-0 hover:bg-black hover:text-white transition duration-500"}>
+                       <button onClick={()=>props.auth.user?Inertia.get(route('user.projet.create',props.auth.user.id)):Inertia.get(route('login'))} className={"md:p-4 p-2 md:text-xl sm:text-lg text-sm rounded border border-white font-bold text-white hover:border-0 hover:bg-black hover:text-white transition duration-500"}>
                            demarrer un projet
                        </button>
                    </div>
@@ -105,7 +108,7 @@ function Accueil(props) {
                 </div>
             </div>
 
-           <div className={"flex w-full justify-center text-justify"}>
+           <div className={"flex w-full justify-center"}>
                <div className={"md:w-8/12 w-10/12 md:flex md:space-x-10 my-32 md:space-y-0 space-y-5 font"}>
                    <img hidden={true} src="/images/1.jpg" className={"flex-1"} alt="" style={{objectFit:"contain",minWidth:300}} />
                    <div data-aos={"fade-up"} data-aos-duration={1000} className={"flex-1 md:text-xl text-lg font"}>
@@ -128,25 +131,31 @@ function Accueil(props) {
 
             </div>
 
-            <div>
+            <div className={"font mb-10"}>
 
-                <div className={"flex justify-center"}>
+                <div className={"flex justify-center border-t"}>
 
-                    <div className={"grid md:grid-cols-3 grid-cols-1 gap-4 mx-10 mb-20 w-auto"}>
-                        <div className={"md:col-span-3 md:text-xl underline sm:text-xl text-lg font-bold my-10 font"}>
-                            PROJETS EN COURS
+                    <div className={projets.length>0?"grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12":"flex flex-col mb-20"}>
+                        <div className={"md:col-span-3 sm:col-span-2 xs:col-span-1 md:text-xl sm:text-xl text-lg my-10 font flex"}>
+                            <span className={"underline"}>Projets en cours</span> <Link className={"ml-10 text-xs text-indigo-600 flex items-center hover:underline"} href={route("projet.index")}>Plus de projets <NavigateNextIcon className={"text-xs"}/></Link>
                         </div>
                         {
-                            props?.projets.map((p,i)=>(
-                                    <div key={p.id} data-aos={"zoom-in"} data-aos-once={true} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col"} style={{maxWidth:400,minWidth:"auto",height:450,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
+                            props.projets.length>0 ? projets.map((p,i)=>(
+                                    <div key={p.id} data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col overflow-hidden"} style={{height:500,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
                                         <div className={"overflow-hidden"}>
-                                            <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:200,width:"100%",objectFit:"cover"}}/>
+                                            <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:250,width:"100%",objectFit:"cover"}}/>
                                         </div>
                                         <div className={"text-xl p-2"}>
                                             {p.titre}
                                         </div>
-                                        <div className={"p-2"} style={{height:50}}>
-                                            {capitalize(p.description.toLowerCase())}
+                                        <div className={"p-2"} style={{height:55}}>
+                                            <ShowMoreText
+                                                more=""
+                                                lines={3}
+                                                className={"w-full"}
+                                            >
+                                                {capitalize(p.description.toLowerCase())}
+                                            </ShowMoreText>
                                         </div>
                                         <div className={"mt-auto flex justify-between border-b border-t p-2"}>
                                             <div>
@@ -168,7 +177,19 @@ function Accueil(props) {
                                             </button>
                                         </div>
                                     </div>
-                            ))
+                            )):
+                                <div className="flex flex-col items-center space-y-4">
+                                    <div className={" p-2 bg-gray-300 rounded-full"} style={{width:'fit-content'}}>
+                                        <CloudOffIcon fontSize={"large"}/>
+                                    </div>
+                                    <div>
+                                        Aucun projet encours
+                                    </div>
+                                    <button onClick={()=>props.auth.user?Inertia.get(route('user.projet.create',props.auth.user.id)):Inertia.get(route('login'))} className={"p-2 border border-indigo-600 text-indigo-600 hover:border-0 hover:bg-indigo-600 hover:text-white transition duration-500"}>
+                                        demarrer un projet
+                                    </button>
+
+                                </div>
                         }
                     </div>
                 </div>
@@ -177,6 +198,58 @@ function Accueil(props) {
                         Voir plus
                     </button>
                 </div>
+
+
+                <div className={"flex justify-center mt-48 border-t"}>
+
+                    <div className={"grid md:grid-cols-2 grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12"}>
+                        <div className={"md:col-span-2 md:text-xl underline sm:text-xl text-lg my-10 font flex"}>
+                            <span className={"underline"}>Programmes en cours</span> <Link className={"ml-10 text-xs text-indigo-600 flex items-center hover:underline"} href={route("programme.index")}>Plus de programmes <NavigateNextIcon className={"text-xs"}/></Link>
+                        </div>
+                        {
+
+                            programmes.map((p,i)=>(
+
+                                <div key={p.id} data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} className={i>=voirPlusProgramme?"":"flex h-80 space-x-5"} hidden={i>=voirPlusProgramme}>
+                                    <div className={"w-6/12"}>
+                                        <img className={"w-full h-full"} style={{objectFit:"cover",minHeight:"100%"}} src={p.image}/>
+                                    </div>
+                                    <div className={"flex w-6/12 flex-col"}>
+                                        <div className={"font-bold uppercase"}>
+                                            {p.titre}
+                                        </div>
+                                        <div>
+                                            <ShowMoreText
+                                                more=""
+                                                lines={7}
+                                                className={"w-full"}
+                                            >
+                                                {p.description}
+                                            </ShowMoreText>
+                                        </div>
+                                        <div className={"p-2 text-xs font-bold rounded bg-indigo-600 text-white"} style={{width:"fit-content"}}>
+                                            Du {p.dateDebut} au {p.dateFin}
+                                        </div>
+                                        <div className={"mt-auto md:w-6/12 w-full"}>
+                                            <button onClick={(e)=>handleProgramme(e,p)} className={"text-indigo-600 hover:text-indigo-800 underline w-full transition duration-500"}>
+                                                Voir les details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                ))
+                        }
+                    </div>
+                </div>
+                <div className={voirPlusProgramme<programmes.length? "flex justify-center my-10":""} hidden={voirPlusProgramme>=programmes.length}>
+                    <button onClick={()=>setVoirPlusProgramme(voirPlusProgramme+2)} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded py-2 px-10 mb-10"} >
+                        Voir plus
+                    </button>
+                </div>
+
+
+
 
             </div>
 

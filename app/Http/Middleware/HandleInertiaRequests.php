@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'success' => session('success'),
             'secteurs' => Secteur::all(),
-            'AllProjets'=>Projet::get(['id',"titre","image","description"])
+            'AllProjets'=>Projet::where("etat","valide")->get(['id',"titre","image","description"])
         ]);
     }
 }

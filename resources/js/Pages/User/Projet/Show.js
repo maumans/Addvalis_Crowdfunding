@@ -78,14 +78,6 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
         return new Intl.NumberFormat('de-DE').format(number)
     }
 
-
-    function handleSubmit(e)
-    {
-        e.preventDefault()
-
-        post("/projet/contribuer")
-    }
-
     return (
         <Authenticated
             auth={auth}
@@ -103,7 +95,8 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                     </div>
                 </div>
             </div>
-            <div className={"flex xs:flex-col justify-center space-x-10 xs:space-x-0 xs:space-y-5 mt-20 text-center projetfont"}>
+
+            <div className={"flex flex-row xs:flex-col justify-center space-x-10 xs:space-x-0 xs:space-y-5 mt-20 text-center font"}>
                 <div data-aos={"fade-up"} data-aos-duration={1000} className={"space-y-5"}>
                     <div >
                         <div className={"text-2xl text-indigo-600 font"}>{numberFormat(projet.montantRechercher)} FG</div>
@@ -190,7 +183,7 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                 </div>
             </div>
             <div className={"w-full mt-32 flex justify-center"}>
-                <div style={{width:"90%"}}>
+                <div className={"md:w-7/12 w-11/12"}>
                     {ReactHtmlParser(projet.details)}
                 </div>
             </div>

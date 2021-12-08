@@ -170,7 +170,7 @@ export default function Authenticated({ auth, header, children,active, }) {
             <nav className="bg-black fixed w-full z-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
-                        <div className="flex">
+                        <div className="flex w-full">
                             <div className="flex-shrink-0 flex items-center">
                                 <Link href="/" className={"text-white"}>
                                     <div className={"text-lg font-bold"}>
@@ -180,14 +180,16 @@ export default function Authenticated({ auth, header, children,active, }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 md:-my-px md:ml-10 md:flex">
+                            <div className="hidden space-x-8 md:-my-px md:ml-10 md:flex w-full">
                                 <NavLink href={route('accueil')} active={route().current('accueil') || route().current('home')}>
                                     Accueil
+
                                 </NavLink>
                                 {
-                                    auth.user &&
+                                        /*
                                         <>
-                                            <div
+
+                                            <div hidden={true}
                                                 className={
                                                     active&&active==="projets"
                                                         ? 'flex items-center  border-b-4  border-indigo-600 text-sm font-medium leading-5 text-indigo-600 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
@@ -227,15 +229,61 @@ export default function Authenticated({ auth, header, children,active, }) {
                                                     Administration
                                                 </NavLink>
                                             }
-                                            <div className="h-full flex items-center">
-                                                <div>
-                                                    <IconButton onClick={handleClick}>
-                                                       <SearchIcon className="text-white"/>
-                                                    </IconButton>
-                                                </div>
-                                            </div>
                                         </>
+
+                                         */
                                 }
+
+                                <NavLink href={route('projet.index')} active={active&&active==="projets"}>
+                                    Projets
+                                </NavLink>
+                                <NavLink href={route('programme.index')} active={active&&active==="programmes"}>
+                                    Programmes
+                                </NavLink>
+
+                                <div
+                                     className={
+                                         active&&active==="secteurs"
+                                             ? 'flex items-center  border-b-4  border-indigo-600 text-sm font-medium leading-5 text-indigo-600 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
+                                             : 'flex items-center border-b-2 border-transparent text-sm font-medium leading-5 text-white hover:text-gray-400 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out'
+                                     }
+                                >
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                            <div className="flex items-center" role={"button"}>
+                                                <button className={"text-white text-sm h-full py-5"}>Secteurs</button>
+                                                <ArrowDropDownIcon className={"text-white"}/>
+                                            </div>
+                                        </Dropdown.Trigger>
+
+                                        <Dropdown.Content>
+                                            {
+                                                secteurs.map((s)=>(
+                                                    <Dropdown.Link key={s.id} href={route('secteur.show',s.id)} method="get" as="button">
+                                                        {s.libelle}
+                                                    </Dropdown.Link>
+
+                                                ))
+                                            }
+
+                                        </Dropdown.Content>
+                                    </Dropdown>
+                                </div>
+
+                                {
+
+                                    auth?.admin &&
+                                    <NavLink href={route('admin.projet.index',auth.user.id)} active={route().current().split('.')[0]==="admin"}>
+                                        Administration
+                                    </NavLink>
+                                }
+                                <div className="h-full w-full flex items-center justify-end">
+                                    <div>
+                                        <IconButton onClick={handleClick}>
+                                            <SearchIcon className="text-white"/>
+                                        </IconButton>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -268,7 +316,22 @@ export default function Authenticated({ auth, header, children,active, }) {
                                         </Dropdown.Trigger>
 
                                         <Dropdown.Content>
-                                            <Dropdown.Link href={route('logout')} method="post" as="button">
+                                            <Dropdown.Link href={route('projet.index')} method="get" as="button" active={active&&active==="creerProjet"}>
+                                                Tous les projets
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('user.projet.create',auth.user.id)} method="get" as="button" active={active&&active==="creerProjet"}>
+                                                Créer un projet
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('user.projet.index',auth.user.id)} method="get" as="button"  active={active&&active==="mesProjets"}>
+                                                Mes projets
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('user.projet.save',auth.user.id)} method="get" as="button"  active={active&&active==="projetsEnregistres"}>
+                                                Projets enregistrés
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('user.contribution.index',auth.user.id)} method="get" as="button" active={active&&active==="contributions"}>
+                                                Mes contributions
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('logout')} method="post" as="button" className={"border-t border-indigo-600"}>
                                                 Deconnexion
                                             </Dropdown.Link>
                                         </Dropdown.Content>
@@ -328,7 +391,7 @@ export default function Authenticated({ auth, header, children,active, }) {
                         {auth.user &&
                             <>
                                 <Accordion
-                                    defaultExpanded={active==="projets"}
+                                    defaultExpanded={true}
                                 >
                                     <AccordionSummary
                                         className={"hover:border-l-5 border-indigo-600"}
@@ -341,6 +404,9 @@ export default function Authenticated({ auth, header, children,active, }) {
                                     </AccordionSummary>
                                     <AccordionDetails className={"bg-black"}>
                                         <List>
+                                            <ResponsiveNavLink href={route('projet.index')} active={route().current()==="projet.index"}>
+                                                Tous les projets
+                                            </ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('user.projet.create',auth.user.id)} active={route().current()==="user.projet.create"}>
                                                 Créer un projet
                                             </ResponsiveNavLink>
@@ -358,6 +424,11 @@ export default function Authenticated({ auth, header, children,active, }) {
                                 </ResponsiveNavLink>
                             </>
                         }
+
+                        <ResponsiveNavLink href={route('programme.index')} active={route().current('accueil')||route().current('home')}>
+                            Programmes
+                        </ResponsiveNavLink>
+
                         {
 
                             auth?.admin &&
@@ -392,8 +463,8 @@ export default function Authenticated({ auth, header, children,active, }) {
             </nav>
             <div  className={"flex-1"} style={{paddingTop:64}}>{children}</div>
 
-            <div className="w-full bg-black z-10 h-full">
-                <div className="text-center xs:text-xs text-white font-bold">
+            <div className="w-full bg-black flex-auto py-5">
+                <div className="text-center text-lg xs:text-xs text-white font-bold">
                     © Copyright Addvalis crowdfunding - GUINÉE - Tous droits réservés.
                 </div>
             </div>

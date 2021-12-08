@@ -61,6 +61,16 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
         projetId:projet.id
     })
 
+    useLayoutEffect(()=>{
+        success && Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: success,
+            showConfirmButton: false,
+            timer: 2000
+        })
+    },[projet])
+
     //var taille = keyframes`from {width: 0%;}to {width: 50%;}`
 
     useEffect(() => {
@@ -116,6 +126,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
     };
 
 
+
     return (
         <Authenticated
             auth={auth}
@@ -130,12 +141,12 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                         {capitalizeFirstLetter(projet.description)}
                     </div>
                 </div>
-                <div className={"flex md:flex-row flex-col md:space-x-5 space-y-5 md:space-y-0"} style={{maxWidth:1000}}>
-                    <img src={projet.image} className="flex-1 md:w-6/12"  style={{objectFit:"cover"}}/>
+                <div className={"flex md:flex-row flex-col md:space-x-5 space-y-5 md:space-y-0 md:max-h-96"} style={{maxWidth:1000}}>
+                    <img src={projet.image} className="flex-1 md:w-8/12"  style={{minHeight:300,objectFit:"cover"}}/>
                     <div className={"xs:mr-0 flex md:w-6/12 h-full flex-col items-between justify-between"}>
                        <div className={"flex w-full"}>
                            <div className={"border border-indigo-600 w-full rounded overflow-hidden"}>
-                               <div className={"h-full bg-indigo-600 animePourcentage"} style={{width:`${Math.round(pourcentage)}%`}}>
+                               <div className={"h-full bg-indigo-600"} style={{width:`${Math.round(pourcentage)}%`}}>
 
                                </div>
                            </div>
@@ -143,7 +154,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                        </div>
                         <div>
                             <div className="text-indigo-600 text-2xl font font-bold">
-                                {montantFinance} FG
+                                {numberFormat(montantFinance)} FG
                             </div>
                             <span>
                                 financé sur {numberFormat(projet.montantRechercher)} FG
@@ -226,7 +237,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                 <div data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} data-aos-delay={400} style={{maxHeight:600}} className={"flex md:flex-col md:space-x-0 space-x-5"}>
                     <img src={"/images/arbreargent.jpg"} className={"md:w-full w-6/12"} style={{height:200,objectFit:"cover"}} alt=""/>
                     <div className="md:w-full w-6/12">
-                        Kickstarter réunit le créateur et ses contributeurs autour du financement d'un projet.
+                        Addvalis crowfunding réunit le créateur et ses contributeurs autour du financement d'un projet.
                     </div>
                 </div>
                 <div data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} data-aos-delay={800}  style={{maxHeight:600}} className={"flex md:flex-col md:space-x-0 space-x-5"}>
@@ -254,7 +265,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                         </Box>
                         <TabPanel value="1">
                            <div className={"w-full flex justify-center"}>
-                               <div style={{maxWidth:600}} className={"flex flex-col justify-center"}>
+                               <div style={{maxWidth:800}} className={"flex flex-col justify-center"}>
                                    {ReactHtmlParser(projet.details)}
                                </div>
                            </div>

@@ -19,8 +19,10 @@ module.exports = {
             }
         },
         screens: {
-            'xs': {'min': '0px', 'max': '639px'},
-            ...defaultTheme.screens,
+            'xs':"1px",
+            'sm': '640px',
+            'md': '1024px',
+
         },
     },
 
@@ -32,6 +34,10 @@ module.exports = {
             inset:["hover"],
             transform:["hover"],
             fontSize:["hover","focus"],
+            width: ['group-hover'],
+            height: ['group-hover'],
+            translate: ['group-hover'],
+
         },
     },
 

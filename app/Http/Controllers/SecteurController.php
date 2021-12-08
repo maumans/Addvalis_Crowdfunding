@@ -54,6 +54,7 @@ class SecteurController extends Controller
         foreach($secteur->projets as $p)
         {
             $p->like=$p->likeurs->contains(Auth::user());
+            $p->enregistre=$p->enregistreurs->contains(Auth::user());
         }
         return Inertia::render("Secteur/Show",["secteur" => $secteur]);
     }

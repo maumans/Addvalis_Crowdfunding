@@ -13,7 +13,7 @@ class Ville extends Model
 
     public function adresses()
     {
-        return $this->belongsToMany(Adresse::class);
+        return $this->hasMany(Adresse::class);
     }
     public function region()
     {

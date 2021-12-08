@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Critere;
+use App\Models\GenreCritere;
+use App\Models\TypeCritere;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,11 +14,13 @@ class CritereController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $criteres=Critere::all();
+        $criteres=Critere::with("genreCritere","typeCritere")->get();
+
+
         return Inertia::render("Admin/Critere/Index",["criteres"=>$criteres]);
     }
 
@@ -34,16 +38,25 @@ class CritereController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request,$userId)
+    public function store(Request $request)
     {
         $request->validate([
-            "description" =>"required"
+            "description" =>"required",
+            "noteMaximale" =>$request->genreCritere?"":"required|gt:0"
         ]);
-        Critere::create([
-            "description" =>$request->description
+        $critere=Critere::create([
+            "description" =>$request->description,
+            "notemax"=> $request->genreCritere?null:$request->noteMaximale
+
         ]);
+
+
+
+        $request->genreCritere?$critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save():$critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
+        $request->typeCritere?$critere->typeCritere()->associate(TypeCritere::where("libelle","selection")->first())->save():$critere->genreCritere()->associate(TypeCritere::where("libelle","preselection")->first())->save();
+
         return redirect()->back()->with("success","critere ajouté avec succès");
     }
 
@@ -74,16 +87,20 @@ class CritereController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $user,Critere $critere)
     {
         $request->validate([
-            "description" =>"required"
+            "description" =>"required",
+            "noteMaximale" =>$request->genreCritere?"":"required|gt:0"
         ]);
 
         $critere->description = $request->description;
+        $critere->notemax = $request->genreCritere?null:$request->noteMaximale;
         $critere->save();
+        $request->genreCritere?$critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save():$critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
+        $request->typeCritere?$critere->typeCritere()->associate(TypeCritere::where("libelle","selection")->first())->save():$critere->typeCritere()->associate(TypeCritere::where("libelle","preselection")->first())->save();
 
         return redirect()->back()->with('success', "critere modifié avec succès");
     }

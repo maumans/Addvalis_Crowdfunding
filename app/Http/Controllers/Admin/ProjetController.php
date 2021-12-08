@@ -131,7 +131,7 @@ class ProjetController extends Controller
 
         $pourcentage=$montantFinance*100/+$projet->montantRechercher;
 
-        $criteres=Critere::all();
+        $criteres=Critere::whereRelation("typeCritere","libelle","note")->get();
 
 
         return Inertia::render("Admin/Projet/Validation/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance,"criteres"=>$criteres]);

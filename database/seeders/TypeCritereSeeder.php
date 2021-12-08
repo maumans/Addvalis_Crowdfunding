@@ -17,12 +17,6 @@ class TypeCritereSeeder extends Seeder
     {
         DB::table("type_criteres")->delete();
 
-        TypeCritere::create([
-            "libelle"=>"choix"
-        ]);
-        TypeCritere::create([
-            "libelle"=>"note"
-        ]);
 
         TypeCritere::create([
             "libelle"=>"preselection"
@@ -32,16 +26,5 @@ class TypeCritereSeeder extends Seeder
             "libelle"=>"selection"
         ]);
 
-        TypeCritere::create([
-            "libelle"=>"region"
-        ]);
-
-        TypeCritere::create([
-            "libelle"=>"secteur"
-        ]);
-
-        TypeCritere::create([
-            "libelle"=>"ville"
-        ]);
     }
 }
