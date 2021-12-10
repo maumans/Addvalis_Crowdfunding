@@ -316,9 +316,6 @@ export default function Authenticated({ auth, header, children,active, }) {
                                         </Dropdown.Trigger>
 
                                         <Dropdown.Content>
-                                            <Dropdown.Link href={route('projet.index')} method="get" as="button" active={active&&active==="creerProjet"}>
-                                                Tous les projets
-                                            </Dropdown.Link>
                                             <Dropdown.Link href={route('user.projet.create',auth.user.id)} method="get" as="button" active={active&&active==="creerProjet"}>
                                                 Créer un projet
                                             </Dropdown.Link>
@@ -425,7 +422,14 @@ export default function Authenticated({ auth, header, children,active, }) {
                             </>
                         }
 
-                        <ResponsiveNavLink href={route('programme.index')} active={route().current('accueil')||route().current('home')}>
+                        {
+                            !auth.user &&
+                            <ResponsiveNavLink href={route('projet.index')} active={active==="projets"}>
+                                Projets
+                            </ResponsiveNavLink>
+                        }
+
+                        <ResponsiveNavLink href={route('programme.index')} active={active==="programmes"}>
                             Programmes
                         </ResponsiveNavLink>
 
@@ -461,10 +465,10 @@ export default function Authenticated({ auth, header, children,active, }) {
                     }
                 </div>
             </nav>
-            <div  className={"flex-1"} style={{paddingTop:64}}>{children}</div>
+            <div style={{paddingTop:64}}>{children}</div>
 
-            <div className="w-full bg-black flex-auto py-5">
-                <div className="text-center text-lg xs:text-xs text-white font-bold">
+            <div className="w-full bg-black mt-auto py-5">
+                <div className="text-center md:text-sm xs:text-xs text-white font-bold">
                     © Copyright Addvalis crowdfunding - GUINÉE - Tous droits réservés.
                 </div>
             </div>

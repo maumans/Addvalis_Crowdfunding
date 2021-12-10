@@ -231,7 +231,7 @@ function Index({success,auth,criteres}) {
                                     <StyledTableCell align="right">{s.type_critere?.libelle}</StyledTableCell>
                                     <StyledTableCell align="right">
                                         <div className={"flex space-x-1 w-full justify-center"}>
-                                            <button hidden={critereSelect && s.id===critereSelect?.id} onClick={()=>confirm("Voulez-vous supprimer ce critere") && Inertia.delete(route("admin.critere.destroy",[auth.user.id,s?.id]),{preserveScroll:true})} className={"rounded bg-red-600 p-2"}>
+                                            <button onClick={()=>confirm("Voulez-vous supprimer ce critere") && Inertia.delete(route("admin.critere.destroy",[auth.user.id,s?.id]),{preserveScroll:true})} className={"rounded bg-red-600 p-2"}>
                                                 <DeleteIcon className={"text-white"}/>
                                             </button>
                                             <button onClick={(e)=>handleOpen(e,s)

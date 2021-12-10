@@ -42,14 +42,14 @@ function Index({auth,success,programmes}) {
                                                 Consulter le programme
                                             </button>
                                         </div>
-                                       <div className={"bg-indigo-600 text-white p-2 font-bold"}>
+                                       <div className={"bg-indigo-600 text-white p-2 font-bold uppercase"}>
                                            {p.titre}
                                        </div>
-                                        <div className={"p-2 space-y-2"}>
+                                        <div className={"p-2 space-y-5"}>
                                             <div>
                                                 { p.description}
                                             </div>
-                                            <div>
+                                            <div className={"font-bold text-sm bg-black text-white w-max p-1"}>
                                                 Du {p.dateDebut} au {p.dateFin}
                                             </div>
                                         </div>

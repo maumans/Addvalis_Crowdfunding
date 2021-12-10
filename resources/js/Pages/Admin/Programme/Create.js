@@ -58,6 +58,7 @@ import "../../../lang/fr_FR"
 import {minWidth} from "@mui/system";
 import {useForm} from "@inertiajs/inertia-react";
 import {indigo} from "@mui/material/colors";
+import {styles} from "dom7";
 
 function Create({auth,success,criteresSelections,criteresPreselections,secteurs,regions,errors}) {
 
@@ -72,7 +73,9 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
         "criteresPreselections":[],
         "criteresSelections":[],
         "image":"",
-        "fichiersSupplementaires":[]
+        "fichiersSupplementaires":[],
+        "noteMinPreselection":"",
+        "noteMinSelection":""
     })
 
 
@@ -238,7 +241,7 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
 
                         <div className={"flex flex-col space-y-5"}>
                             <div>
-                                Selectionnez les criteres de preselections ( Laisser vide si toutes les villes sont concernées)
+                                Selectionnez les criteres de preselections
                             </div>
                             <div>
                                 <Autocomplete
@@ -254,9 +257,18 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                                 />
                             </div>
                         </div>
+
                         <div className={"flex flex-col space-y-5"}>
                             <div>
-                                Selectionnez les criteres de selections ( Laisser vide si toutes les villes sont concernées)
+                                Entrez la note minimale de préselection
+                            </div>
+                            <div>
+                                <TextField style={{maxWidth:300}} type={"number"} variant={"standard"} className={"w-full"} onChange={(e)=>setData('noteMinPreselection',e.target.value)} label={"note minimale de preselection"}/>
+                            </div>
+                        </div>
+                        <div className={"flex flex-col space-y-5"}>
+                            <div>
+                                Selectionnez les criteres de selections
                             </div>
                             <div>
                                 <Autocomplete
@@ -272,7 +284,14 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                                 />
                             </div>
                         </div>
-
+                        <div className={"flex flex-col space-y-5"}>
+                            <div>
+                                Entrez la note minimale de selection
+                            </div>
+                            <div>
+                                <TextField style={{maxWidth:300}} type={"number"} variant={"standard"} className={"w-full"} onChange={(e)=>setData('noteMinSelection',e.target.value)} label={"note minimale de selection"}/>
+                            </div>
+                        </div>
                         <div>
                             <div>
                                 Selectionnez les fichiers supplementaire à ajouter (pdf,word,excel)*

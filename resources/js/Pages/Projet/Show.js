@@ -16,6 +16,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Avatar from "@mui/material/Avatar";
+import {minHeight} from "@mui/system";
 
 
 const TextFieldCustom = withStyles({
@@ -54,7 +55,6 @@ const TextFieldCustom = withStyles({
 
 function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentage,montantFinance,success}) {
     const [voirSoutien,setVoirSoutien]=useState(false)
-    const [joursRestant,setJoursRestant]=useState(0)
 
     const {data,setData,post}=useForm({
         montant:contributeur?contributeur.pivot.montant:0,
@@ -77,16 +77,12 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
         AOS.refresh()
     },[voirSoutien])
 
-    useEffect(()=>{
-        let difference= Math.abs(Date.parse(projet.dateFin)-Date.parse(projet.dateDebut));
-        let days = difference/(1000 * 3600 * 24)
-        setJoursRestant(days)
-    },[])
 
     const myref=useRef(null);
     function handleSoutienClick()
     {
         setVoirSoutien(voirSoutien===false)
+        setSoutienContributeurs(false)
         !voirSoutien && myref.current.scrollIntoView({behavior: 'smooth',block: 'center'})
 
 
@@ -118,15 +114,17 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
     function onEnregistre(p) {
         auth.user?Inertia.visit(route('save.enregistrer',[auth.user?.id,p?.id]),{preserveScroll:true,preserveState:true}):confirm("connectez-vous avant d'enregister")&& Inertia.visit(route('login'))
     }
-
-    const [value, setValue] = React.useState('1');
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    const [value, setValue] = useState('1');
+    const [soutienContributeurs, setSoutienContributeurs] = useState(false);
 
 
+
+
+    let soutiencontributeurs;
     return (
         <Authenticated
             auth={auth}
@@ -178,10 +176,10 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                         </div>
                         <div>
                             <div className={"text-2xl text-indigo-600 font-bold font"}>
-                                {joursRestant}
+                                {projet.joursRestant}
                             </div>
                             <div>
-                                {joursRestant>1?"jours restants":"jour restant"}
+                                {projet.joursRestant>1?"jours restants":"jour restant"}
                             </div>
                         </div>
                         <div  className={"w-full flex justify-center mt-auto"}>
@@ -202,8 +200,8 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
 
             </div>
 
-            <div ref={myref}  className={voirSoutien?"flex justify-center":""} >
-                <div hidden={!voirSoutien} data-aos={voirSoutien?"fade-up":"fade-down"} data-aos-duration={1000} className={"h-96 w-full p-10 border my-10 bg-indigo-600"}>
+            <div ref={myref}  className={voirSoutien||soutienContributeurs?"flex justify-center":""} >
+                <div hidden={!voirSoutien && !soutienContributeurs} data-aos={voirSoutien || soutienContributeurs?"fade-up":"fade-down"} data-aos-duration={1000} className={"h-96 w-full p-10 border my-10 bg-indigo-600"}>
                     <div className={"w-80 text-white font text-lg"}>
                         Votre contribution n'est prélevée que si l'objectif de financement du projet est atteint avant la date limite.
                     </div>
@@ -264,33 +262,52 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                             </TabList>
                         </Box>
                         <TabPanel value="1">
-                           <div className={"w-full flex justify-center"}>
+                           <div className={"w-full flex justify-center"}  style={{minHeight:500}}>
                                <div style={{maxWidth:800}} className={"flex flex-col justify-center"}>
                                    {ReactHtmlParser(projet.details)}
                                </div>
                            </div>
                         </TabPanel>
                         <TabPanel value="2">
-                            {
-                                projet.contributeurs.map((c)=>(
-                                    <div key={c.id} className={"flex justify-between w-full border-b border-indigo-500 p-5"}>
-                                        <div>
-                                            <Avatar sx={{backgroundColor:"black"}}>
-                                                M
-                                            </Avatar>
+
+                                <div style={{minHeight:500}}>
+                                    {
+                                        projet.contributeurs.map((c)=>(
+                                        <div key={c.id} className={"flex justify-between w-full border-b border-indigo-500 p-5"}>
                                             <div>
-                                                <span>{c.name}</span>
+                                                <Avatar sx={{backgroundColor:"black"}}>
+                                                    M
+                                                </Avatar>
+                                                <div>
+                                                    <span>{c.name}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span>Montant financé </span>
+                                                <div className={"p-2 text-white text-center rounded bg-black"}>
+                                                    {numberFormat(c.pivot.montant)} FG
+                                                </div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <span>Montant financé </span>
-                                            <div className={"p-2 text-white text-center rounded bg-black"}>
-                                                {numberFormat(c.pivot.montant)} FG
+                                        ))
+                                    }
+                                    {
+                                        projet.contributeurs.length ===0 &&
+                                            <div className={"flex flex-col justify-center items-center space-y-5"}>
+                                                <div>
+                                                    Aucun contributeur pour le moment
+                                                </div>
+                                                <button onClick={()=>{
+                                                    setSoutienContributeurs(true)
+                                                    myref.current.scrollIntoView({behavior: 'smooth',block: 'center'})
+                                                }} className={"w-max border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded py-2 px-10"} >
+                                                    Soutenir le projet
+                                                </button>
                                             </div>
-                                        </div>
-                                    </div>
-                                ))
-                            }
+
+                                    }
+                                </div>
+
                         </TabPanel>
                         <TabPanel value="3">Avis</TabPanel>
                     </TabContext>

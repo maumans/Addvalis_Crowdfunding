@@ -87,7 +87,7 @@ class Projet extends Model
 
     public function criteres()
     {
-        return $this->belongsToMany(Critere::class,"projet_critere");
+        return $this->belongsToMany(Critere::class,"projet_critere")->with(["typeCritere","genreCritere"])->withPivot("note","choix");
     }
 
     public function programmes()

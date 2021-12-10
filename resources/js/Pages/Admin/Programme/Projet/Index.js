@@ -11,7 +11,7 @@ function Index({auth,programme,projets,success}) {
             active={"programme"}
             sousActive={"voirProgramme"}
         >
-            <div className="font p-5">
+            <div className="font p-5 h-full">
                 <div className={"md:mx-5 mb-10 space-y-5"}>
                     <div className={"text-3xl font-bold uppercase"}>
                         {programme.titre}
@@ -21,9 +21,18 @@ function Index({auth,programme,projets,success}) {
                     </div>
                 </div>
 
+                {
+                    projets.length ===0 &&
+                    <div className={"flex mt-36 w-full justify-center items-center"}>
+                        <div>
+                            Aucun projet soumis pour le moment
+                        </div>
+                    </div>
+                }
+
                 <div className={"w-full flex"}>
                    <div className={"w-full md:mx-5 grid gap-5"}>
-                       {projets.map((p)=>(
+                       {projets.length>0 && projets.map((p)=>(
                            <div className={"flex h-80 space-x-5"} key={p.id}>
                                <div className={"md:w-5/12 w-6/12"}>
                                    <img className={"w-full h-full"} style={{objectFit:"cover",minHeight:"100%"}} src={p.image}/>

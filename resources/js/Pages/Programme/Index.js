@@ -29,7 +29,7 @@ function Index({auth,success,programmes,errors}) {
             errors={errors}
             active={"programmes"}
         >
-            <div className={"flex justify-center font"}>
+            <div className={"flex justify-center font mb-10"}>
                 <div className={"grid cols-1 space-y-10 md:w-8/12 w-full px-5"}>
 
                     <div data-aos={"zoom-in"} className={"my-8 md:text-2xl text-xl projetfont border-indigo-600 border-b-2 border-l-2 font"} style={{width:"fit-content"}}>

@@ -54,7 +54,6 @@ class ProjetController extends Controller
     public function store(Request $request)
     {
 
-        //dd(strtotime($request->dateFin)-strtotime($request->dateDebut));
         $request->validate([
             "titre"=>"required|string",
             "description"=>"required|string|max:100",
@@ -125,6 +124,11 @@ class ProjetController extends Controller
             if($region && $secteur)
             {
                 $programme->projets()->syncWithoutDetaching($projet);
+            }
+
+            foreach($programme->criteres as $critere)
+            {
+                $projet->criteres()->syncWithoutDetaching([$critere->id=>["note"=>"","choix"=>false]]);
             }
 
         }

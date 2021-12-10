@@ -6,8 +6,10 @@ use App\Models\Programme;
 use App\Models\Region;
 use App\Models\Secteur;
 use App\Models\Ville;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
@@ -49,13 +51,15 @@ class ProgrammeController extends Controller
      * Display the specified resource.
      *
      * @param $programmeId
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function show($programmeId)
     {
         $programme = Programme::where("id",$programmeId)->with(["criteres","regions","secteurs"])->first();
 
         $criteres = $programme->criteres()->with("typeCritere")->get();
+
+        $programme->joursRestant=$programme->dateFin >= Date::now()?Carbon::parse($programme->dateFin)->diffInDays(Date::now()):0;
 
         return Inertia::render("Programme/Show",["programme"=>$programme,"criteres"=>$criteres]);
     }

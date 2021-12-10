@@ -9,9 +9,11 @@ use App\Models\Region;
 use App\Models\Secteur;
 use App\Models\User;
 use App\Models\Ville;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -58,7 +60,9 @@ class ProgrammeController extends Controller
             "dateDebut" =>"required|date",
             "dateFin" =>"required|date",
             "details" =>"required",
-            "image" =>"required"
+            "image" =>"required",
+            "noteMinPreselection"=>$request->criteresPreselections?"required":"prohibited",
+            "noteMinSelection"=>$request->criteresSelections?"required":"prohibited",
         ]);
 
         $nom=$request->file("image")->store("ProgrammeImage","public");
@@ -71,7 +75,9 @@ class ProgrammeController extends Controller
             "dateDebut" =>$request->dateDebut,
             "dateFin" =>$request->dateFin,
             "details" =>$request->details,
-            "image" =>$image
+            "image" =>$image,
+            "noteMinPreselection"=>$request->noteMinPreselection,
+            "noteMinSelection"=>$request->noteMinSelection
         ]);
 
         foreach($request->criteresPreselections as $key => $value)
@@ -97,6 +103,8 @@ class ProgrammeController extends Controller
 
         }
 
+
+
         return redirect()->route('admin.programme.index',Auth::id())->with("success","Programme ajouté avec succès");
 
     }
@@ -112,6 +120,8 @@ class ProgrammeController extends Controller
     {
         $programme = Programme::where("id",$programmeId)->with(["criteres","regions","secteurs"])->first();
         $criteres = $programme->criteres()->with("typeCritere")->get();
+
+        $programme->joursRestant=$programme->dateFin>=Date::now()?Carbon::parse($programme->dateFin)->diffInDays(Date::now()):0;
 
         return Inertia::render("Admin/Programme/Show",["programme"=>$programme,"criteres"=>$criteres]);
 

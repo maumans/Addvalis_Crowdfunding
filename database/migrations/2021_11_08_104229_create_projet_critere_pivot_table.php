@@ -16,6 +16,7 @@ class CreateProjetCriterePivotTable extends Migration
         Schema::create('projet_critere', function (Blueprint $table) {
             $table->id();
             $table->string("note")->nullable();
+            $table->boolean("choix")->nullable();
             $table->foreignId("projet_id")->nullable()->constrained("projets")->cascadeOnDelete();
             $table->foreignId("critere_id")->nullable()->constrained("criteres")->cascadeOnDelete();
             $table->timestamps();

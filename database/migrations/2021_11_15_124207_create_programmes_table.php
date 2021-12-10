@@ -22,6 +22,8 @@ class CreateProgrammesTable extends Migration
             $table->string("dateFin")->nullable();
             $table->longText("details")->nullable();
             $table->string("organisation")->nullable();
+            $table->integer('noteMinPreselection')->nullable();
+            $table->integer('noteMinSelection')->nullable();
             $table->timestamps();
         });
     }

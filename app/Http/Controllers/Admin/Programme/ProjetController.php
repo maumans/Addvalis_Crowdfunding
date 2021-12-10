@@ -18,7 +18,7 @@ class ProjetController extends Controller
      */
     public function index($user, Programme $programme)
     {
-        $projets=$programme->projets()->with("user")->get();
+        $projets=$programme->projets()->orderBy("created_at","desc")->with("user")->get();
        return Inertia::render("Admin/Programme/Projet/Index",["programme"=>$programme,"projets"=>$projets]);
     }
 
@@ -51,7 +51,8 @@ class ProjetController extends Controller
      */
     public function show($user,Programme $programme,Projet $projet)
     {
-        return Inertia::render("Admin/Programme/Projet/Show",["projet"=>$projet->with("user")->first(),"programme"=>$programme,"criteres"=>$programme->criteres]);
+        $projet->user;
+        return Inertia::render("Admin/Programme/Projet/Show",["projet"=>$projet,"programme"=>$programme,"criteres"=>$projet->criteres]);
     }
 
     /**
@@ -72,9 +73,15 @@ class ProjetController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$userId, Programme $programme,Projet $projet)
     {
-        //
+        foreach($request->all() as $key=>$value)
+        {
+            $projet->criteres()->syncWithoutDetaching([$key=>["note"=>$value,"choix"=>$value]]);
+
+        }
+
+        return redirect()->back();
     }
 
     /**

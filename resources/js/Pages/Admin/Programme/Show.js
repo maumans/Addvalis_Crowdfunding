@@ -5,13 +5,6 @@ import ReactHtmlParser from "react-html-parser";
 import {Inertia} from "@inertiajs/inertia";
 
 function Show({auth,success,programme,criteres}) {
-    const [joursRestant,setJoursRestant]=useState(0)
-
-    useEffect(()=>{
-        let difference= Math.abs(Date.parse(programme.dateFin)-Date.parse(programme.dateDebut));
-        let days = difference/(1000 * 3600 * 24)
-        setJoursRestant(days)
-    },[])
 
     useEffect(()=>{
         success && Swal.fire({
@@ -45,13 +38,13 @@ function Show({auth,success,programme,criteres}) {
                     </div>
 
                     <div className={"mt-5"}>
-                        <div className={"flex md:flex-row flex-col mt-5 md:space-y-0 md:space-x-5 space-y-5"}>
-                            <div className={"md:order-none order-2"} style={{maxWidth:800,minWidth:300}}>
+                        <div className={"flex md:flex-row flex-col mt-5 md:space-x-5"}>
+                            <div className={"md:order-none order-2 mt-10 md:mt-0"} style={{maxWidth:800,minWidth:300}}>
                                 {ReactHtmlParser(programme.details)}
                             </div>
                             <div className={"space-y-2 md:order-none order-1"} style={{maxWidth:400,minWidth:200}}>
                                 <button onClick={()=>Inertia.get(route("admin.programme.projet.index",[auth.user.id,programme.id]))} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded p-1 my-5 md:w-full"}>
-                                    Projets soumis
+                                    Voir les projets soumis
                                 </button>
                                 <div className={" md:divide-y space-y-1"} style={{height:"fit-content"}}>
                                     <div className={"p-2 md:bg-indigo-600 md:text-white uppercase font-bold"}>
@@ -61,7 +54,7 @@ function Show({auth,success,programme,criteres}) {
                                        <span>
                                             <span className={"font-bold mr-2"}>
                                                 Jours restants: </span>
-                                           {joursRestant}
+                                           {programme.joursRestant}
                                        </span>
                                     </div>
                                     <div className={"border-l-4 border-indigo-600 p-2 bg-gray-100"}>

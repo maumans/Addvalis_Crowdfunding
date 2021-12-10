@@ -203,7 +203,7 @@ function Accueil(props) {
                 <div className={"flex justify-center mt-48 border-t"}>
 
                     <div className={"grid md:grid-cols-2 grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12"}>
-                        <div className={"md:col-span-2 md:text-xl underline sm:text-xl text-lg my-10 font flex"}>
+                        <div className={"md:col-span-2 md:text-xl sm:text-xl text-lg my-10 font flex"}>
                             <span className={"underline"}>Programmes en cours</span> <Link className={"ml-10 text-xs text-indigo-600 flex items-center hover:underline"} href={route("programme.index")}>Plus de programmes <NavigateNextIcon className={"text-xs"}/></Link>
                         </div>
                         {

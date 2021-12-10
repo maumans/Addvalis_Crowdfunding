@@ -10,6 +10,7 @@ use App\Models\Ville;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Inertia\Inertia;
 
 class ProjetController extends Controller
@@ -29,7 +30,7 @@ class ProjetController extends Controller
             $pourcentage=$montantFinance*100/$projet->montantRechercher;
             $projet->pourcentage=$pourcentage;
 
-            $projet->joursRestant=Carbon::parse($projet->dateFin)->diffInDays(Carbon::parse($projet->dateDebut));
+            $projet->joursRestant=$projet->dateFin>=Date::now()?Carbon::parse($projet->dateFin)->diffInDays(Date::now()):0;
             $projet->montantFinance=$montantFinance;
 
             $projet->like=$projet->likeurs->contains(Auth::user());
@@ -83,6 +84,8 @@ class ProjetController extends Controller
         $pourcentage=$montantFinance*100/$projet->montantRechercher;
 
         $contributeur=$projet->contributeurs()->where("user_id",Auth::id())->first();
+
+        $projet->joursRestant=$projet->dateFin>=Date::now()?Carbon::parse($projet->dateFin)->diffInDays(Date::now()):0;
 
 
         return Inertia::render("Projet/Show",["projet"=>$projet,"createur"=>$user,"contributeurs"=>$contributeurs,"pourcentage"=>$pourcentage,"montantFinance"=>$montantFinance,"contributeur"=>$contributeur]);

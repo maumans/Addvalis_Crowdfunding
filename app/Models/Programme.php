@@ -11,6 +11,19 @@ class Programme extends Model
 
     protected $guarded=[];
 
+    protected $joursRestant;
+
+
+    public function getJoursRestantAttribute(){
+        return $this->joursRestant;
+    }
+    public function setJoursRestantAttribute($joursRestant){
+        $this->joursRestant = $joursRestant;
+    }
+
+    protected $appends = ["joursRestant"];
+
+
     public function projets()
     {
         return $this->belongsToMany(Projet::class,"programme_projet");
@@ -28,6 +41,6 @@ class Programme extends Model
 
     public function criteres()
     {
-        return $this->belongsToMany(Critere::class,"programme_critere")->with(["typeCritere","genreCritere"]);
+        return $this->belongsToMany(Critere::class,"programme_critere");
     }
 }

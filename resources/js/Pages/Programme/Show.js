@@ -5,14 +5,6 @@ import {Inertia} from "@inertiajs/inertia";
 
 function Show({auth,success,programme,criteres,errors}) {
 
-    const [joursRestant,setJoursRestant]=useState(0)
-
-    useEffect(()=>{
-        let difference= Math.abs(Date.parse(programme.dateFin)-Date.parse(programme.dateDebut));
-        let days = difference/(1000 * 3600 * 24)
-        setJoursRestant(days)
-    },[])
-
     return (
         <Authenticated
             auth={auth}
@@ -35,11 +27,11 @@ function Show({auth,success,programme,criteres,errors}) {
 
                     <div className={"mt-5 mx-10"}>
                         <div className={"flex md:flex-row flex-col mt-5 md:space-y-0 md:space-x-5 space-y-5"}>
-                            <div className={"md:order-none order-2"} style={{maxWidth:800,minWidth:400}}>
+                            <div className={"md:order-none order-2 mt-10 md:mt-0"} style={{maxWidth:800,minWidth:400}}>
                                 {ReactHtmlParser(programme.details)}
                             </div>
                             <div className={"space-y-2 md:order-none order-1"} style={{maxWidth:400,minWidth:300}}>
-                                <button onClick={()=>Inertia.get(route("programme.projet",programme.id))} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded p-1 my-5 md:w-full"}>
+                                <button disabled={programme.joursRestant<1} onClick={()=>Inertia.get(route("programme.projet",programme.id))} className={`border-2 rounded p-1 my-5 md:w-full ${programme.joursRestant>0?"border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500":" bg-gray-200 border-gray-400 text-gray-400"}`}>
                                     Soumettre sa candidature
                                 </button>
                                 <div className={" md:divide-y space-y-1"} style={{height:"fit-content"}}>
@@ -49,8 +41,7 @@ function Show({auth,success,programme,criteres,errors}) {
                                     <div className={"border-l-4 border-indigo-600 p-2"}>
                                        <span>
                                             <span className={"font-bold mr-2"}>
-                                                Jours restants: </span>
-                                           {joursRestant}
+                                                Jours restants: </span> {programme.joursRestant}
                                        </span>
                                     </div>
                                     <div className={"border-l-4 border-indigo-600 p-2 bg-gray-100"}>

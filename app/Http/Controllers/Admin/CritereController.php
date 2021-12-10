@@ -48,12 +48,9 @@ class CritereController extends Controller
         ]);
         $critere=Critere::create([
             "description" =>$request->description,
-            "notemax"=> $request->genreCritere?null:$request->noteMaximale
+            "notemax"=> $request->genreCritere?null:$request->noteMaximale,
 
         ]);
-
-
-
         $request->genreCritere?$critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save():$critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
         $request->typeCritere?$critere->typeCritere()->associate(TypeCritere::where("libelle","selection")->first())->save():$critere->genreCritere()->associate(TypeCritere::where("libelle","preselection")->first())->save();
 

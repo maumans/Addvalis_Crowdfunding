@@ -17,7 +17,7 @@ class CreateCriteresTable extends Migration
             $table->id();
             $table->string("description");
             $table->integer("notemax")->nullable();
-            $table->boolean("choix")->nullable();
+
             $table->foreignId("type_critere_id")->nullable()->constrained("type_criteres")->cascadeOnDelete();
             $table->foreignId("genre_critere_id")->nullable()->constrained("genre_criteres")->cascadeOnDelete();
             $table->timestamps();

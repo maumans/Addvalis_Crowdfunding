@@ -8,42 +8,41 @@ import Tab from "@mui/material/Tab";
 import TabPanel from "@mui/lab/TabPanel";
 import ReactHtmlParser from "react-html-parser";
 import Avatar from "@mui/material/Avatar";
-import {Switch, TextField} from "@mui/material";
+import {InputAdornment, Switch, TextField} from "@mui/material";
 
 function Show({auth,success,projet,programme,criteres}) {
 
-    const [critereValidation,setCritereValidation]=useState({}
-    )
+    const [critereValidation,setCritereValidation]=useState({})
+
+    const [value, setValue] = useState('1');
+    const [noteTotalePreselection, setNoteTotalePreselection] =useState(0);
+    const [noteTotaleSelection, setNoteTotaleSelection] =useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     useEffect(()=>{
-        criteres.map((c)=>(
-            setCritereValidation(critereValidation=>({
+        criteres.map((c)=> {
+            setCritereValidation(critereValidation => ({
                 ...critereValidation,
-                [c.id]:c.genre_critere.libelle === "choix"?false:"",
+                [c.id]: c.genre_critere.libelle === "choix" ? c.pivot.choix : c.pivot.note,
             }))
-        ))
-    },[])
+        })
+    },[projet])
 
-    useEffect(()=>{
-        console.log(critereValidation)
-    })
 
     function numberFormat(number)
     {
         return new Intl.NumberFormat('de-DE').format(number)
     }
 
-    const [value, setValue] = React.useState('1');
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
     function handleValidationChange(e, id) {
         setCritereValidation((critereValidation)=>({
             ...critereValidation,
-            [id]:e.target.value
+            [id]:e.target.value,
         }))
+
     }
 
     function switchValidationChange(e, id) {
@@ -53,9 +52,24 @@ function Show({auth,success,projet,programme,criteres}) {
         }))
     }
 
+
+    useEffect(()=>{
+        let sumPreselection = 0
+        let sumSelection = 0
+        for(const [key, val] of Object.entries(critereValidation))
+        {
+            criteres.filter((c)=>(c.id.toString()===key.toString() && c.type_critere.libelle==="preselection")).length===1 && (sumPreselection =sumPreselection+(val===null||val===""|| val===false?0:val===true?1:parseInt(val)))
+
+            criteres.filter((c)=>(c.id.toString()===key.toString() && c.type_critere.libelle==="selection")).length===1 && (sumSelection =sumSelection+(val===null||val===""|| val===false?0:val===true?1:parseInt(val)))
+        }
+        setNoteTotalePreselection(sumPreselection)
+        setNoteTotaleSelection(sumSelection)
+
+    },[critereValidation])
+
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.post(route("admin.programme.projet"),[auth.user.id,programme.id,projet.id])
+        Inertia.patch(route("admin.programme.projet.update",[auth.user.id,programme.id,projet.id]),critereValidation,{preserveScroll:true})
     }
 
     return (
@@ -68,19 +82,19 @@ function Show({auth,success,projet,programme,criteres}) {
             <form action="" onSubmit={handleSubmit}>
                 <div>
                     <div className={"fixed w-full bg-white flex justify-center items-center border-b z-10"} style={{height:80}}>
-                        <button className={"bg-indigo-600 text-white p-2 rounded"}>Enregistrer</button>
+                        <button type={"submit"} className={"border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded p-2"}>Enregistrer</button>
                     </div>
                     <div className={"flex p-5 space-x-5 w-full"} style={{paddingTop:80}}>
-                        <img src={projet.image} className={"w-64 h-64 object-cover"} style={{minWidth:200,minHeight:200}} alt=""/>
+                        <img src={projet.image} className={"w-6/12 h-3/6 object-cover"} style={{minWidth:200,minHeight:200}} alt=""/>
                         <div className={"w-full"}>
                             <div className={"flex flex-col"}>
-                                <div className={"font-bold uppercase"}>
+                                <div className={"font-bold md:text-2xl uppercase"}>
                                     {projet.titre}
                                 </div>
-                                <div>
+                                <div className={"md:text-2xl"}>
                                     {projet.description}
                                 </div>
-                                <span className={"italic text-xs my-5"}>
+                                <span className={"italic md:text-sm text-xs my-5"}>
                                Pojet de: <span className={"capitalize font-bold"}> {projet.user.name}</span>
                            </span>
                             </div>
@@ -114,23 +128,36 @@ function Show({auth,success,projet,programme,criteres}) {
                                                     {criteres.map((c)=>(
                                                         c.type_critere.libelle==="preselection"
                                                         &&
-                                                        <div key={c.id} className="flex justify-between items-end">
+                                                        <div key={c.id} className="grid grid-cols-2 items-end">
                                                             <div>{c.description}</div>
                                                             {
                                                                 c.genre_critere.libelle==="note"&&
-                                                                <div>
-                                                                    <TextField onChange={(e)=>handleValidationChange(e,c.id)} type={"number"} inputProps={{max:100,min:1}} variant="standard" label={"Entrez la note"} style={{minWidth:100}}/>
+                                                                <div className="ml-auto">
+                                                                    <TextField
+                                                                        InputProps={{
+                                                                            endAdornment: <InputAdornment position="end">/{c.notemax}</InputAdornment>,
+                                                                        }}
+                                                                        defaultValue={c.pivot.note} onChange={(e)=>handleValidationChange(e,c.id)} type={"number"} inputProps={{max:100,min:1}} variant="standard" label={"Entrez la note"} style={{minWidth:140}}/>
                                                                 </div>
                                                             }
                                                             {c.genre_critere.libelle==="choix"&&
-                                                            <div>
+                                                            <div className="ml-auto">
                                                                 <span>Non</span>
-                                                                <Switch onChange={(e)=>switchValidationChange(e,c.id)}/>
+                                                                <Switch defaultChecked={c.pivot.choix===1} onChange={(e)=>switchValidationChange(e,c.id)}/>
                                                                 <span>Oui</span>
                                                             </div>
                                                             }
                                                         </div>
                                                     ))}
+
+                                                </div>
+                                                <div className={"grid grid-cols-2 gap-4"}>
+                                                    <div>
+                                                        <span className={"font-bold"}>Note totale minimale de preselection:</span> {programme.noteMinPreselection}
+                                                    </div>
+                                                    <div className={"ml-auto"}>
+                                                       <span className={"font-bold"}>Note totale:</span> {noteTotalePreselection}
+                                                    </div>
 
                                                 </div>
                                             </div>
@@ -142,22 +169,36 @@ function Show({auth,success,projet,programme,criteres}) {
                                                     {criteres.map((c)=>(
                                                         c.type_critere.libelle==="selection"
                                                         &&
-                                                        <div key={c.id} className="flex justify-between items-end">
+                                                        <div key={c.id} className="grid grid-cols-2 items-end">
                                                             <div>{c.description}</div>
                                                             {c.genre_critere.libelle==="note"&&
-                                                            <div>
-                                                                <TextField onChange={(e)=>handleValidationChange(e,c.id)} type={"number"} inputProps={{max:100,min:1}} variant="standard" label={"Entrez la note"} style={{minWidth:100}}/>
+                                                            <div className="ml-auto">
+                                                                <TextField
+                                                                    InputProps={{
+                                                                        endAdornment: <InputAdornment position="end">/{c.notemax}</InputAdornment>,
+                                                                    }}
+
+                                                                    defaultValue={c.pivot.note} onChange={(e)=>handleValidationChange(e,c.id)} type={"number"} inputProps={{max:100,min:1}} variant="standard" label={"entrez la note"}  style={{minWidth:140}}/>
                                                             </div>
                                                             }
                                                             {c.genre_critere.libelle==="choix"&&
-                                                            <div>
+                                                            <div className="ml-auto">
                                                                 <span>Non</span>
-                                                                <Switch onChange={(e)=>switchValidationChange(e,c.id)}/>
+                                                                <Switch defaultChecked={c.pivot.choix===1} onChange={(e)=>switchValidationChange(e,c.id)}/>
                                                                 <span>Oui</span>
                                                             </div>
                                                             }
                                                         </div>
                                                     ))}
+
+                                                </div>
+                                                <div className={"grid grid-cols-2 gap-4"}>
+                                                    <div>
+                                                        <span className={"font-bold"}>Note totale minimale de preselection:</span> {programme.noteMinSelection}
+                                                    </div>
+                                                    <div className={"ml-auto"}>
+                                                        <span className={"font-bold"}>Note totale:</span> {noteTotaleSelection}
+                                                    </div>
 
                                                 </div>
                                             </div>

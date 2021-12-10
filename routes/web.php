@@ -64,8 +64,9 @@ Route::get("/accueil",function () {
 })->name("accueil");
 
 
-Route::resource("projet",\App\Http\Controllers\ProjetController::class)->except("show")->middleware(['auth', 'verified']);
+Route::resource("projet",\App\Http\Controllers\ProjetController::class)->except("show","index")->middleware(['auth', 'verified']);
 Route::resource("projet",\App\Http\Controllers\ProjetController::class)->only("show")->middleware(["projectIsValidated"]);
+Route::resource("projet",\App\Http\Controllers\ProjetController::class)->only("index");
 Route::post("/projet/contribuer",[\App\Http\Controllers\ProjetController::class,"contribuer"])->middleware(['auth', 'verified']);
 
 //User route
