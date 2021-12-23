@@ -208,8 +208,6 @@ class ProjetController extends Controller
             "projet.montantInitial.integer"=>"Le montant initial est un nombre",
             "projet.montantRechercher.integer"=>"Le montant recherché est un nombre",
             "projet.dateFin.gte"=>"La date de fin doit etre supérieure à la date de debut",
-
-
         ]);
 
        if($request->projet["image"] !== null)

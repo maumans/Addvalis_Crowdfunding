@@ -1,9 +1,39 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Panel from "@/Layouts/Admin/Panel";
 import {minHeight} from "@mui/system";
 import {Inertia} from "@inertiajs/inertia";
+import {MenuItem, Select} from "@mui/material";
 
-function Index({auth,programme,projets,success}) {
+function Index({auth,programme,projets,success,page}) {
+    const [projetsSt, setProjetsSt] = useState([]);
+    const [recherche, setRecherche] = useState(0);
+
+    const handleChange = (event) => {
+        setRecherche(event.target.value);
+    };
+
+    useEffect(()=>{
+        setProjetsSt(projets)
+    },[])
+
+    useEffect(()=>{
+        switch(recherche)
+        {
+            case 1:
+                setProjetsSt(projets.filter((p)=>(p.etape==="preselection")))
+                break
+            case 2:
+                setProjetsSt(projets.filter((p)=>(p.etape==="selection")))
+                break
+            case 3:
+                setProjetsSt(projets.filter((p)=>(p.etape==="valide")))
+                break
+            default:
+                setProjetsSt(projets)
+        }
+    },[recherche])
+
+
     return (
         <Panel
             auth={auth}
@@ -25,14 +55,34 @@ function Index({auth,programme,projets,success}) {
                     projets.length ===0 &&
                     <div className={"flex mt-36 w-full justify-center items-center"}>
                         <div>
-                            Aucun projet soumis pour le moment
+                            Aucun projet {page==="valide"?"validé":"soumis"} pour le moment
+                        </div>
+                    </div>
+                }
+
+                {
+                    projets.length !==0 &&
+                    <div className={"w-full flex space-x-5 my-5 items-center"}>
+                        <div>
+                            filtre:
+                        </div>
+                        <div>
+                            <Select
+                                value={recherche}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value={0}>Tous les projets</MenuItem>
+                                <MenuItem value={1}>Preselection</MenuItem>
+                                <MenuItem value={2}>Selection</MenuItem>
+                                <MenuItem value={3}>valide</MenuItem>
+                            </Select>
                         </div>
                     </div>
                 }
 
                 <div className={"w-full flex"}>
                    <div className={"w-full md:mx-5 grid gap-5"}>
-                       {projets.length>0 && projets.map((p)=>(
+                       {projetsSt.length>0 && projetsSt.map((p)=>(
                            <div className={"flex h-80 space-x-5"} key={p.id}>
                                <div className={"md:w-5/12 w-6/12"}>
                                    <img className={"w-full h-full"} style={{objectFit:"cover",minHeight:"100%"}} src={p.image}/>

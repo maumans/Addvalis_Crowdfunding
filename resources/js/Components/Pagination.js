@@ -1,7 +1,7 @@
 import React, {Component, useEffect, useState} from 'react';
 import ReactPaginate from 'react-paginate';
 
-function Paginations({list,perPage,content}) {
+function Paginations({list,perPage,content,lv}) {
 
     const [st,setSt]=useState({
         page: 0,
@@ -45,7 +45,7 @@ function Paginations({list,perPage,content}) {
                 }
             </div>
             :
-            <div className={"text-center"} style={{marginTop:300}}>Liste Vide</div>
+            <div className={"text-center"} style={{marginTop:300}}>{lv&&lv}</div>
 
     );
 }

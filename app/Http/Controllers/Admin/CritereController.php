@@ -45,12 +45,18 @@ class CritereController extends Controller
         $request->validate([
             "description" =>"required",
             "noteMaximale" =>$request->genreCritere?"":"required|gt:0"
+        ],
+        [
+            "description.required" =>"La description est requise",
+            "noteMaximale.required" =>"La note noteMaximale est requise",
+            "noteMaximale.gt" =>"La note maximale doit etre superieure à 0",
         ]);
+
         $critere=Critere::create([
             "description" =>$request->description,
             "notemax"=> $request->genreCritere?null:$request->noteMaximale,
-
         ]);
+
         $request->genreCritere?$critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save():$critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
         $request->typeCritere?$critere->typeCritere()->associate(TypeCritere::where("libelle","selection")->first())->save():$critere->genreCritere()->associate(TypeCritere::where("libelle","preselection")->first())->save();
 
@@ -89,12 +95,16 @@ class CritereController extends Controller
     public function update(Request $request, $user,Critere $critere)
     {
         $request->validate([
-            "description" =>"required",
-            "noteMaximale" =>$request->genreCritere?"":"required|gt:0"
+            "descriptionEd" =>"required",
+            "noteMaximaleEd" =>$request->genreCritere?"":"required|gt:0"
+        ],
+        [
+            "descriptionEd.required" =>"La description est requise",
+            "noteMaximaleEd.required" =>"La note est requise",
         ]);
 
-        $critere->description = $request->description;
-        $critere->notemax = $request->genreCritere?null:$request->noteMaximale;
+        $critere->description = $request->descriptionEd;
+        $critere->notemax = $request->genreCritere?null:$request->noteMaximaleEd;
         $critere->save();
         $request->genreCritere?$critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save():$critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
         $request->typeCritere?$critere->typeCritere()->associate(TypeCritere::where("libelle","selection")->first())->save():$critere->typeCritere()->associate(TypeCritere::where("libelle","preselection")->first())->save();

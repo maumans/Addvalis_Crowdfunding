@@ -24,6 +24,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {Link} from "@inertiajs/inertia-react";
+import {Collapse, ListItemButton} from "@mui/material";
+import {ExpandLess, ExpandMore, StarBorder} from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -35,8 +37,16 @@ function ResponsiveDrawer(props) {
         setMobileOpen(!mobileOpen);
     };
 
+    const [open, setOpen] = React.useState("");
+
+    const handleClick = (e,a) => {
+        open===a?setOpen(""):setOpen(a);
+    };
+
     const drawer = (
         <div className={"z-0"}>
+
+
             <Accordion
                 defaultExpanded={props.active==="projet"}
             >
@@ -148,6 +158,44 @@ function ResponsiveDrawer(props) {
                     </List>
                 </AccordionDetails>
             </Accordion>
+
+
+            <ListItemButton onClick={(e)=>handleClick(e,"projets")}>
+                <ListItemIcon>
+                    <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Projets" />
+                {open==="projets" ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+
+            <Collapse in={open==="projets"} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                            <StarBorder />
+                        </ListItemIcon>
+                        <ListItemText primary="Starred" />
+                    </ListItemButton>
+                </List>
+            </Collapse>
+
+            <ListItemButton onClick={(e)=>handleClick(e,"programmes")}>
+                <ListItemIcon>
+                    <InboxIcon/>
+                </ListItemIcon>
+                <ListItemText primary="Programmes" />
+                {open==="programmes" ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={open==="programmes"} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                            <StarBorder />
+                        </ListItemIcon>
+                        <ListItemText primary="Starred" />
+                    </ListItemButton>
+                </List>
+            </Collapse>
 
         </div>
     );

@@ -1,3 +1,8 @@
+.swal2-popup {
+    font-size: 10px !important;
+    font-family: Georgia, serif;
+}
+
 @keyframes visible {
     from {opacity: 0;}
     to {opacity: 1;}

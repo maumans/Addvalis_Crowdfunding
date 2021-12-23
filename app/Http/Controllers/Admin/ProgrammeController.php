@@ -52,17 +52,32 @@ class ProgrammeController extends Controller
      * @param User $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request,User $user)
+    public function store(Request $request, $user)
     {
         $request->validate([
-            "titre" =>"required",
-            "description" =>"required",
+            "titre" =>"required|max:100",
+            "description" =>"required|min:10|max:255",
             "dateDebut" =>"required|date",
             "dateFin" =>"required|date",
             "details" =>"required",
             "image" =>"required",
-            "noteMinPreselection"=>$request->criteresPreselections?"required":"prohibited",
-            "noteMinSelection"=>$request->criteresSelections?"required":"prohibited",
+            "noteMinPreselection"=>$request->criteresPreselections?"required":"",
+            "noteMinSelection"=>$request->criteresSelections?"required":"",
+        ],
+        [
+            "titre.required"=>"Le titre est requis",
+            "titre.max"=>"100 caractères max pour titre ",
+            "description.required"=>"La description est requise",
+            "description.min"=>"10 caractères min pour titre",
+            "description.max"=>"255 caractères max pour titre",
+            "dateDebut.required"=>"La date de debut est requise",
+            "dateDebut.date"=>"Une date est requise",
+            "dateFin.required"=>"La date de fin est requise",
+            "dateFin.date"=>"Une date est requise",
+            "details.required"=>"Les details sont requis",
+            "image.required"=>"L'image est requise",
+            "noteMinPreselection.required"=>"La note minimale de preselection est requise",
+            "noteMinSelection.required"=>"La note minimale de selection est requise",
         ]);
 
         $nom=$request->file("image")->store("ProgrammeImage","public");
@@ -76,8 +91,8 @@ class ProgrammeController extends Controller
             "dateFin" =>$request->dateFin,
             "details" =>$request->details,
             "image" =>$image,
-            "noteMinPreselection"=>$request->noteMinPreselection,
-            "noteMinSelection"=>$request->noteMinSelection
+            "noteMinPreselection"=>$request->criteresPreselections ? $request->noteMinPreselection:"",
+            "noteMinSelection"=>$request->criteresSelections ? $request->noteMinSelection:""
         ]);
 
         foreach($request->criteresPreselections as $key => $value)
@@ -133,9 +148,17 @@ class ProgrammeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($userId ,$programmeId)
     {
-        //
+        $criteresPreselections=Critere::whereRelation("typeCritere","libelle","preselection")->get();
+        $criteresSelections=Critere::whereRelation("typeCritere","libelle","selection")->get();
+        $secteurs=Secteur::all();
+        $regions=Region::all();
+        $programme=Programme::where("id",$programmeId)->with(["secteurs","regions",])->first();
+        $preselections=$programme->criteres()->whereRelation("typeCritere","libelle","preselection")->get();
+        $selections=$programme->criteres()->whereRelation("typeCritere","libelle","selection")->get();
+
+        return Inertia::render("Admin/Programme/Edit",["criteresPreselections"=>$criteresPreselections,"criteresSelections"=>$criteresSelections,"secteurs"=>$secteurs,"regions"=>$regions,"programme"=>$programme,"selections"=>$selections,"preselections"=>$preselections]);
     }
 
     /**
@@ -143,21 +166,96 @@ class ProgrammeController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $userId, Programme $programme)
     {
-        //
+
+        $request->validate([
+            "programme.titre" =>"required|max:100",
+            "programme.description" =>"required|min:1|max:255",
+            "programme.dateDebut" =>"required|date",
+            "programme.dateFin" =>"required|date",
+            "programme.details" =>"required",
+            "programme.noteMinPreselection"=>count($request->programme["criteresPreselections"])!=0 ?"required":"",
+            "programme.noteMinSelection"=>count($request->programme["criteresSelections"])!=0 ?"required":"",
+        ],
+            [
+                "programme.titre.required"=>"Le titre est requis",
+                "programme.titre.min"=>"100 caractères max pour le titre",
+                "programme.description.required"=>"La description est requise",
+                "programme.description.min"=>"10 caractères min pour le description",
+                "programme.description.max"=>"200 caractères max pour le description",
+                "programme.dateDebut.required"=>"La date de debut est requise",
+                "programme.dateDebut.date"=>"Une date est requise",
+                "programme.dateFin.required"=>"La date de fin est requise",
+                "programme.dateFin.date"=>"Une date est requise",
+                "programme.details.required"=>"Les details sont requis",
+                "programme.noteMinPreselection.required"=>"La note minimale de preselection est requise",
+                "programme.noteMinSelection.required"=>"La note minimale de selection est requise",
+            ]
+        );
+
+
+        if($request->programme["image"] !== null)
+        {
+            $nom=$request->file("programme.image")->store("ProgrammeImage","public");
+            $image=Storage::url($nom);
+        }
+
+        $programme->titre =$request->programme["titre"];
+        $programme->description =$request->programme["description"];
+        $programme->dateDebut =$request->programme["dateDebut"];
+        $programme->dateFin = $request->programme["dateFin"];
+        $programme->details = $request->programme["details"];
+        $request->programme["image"]!==null &&  $programme->image = $image;
+        $programme->noteMinPreselection =count($request->programme["criteresPreselections"])!=0 ? $request->programme["noteMinPreselection"]:"";
+        $programme->noteMinSelection = count($request->programme["criteresSelections"])!=0 ? $request->programme["noteMinSelection"]:"";
+
+        $preselections=$programme->criteres()->whereRelation("typeCritere","libelle","preselection")->get();
+        $programme->criteres()->detach($preselections);
+        foreach($request->programme["criteresPreselections"] as $key => $value)
+        {
+            $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
+        }
+
+        $selections=$programme->criteres()->whereRelation("typeCritere","libelle","selection")->get();
+        $programme->criteres()->detach($selections);
+
+        foreach($request->programme["criteresSelections"] as $key => $value)
+        {
+            $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
+        }
+
+        $programme->regions()->detach();
+        foreach($request->programme["regions"] as $key => $value)
+        {
+            $programme->regions()->syncWithoutDetaching(Region::find($value["id"]));
+        }
+
+        $programme->secteurs()->detach();
+        foreach($request->programme["secteurs"] as $key => $value)
+        {
+            $programme->secteurs()->syncWithoutDetaching(Secteur::find($value["id"]));
+        }
+
+        $programme->save();
+
+
+        return redirect()->back()->with("success", "programme modifié avec succès");
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($userId,Programme $programme)
     {
-        //
+        $programme->delete();
+
+        return redirect()->back()->with("success", "programme supprimé avec succès");
     }
 }

@@ -17,6 +17,8 @@ class CreateProgrammeProjetPivotTable extends Migration
             $table->id();
             $table->foreignId("programme_id")->nullable()->constrained("programmes")->cascadeOnDelete();
             $table->foreignId("projet_id")->nullable()->constrained("projets")->cascadeOnDelete();
+            $table->float("noteTotalePreselection")->nullable();
+            $table->float("noteTotaleSelection")->nullable();
             $table->timestamps();
         });
     }

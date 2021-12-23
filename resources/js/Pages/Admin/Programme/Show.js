@@ -14,7 +14,7 @@ function Show({auth,success,programme,criteres}) {
             showConfirmButton: false,
             timer: 2000
         })
-    },[success])
+    },[success,programme])
 
     return (
         <Panel
@@ -80,23 +80,19 @@ function Show({auth,success,programme,criteres}) {
                                        </span>
                                     </div>
                                     <div className={"p-2 border-l-4 border-indigo-600 bg-gray-100"}>
-                                        <span>
+                                        <span className={"space-x-2"}>
                                             <span className={"font-bold mr-2"}> Critères de preselection: </span>
                                             {criteres.length!==0 ? criteres.map((c)=> {
-                                                let a=0
-                                                a++
-                                                return c.type_critere.libelle === "preselection" && (a !== 1 ? "," : "") + c.description
+                                                return c.type_critere.libelle === "preselection" && <span className={"underline"}>{c.description} </span>
 
                                             }):"aucun"}
                                         </span>
                                     </div>
                                     <div className={"p-2 border-l-4 border-indigo-600"}>
-                                        <span>
+                                        <span className={"space-x-2"}>
                                             <span className={"font-bold mr-2"}> Critères de selection: </span>
                                             {criteres.length!==0 ? criteres.map((c)=> {
-                                                let a=0
-                                                a++
-                                                return c.type_critere.libelle === "selection" && (a !== 1 ? "," : "") + c.description
+                                                return c.type_critere.libelle === "selection" && <span className={"underline"}>{c.description } </span>
 
                                             }):"aucun"}
                                         </span>

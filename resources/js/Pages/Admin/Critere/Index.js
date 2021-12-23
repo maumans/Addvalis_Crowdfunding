@@ -47,40 +47,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }))
 
-function Index({success,auth,criteres}) {
+function Index({success,auth,criteres,errors}) {
 
     const [open, setOpen] = React.useState(false);
 
-    function handleOpen(e,s){
-        setCritereSelect(s)
-        setData((data) => ({
-            ...data,
-            "description":s.description,
-            "noteMaximale":s.notemax?s.notemax:"",
-            "genreCritere":s.genre_critere.libelle==="choix",
-            "typeCritere":s.type_critere?.libelle==="selection"
-        }))
-        setOpen(true)
-    }
-
-    function handleClose(){
-        setOpen(false)
-        setCritereSelect(null)
-    }
 
     const [critereSelect,setCritereSelect] =useState(null)
 
     const [data,setData] =useState({
-        "description":"",
+        "descriptionEd":"",
         "genreCritere":false,
         "typeCritere":false,
-        "noteMaximale":10
+        "noteMaximaleEd":0
     })
     const [dataAdd,setDataAdd] =useState({
         "description":"",
         "genreCritere":false,
         "typeCritere":false,
-        "noteMaximale":10
+        "noteMaximale":0
     })
 
     const style = {
@@ -93,6 +77,27 @@ function Index({success,auth,criteres}) {
         boxShadow: 24,
         p: 4,
     };
+
+    function handleOpen(e,s){
+        setCritereSelect(s)
+        setData((data) => ({
+            ...data,
+            "descriptionEd":s.description,
+            "noteMaximaleEd":s.notemax?s.notemax:"",
+            "genreCritere":s.genre_critere.libelle==="choix",
+            "typeCritere":s.type_critere?.libelle==="selection"
+        }))
+        setOpen(true)
+    }
+
+    useEffect(()=>{
+       (errors.descriptionEd || errors.noteMaximaleEd) && setOpen(true)
+    })
+
+    function handleClose(){
+        setOpen(false)
+        setCritereSelect(null)
+    }
     useLayoutEffect(()=>{
         success && Swal.fire({
             position: 'top-end',
@@ -103,15 +108,15 @@ function Index({success,auth,criteres}) {
         })
         setData((data) => ({
             ...data,
-            "description":"",
-            "noteMaximale":"",
+            "descriptionEd":"",
+            "noteMaximaleEd":"",
             "genreCritere":false,
             "typeCritere":false
         }))
     },[success,criteres])
 
     useEffect(()=>{
-        console.log(data)
+        console.log(errors)
     })
     function handleSubmit(e){
         e.preventDefault();
@@ -132,9 +137,12 @@ function Index({success,auth,criteres}) {
                 aria-describedby="modal-modal-description"
             >
                 <div style={style} className={"bg-white p-5 space-y-5 flex flex-col"}>
-                    <TextareaAutosize className={"w-full"} style={{ height:100 }} value={data.description} onChange={(e)=> setData((data)=>({
+                    <TextareaAutosize className={"w-full"} style={{ height:100 }} value={data.descriptionEd} onChange={(e)=> setData((data)=>({
                         ...data,
-                        "description":e.target.value}))} variant="standard"/>
+                        "descriptionEd":e.target.value}))} variant="standard"/>
+                    <div className="text-red-600">
+                        {errors?.descriptionEd}
+                    </div>
                     <div className={"w-full"}>
                         <span>Note</span>
                         <Switch checked={data.genreCritere} onChange={(e)=> setData((data)=>({
@@ -152,10 +160,13 @@ function Index({success,auth,criteres}) {
                         <span>Selection</span>
                     </div>
 
-                    <TextField value={data.noteMaximale}  style={{ minWidth:150}} onChange={(e)=> setData((dataAdd)=>({
+                    <TextField value={data.noteMaximaleEd}  style={{ minWidth:150}} onChange={(e)=> setData((dataAdd)=>({
                         ...data,
-                        "noteMaximale":e.target.value }))}
+                        "noteMaximaleEd":e.target.value }))}
                                type={"number"} inputProps={{ min: 1, max: 100 }}  disabled={data.genreCritere} label={"note maximale"} variant={"standard"}/>
+                    <div className="text-red-600">
+                        {errors?.noteMaximaleEd}
+                    </div>
 
 
                     <button onClick={()=>{
@@ -175,7 +186,10 @@ function Index({success,auth,criteres}) {
                                     <TextareaAutosize placeholder={"Description du secteur"} onChange={(e)=> setDataAdd((dataAdd)=>({
                                         ...dataAdd,
                                         "description":e.target.value
-                                    }))} variant={"standard"} label={"ajouter un critere"}/>
+                                    }))} variant={"standard"}/>
+                                    <div className="text-red-600">
+                                        {errors?.description}
+                                    </div>
                                     <div className={"flex space-x-2 items-center"}>
                                         <span>Note</span>
                                         <Switch onChange={(e)=> setDataAdd((dataAdd)=>({
@@ -197,6 +211,9 @@ function Index({success,auth,criteres}) {
                                             ...dataAdd,
                                             "noteMaximale":e.target.value }))}
                                                    type={"number"} inputProps={{ min: 1, max: 100 }}  disabled={dataAdd.genreCritere} label={"note maximale"} variant={"standard"}/>
+                                    </div>
+                                    <div className="text-red-600">
+                                        {errors?.noteMaximale}
                                     </div>
                                     <div>
                                         <button type={"submit"} className={"text-white rounded bg-indigo-600 p-2 font-bold"}>

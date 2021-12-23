@@ -16,10 +16,11 @@ class ProjetController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index($user, Programme $programme)
+    public function index(Request $request,$user, Programme $programme)
     {
         $projets=$programme->projets()->orderBy("created_at","desc")->with("user")->get();
-       return Inertia::render("Admin/Programme/Projet/Index",["programme"=>$programme,"projets"=>$projets]);
+
+        return Inertia::render("Admin/Programme/Projet/Index",["programme"=>$programme,"projets"=>$projets,"page"=>$request->page]);
     }
 
     /**
@@ -75,11 +76,14 @@ class ProjetController extends Controller
      */
     public function update(Request $request,$userId, Programme $programme,Projet $projet)
     {
-        foreach($request->all() as $key=>$value)
+        foreach($request->critereValidation as $key=>$value)
         {
             $projet->criteres()->syncWithoutDetaching([$key=>["note"=>$value,"choix"=>$value]]);
-
         }
+
+        $programme->projets()->syncWithoutDetaching([$projet->id=>["noteTotalePreselection"=>$request->noteTotalePreselection,"noteTotaleSelection"=>$request->noteTotaleSelection]]);
+        $projet->etape=$request->etape;
+        $projet->save();
 
         return redirect()->back();
     }

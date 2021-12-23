@@ -9,6 +9,9 @@ import TabPanel from "@mui/lab/TabPanel";
 import ReactHtmlParser from "react-html-parser";
 import Avatar from "@mui/material/Avatar";
 import {InputAdornment, Switch, TextField} from "@mui/material";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 function Show({auth,success,projet,programme,criteres}) {
 
@@ -17,12 +20,14 @@ function Show({auth,success,projet,programme,criteres}) {
     const [value, setValue] = useState('1');
     const [noteTotalePreselection, setNoteTotalePreselection] =useState(0);
     const [noteTotaleSelection, setNoteTotaleSelection] =useState(0);
+    const [etape, setEtape] = useState("");
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
     useEffect(()=>{
+        setEtape(projet.etape);
         criteres.map((c)=> {
             setCritereValidation(critereValidation => ({
                 ...critereValidation,
@@ -69,8 +74,9 @@ function Show({auth,success,projet,programme,criteres}) {
 
     function handleSubmit(e) {
         e.preventDefault()
-        Inertia.patch(route("admin.programme.projet.update",[auth.user.id,programme.id,projet.id]),critereValidation,{preserveScroll:true})
+        Inertia.patch(route("admin.programme.projet.update",[auth.user.id,programme.id,projet.id]),{critereValidation,etape,noteTotaleSelection,noteTotalePreselection},{preserveScroll:true,preserveState:true})
     }
+
 
     return (
         <Panel
@@ -120,7 +126,8 @@ function Show({auth,success,projet,programme,criteres}) {
                                 <TabPanel value="2">
                                     <div className="flex justify-center">
                                         <div className="w-full space-y-16" style={{maxWidth:1000}}>
-                                            <div className="space-y-10">
+
+                                            <div hidden={projet.etape!=="preselection"} className="space-y-10">
                                                 <div className="w-full border-b border-t text-xl font-bold">
                                                     Critères de presélection
                                                 </div>
@@ -155,13 +162,19 @@ function Show({auth,success,projet,programme,criteres}) {
                                                     <div>
                                                         <span className={"font-bold"}>Note totale minimale de preselection:</span> {programme.noteMinPreselection}
                                                     </div>
-                                                    <div className={"ml-auto"}>
+                                                    <div className={`ml-auto ${noteTotalePreselection>=programme.noteMinPreselection ? "text-green-500 transition duration-500":"text-red-500 transition duration-500"}`}>
                                                        <span className={"font-bold"}>Note totale:</span> {noteTotalePreselection}
                                                     </div>
 
                                                 </div>
+                                                <div className={"w-full flex justify-end"}>
+                                                    <button disabled={noteTotalePreselection<programme.noteMinPreselection} onClick={()=>{
+                                                            setEtape("selection")
+                                                        }
+                                                    } type={"submit"} className={noteTotalePreselection<programme.noteMinPreselection?"border border-gray-400 text-gray-400 rounded p-2 cursor-not-allowed":"border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition duration-500 rounded p-2"}>Passer à la preselection <NavigateNextIcon/> </button>
+                                                </div>
                                             </div>
-                                            <div className="space-y-10">
+                                            <div hidden={projet.etape!=="selection"} className="space-y-10">
                                                 <div className="w-full border-b border-t text-xl font-bold">
                                                     Critères de sélection
                                                 </div>
@@ -196,10 +209,20 @@ function Show({auth,success,projet,programme,criteres}) {
                                                     <div>
                                                         <span className={"font-bold"}>Note totale minimale de preselection:</span> {programme.noteMinSelection}
                                                     </div>
-                                                    <div className={"ml-auto"}>
+                                                    <div className={`ml-auto ${noteTotaleSelection>=programme.noteMinSelection ? "text-green-500 transition duration-500":"text-red-500 transition duration-500"}`}>
                                                         <span className={"font-bold"}>Note totale:</span> {noteTotaleSelection}
                                                     </div>
 
+                                                </div>
+                                                <div className={"w-full flex justify-between"}>
+                                                    <button onClick={()=>{
+                                                        setEtape("preselection")
+                                                    }
+                                                    } type={"submit"} className={"border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded p-2"}><NavigateBeforeIcon/>Retourner à la preselection  </button>
+                                                    <button disabled={noteTotaleSelection<programme.noteMinSelection} onClick={()=>{
+                                                        setEtape("valide")
+                                                    }
+                                                    } type={"submit"} className={noteTotaleSelection<programme.noteMinSelection?"border border-gray-400 text-gray-400 rounded p-2 cursor-not-allowed":"border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition duration-500 rounded p-2"}>Valider le projet </button>
                                                 </div>
                                             </div>
                                         </div>

@@ -163,7 +163,11 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                     <span className="text-2xl font-bold font">
                         Creation de programme
                     </span>
-                    <TextField onChange={e=>setData("titre",e.target.value)} label={"titre du programme"} variant={"standard"}/>
+                   <div>
+                       <TextField className={"w-full"} onChange={e=>setData("titre",e.target.value)} label={"titre du programme"} variant={"standard"}/>
+                       <div className={"text-red-600"}>{errors?.titre}</div>
+                   </div>
+
                     <div className={"space-y-5"}>
                         <div>Description du programme</div>
                         <TextareaAutosize
@@ -171,11 +175,17 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                             aria-label="minimum height"
                             maxRows={4}
                             className={"w-full"} style={{height:100}} label={"description du programme"} variant={"standard"}/>
+                        <div className={"text-red-600"}>{errors?.description}</div>
                     </div>
 
-                    <TextField type={"date"} value={data.dateDebut} onChange={e=>setData("dateDebut",e.target.value)} variant={"standard"}/>
-                    <TextField  value={data.dateFin} onChange={e=>setData("dateFin",e.target.value)} type="date" variant={"standard"}/>
-
+                    <div>
+                        <TextField className={"w-full"} type={"date"} value={data.dateDebut} onChange={e=>setData("dateDebut",e.target.value)} variant={"standard"}/>
+                        <div className={"text-red-600"}>{errors?.dateDebut}</div>
+                    </div>
+                    <div>
+                        <TextField className={"w-full"}  value={data.dateFin} onChange={e=>setData("dateFin",e.target.value)} type="date" variant={"standard"}/>
+                        <div className={"text-red-600"}>{errors?.dateFin}</div>
+                    </div>
                     <div className={"grid md:grid-cols-2 grid-cols-1 gap-5 border-t py-2 w-full"} style={{maxWidth:1000}}>
                         <div className={"flex flex-col space-y-3"}>
                             <span className={"text-xl font-bold"}>Image du programme</span>
@@ -186,7 +196,7 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                         <div>
                             <div className={"mt-2"}>
                                 {
-                                    data.image&& <img src={URL.createObjectURL(data.image)} alt=""/>
+                                    data.image&& <img src={URL.createObjectURL(data.image)} style={{maxHeight:200}} alt=""/>
                                 }
                             </div>
                             <TextField
@@ -197,11 +207,11 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                         </div>
                     </div>
 
-                    <div className={"space-y-5"}>
+                    <div className={"space-y-10"}>
                         <div className={"text-xl font-bold"}>
                             Definition des critères
                         </div>
-                        <div className={"flex flex-col space-y-5"}>
+                        <div className={"flex flex-col space-y-2"}>
                             <div>
                                 Selectionnez les secteurs concernés ( Laisser vide si tous les secteurs sont concernés)
                             </div>
@@ -217,10 +227,11 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"Secteurs concernés"} label={params.libelle}/>}
                                 />
+                                <div className={"text-red-600"}>{errors?.secteurs}</div>
                             </div>
                         </div>
 
-                        <div className={"flex flex-col space-y-5"}>
+                        <div className={"flex flex-col space-y-2"}>
                             <div>
                                 Selectionnez les regions concernées ( Laisser vide si toutes les regions sont concernées)
                             </div>
@@ -236,10 +247,11 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"Regions concernées"} label={params.libelle}/>}
                                 />
+                                <div className={"text-red-600"}>{errors?.regions}</div>
                             </div>
                         </div>
 
-                        <div className={"flex flex-col space-y-5"}>
+                        <div className={"flex flex-col space-y-2"}>
                             <div>
                                 Selectionnez les criteres de preselections
                             </div>
@@ -251,22 +263,24 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                                     disablePortal={true}
                                     id={"combo-box-demo"}
                                     options={criteresPreselections}
-                                    getOptionLabel={option=>option.description}
+                                    getOptionLabel={option=>option.description+`${option.notemax ?" ("+option.notemax+")":""}`}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"Critères de préselection"} label={params.description}/>}
                                 />
+                                <div className={"text-red-600"}>{errors?.criteresPreselections}</div>
                             </div>
                         </div>
 
-                        <div className={"flex flex-col space-y-5"}>
+                        <div className={"flex flex-col"}>
                             <div>
                                 Entrez la note minimale de préselection
                             </div>
                             <div>
-                                <TextField style={{maxWidth:300}} type={"number"} variant={"standard"} className={"w-full"} onChange={(e)=>setData('noteMinPreselection',e.target.value)} label={"note minimale de preselection"}/>
+                                <TextField disabled={data.criteresPreselections.length === 0} style={{maxWidth:300}} type={"number"} variant={"standard"} className={"w-full"} onChange={(e)=>setData('noteMinPreselection',e.target.value)} label={"note minimale de preselection"}/>
+                                <div className={"text-red-600"}>{errors?.noteMinPreselection}</div>
                             </div>
                         </div>
-                        <div className={"flex flex-col space-y-5"}>
+                        <div className={"flex flex-col space-y-2"}>
                             <div>
                                 Selectionnez les criteres de selections
                             </div>
@@ -278,18 +292,20 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                                     disablePortal={true}
                                     id={"combo-box-demo"}
                                     options={criteresSelections}
-                                    getOptionLabel={option=>option.description}
+                                    getOptionLabel={option=>option.description+`${option.notemax ?" ("+option.notemax+")":""}`}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"Critères de selection"} label={params.description}/>}
                                 />
+                                <div className={"text-red-600"}>{errors?.criteresSelections}</div>
                             </div>
                         </div>
-                        <div className={"flex flex-col space-y-5"}>
+                        <div className={"flex flex-col"}>
                             <div>
                                 Entrez la note minimale de selection
                             </div>
                             <div>
-                                <TextField style={{maxWidth:300}} type={"number"} variant={"standard"} className={"w-full"} onChange={(e)=>setData('noteMinSelection',e.target.value)} label={"note minimale de selection"}/>
+                                <TextField disabled={data.criteresSelections.length === 0} style={{maxWidth:300}} type={"number"} variant={"standard"} className={"w-full"} onChange={(e)=>setData('noteMinSelection',e.target.value)} label={"note minimale de selection"}/>
+                                <div className={"text-red-600"}>{errors?.noteMinSelection}</div>
                             </div>
                         </div>
                         <div>
@@ -302,7 +318,7 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
 
                     </div>
                     <div className={"space-y-5"}>
-                        <div>Details du programme</div>
+                        <div className={"font-bold"}>Details du programme</div>
                         <Editor
                             value={data.details} onEditorChange={handleEditorChange}
                             init={{
@@ -342,6 +358,8 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                         >
 
                         </Editor>
+                        <div className={"text-red-600"}>{errors?.details}</div>
+
 
                         <button type="submit" className={"border-2 border-indigo-600 text-indigo-600 hover:bg-blue-600 hover:text-white transition duration-500 rounded p-2"}>
                             Soumettre

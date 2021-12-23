@@ -380,7 +380,7 @@ function Edit(props) {
                                             'bold italic backcolor | alignleft aligncenter ' +
                                             'alignright alignjustify | bullist numlist outdent indent | ' +
                                             'removeformat | help',
-                                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                                        content_style: 'img {max-width: 600px;height:"auto";},body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                                         // enable title field in the Image dialog
                                         image_title: true,
                                         // enable automatic uploads of images represented by blob or data URIs

@@ -8,6 +8,7 @@ use App\Models\Projet;
 use App\Models\Region;
 use App\Models\Ville;
 use Carbon\Carbon;
+use http\Url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
@@ -141,5 +142,10 @@ class ProjetController extends Controller
         $projet->contributeurs()->syncWithoutDetaching([auth()->user()->id=>["montant"=>$request->montant]]);
         return redirect()->back()->with('success', 'Vous avez contribué à ce projet avec succès');
 
+    }
+
+    public function searchProject($search)
+    {
+        return redirect()->route("projet.index")->with(['search'=> $search,"previousUrl"=>url()->previous()]);
     }
 }

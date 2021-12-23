@@ -63,15 +63,20 @@ Route::get("/accueil",function () {
     return Inertia::render("Accueil",["secteurs"=>$secteurs, "projets"=>$projets,"programmes"=>$programmes]);
 })->name("accueil");
 
-
+//Projet route
 Route::resource("projet",\App\Http\Controllers\ProjetController::class)->except("show","index")->middleware(['auth', 'verified']);
 Route::resource("projet",\App\Http\Controllers\ProjetController::class)->only("show")->middleware(["projectIsValidated"]);
 Route::resource("projet",\App\Http\Controllers\ProjetController::class)->only("index");
 Route::post("/projet/contribuer",[\App\Http\Controllers\ProjetController::class,"contribuer"])->middleware(['auth', 'verified']);
+Route::get("/projet/search/{search}",[\App\Http\Controllers\ProjetController::class,"searchProject"])->name("projet.search");
 
 //User route
+Route::resource("user",\App\Http\Controllers\UserController::class)->middleware(['auth', 'verified'])->except("edit");
+Route::get("user/{user}/edit/{biographie?}",[\App\Http\Controllers\UserController::class,"edit"])->name("user.edit")->middleware(['auth', 'verified']);
 Route::resource("user.projet",\App\Http\Controllers\User\ProjetController::class)->middleware(['auth', 'verified']);
 Route::get("user/{user}/save",[\App\Http\Controllers\SaveController::class,"index"])->name("user.projet.save")->middleware(['auth', 'verified']);
+
+
 
 
 Route::inertia("user/projet/attente","User/Projet/Attente",["success"=>"projet crée"])->name("attente")->middleware(['auth', 'verified']);

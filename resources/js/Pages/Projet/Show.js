@@ -122,9 +122,6 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
     const [soutienContributeurs, setSoutienContributeurs] = useState(false);
 
 
-
-
-    let soutiencontributeurs;
     return (
         <Authenticated
             auth={auth}
@@ -163,7 +160,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                                 {numberFormat(projet.montantInitial)} FG
                             </div>
                             <span>
-                                montant initial
+                                Apport initial
                             </span>
                         </div>
                         <div>
@@ -254,7 +251,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
             <div className="flex justify-center">
                 <Box sx={{ width: '100%', typography: 'body1' }} centered>
                     <TabContext value={value}>
-                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider'}}>
                             <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
                                 <Tab label="Details" value="1" />
                                 <Tab label="Contributeurs" value="2" />

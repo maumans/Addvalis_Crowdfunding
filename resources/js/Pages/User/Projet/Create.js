@@ -289,7 +289,7 @@ export default function Create(props) {
                     <div>
                         <div className={"mt-2"}>
                             {
-                                data.image&& <img src={URL.createObjectURL(data.image)} alt=""/>
+                                data.image&& <img src={URL.createObjectURL(data.image)} style={{maxHeight:200}} alt=""/>
                             }
                         </div>
                         <TextField
@@ -411,15 +411,14 @@ export default function Create(props) {
                    </div>
                </div>
                 <div className={"flex justify-center"}>
-                    <div className={"w-10/12 xs:w-11/12 space-y-3"}>
+                    <div className={"w-6/12 xs:w-11/12 space-y-3"}>
                         <div>
                             <span className="text-xl font-bold">
                                 Details du projet
                             </span>
                             <p>
-                                Décrivez ce que vous souhaitez financier en évoquant l'importance que votre projet revêt à vos yeux et comment vous comptez le réaliser. Parlez aussi un peu de vous. Une description complète informe les contributeurs sur l'ensemble de votre projet. Si possible, ajoutez des images pour montrer votre travail.
+                                Décrivez ce que vous souhaitez financer en évoquant l'importance que votre projet revêt à vos yeux et comment vous comptez le réaliser. Parlez aussi un peu de vous. Une description complète informe les contributeurs sur l'ensemble de votre projet. Si possible, ajoutez des images pour montrer votre travail.
                             </p>
-
                         </div>
                         <div className="w-full">
                             <Editor

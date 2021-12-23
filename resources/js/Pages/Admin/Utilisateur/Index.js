@@ -14,6 +14,8 @@ import Panel from "@/Layouts/Admin/Panel";
 import { styled } from '@mui/material/styles';
 import {tableCellClasses} from "@mui/material";
 import TableCell from "@mui/material/TableCell";
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 
 
@@ -83,7 +85,11 @@ function Index({success,utilisateurs,auth}) {
                                     <StyledTableCell align="right">
                                         <div className={"flex space-x-1 w-full justify-center"}>
                                             <button onClick={()=>confirm(`Voulez-vous ${u.status==="actif"? "bloquer":"debloquer"} ce utilisateur`) && Inertia.delete(route("admin.utilisateur.destroy",[auth.user.id,u?.id]))} className={`rounded text-white ${u.status==="actif"?" bg-red-600":"bg-green-600"}  p-2`}>
-                                                {u.status==="actif"? "bloquer":"debloquer"}
+                                                {u.status==="actif"? <>
+                                                    <DoNotDisturbIcon/> bloquer
+                                                </> : <>
+                                                    <LockOpenIcon/> debloquer
+                                                </> }
                                             </button>
                                         </div>
                                     </StyledTableCell>

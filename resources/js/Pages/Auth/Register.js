@@ -6,6 +6,7 @@ import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Authenticated from "@/Layouts/Authenticated";
+import {minWidth} from "@mui/system";
 
 export default function Register({auth,AllProjets}) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -41,7 +42,7 @@ export default function Register({auth,AllProjets}) {
 
                 <ValidationErrors errors={errors} />
 
-                <form onSubmit={submit}>
+                <form onSubmit={submit} style={{width:360}}>
                     <div>
                         <Label forInput="name" value="Nom" />
 
@@ -98,22 +99,16 @@ export default function Register({auth,AllProjets}) {
                         />
                     </div>
 
-                    <div className="flex items-center justify-end mt-4">
-                        <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
+                    <div className="flex items-center gap-6 justify-end mt-4">
+                        <Link href={route('login')} className="underline text-sm text-indigo-600 hover:text-indigo-800">
                            Déjà inscrit?
                         </Link>
+
 
                         <Button className="ml-4" processing={processing}>
                             S'inscrire
                         </Button>
 
-                        <Button className="ml-4" role="button">
-                            <Link
-                                href={route('login')}
-                                className="text-white hover:text-gray-20">
-                                SE CONNECTER
-                            </Link>
-                        </Button>
                     </div>
                 </form>
             </Guest>

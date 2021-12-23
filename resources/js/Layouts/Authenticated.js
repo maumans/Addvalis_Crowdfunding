@@ -16,6 +16,7 @@ import {TextField} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
 import {withStyles} from "@mui/styles";
+import Avatar from "@mui/material/Avatar";
 
 
 const TextFieldCustom = withStyles({
@@ -119,7 +120,7 @@ export default function Authenticated({ auth, header, children,active, }) {
                     </div>
                 </div>
                 {(searchProjetList!==null || searchSecteurList!==null)&&
-                <div  className={`${see?"search":"searchHidden"} flex flex-col items-center bg-gray-100 overflow-auto`}>
+                <div  className={`${see?"search":"searchHidden"} flex flex-col items-center relative bg-gray-100 overflow-auto shadow-lg`} style={{maxHeight:600}}>
 
                     {
                         searchSecteurList.length > 0 &&
@@ -159,6 +160,13 @@ export default function Authenticated({ auth, header, children,active, }) {
                                     )
                                 )
                             }
+                        </div>
+                    }
+                    {
+                        (searchProjetList.length > 0 || searchSecteurList.length > 0)
+                        &&
+                        <div className={"w-full flex justify-center py-3 sticky bg-indigo-600 text-white"} style={{bottom:0}}>
+                            <Link href={route("projet.search",search)} className={"hover:underline transition duration-500"}>Voir tous les resultats</Link>
                         </div>
                     }
 
@@ -297,6 +305,10 @@ export default function Authenticated({ auth, header, children,active, }) {
                                                 type="button"
                                                 className="inline-flex items-center px-3 py-2 border border-indigo-600 text-sm leading-4 font-medium rounded-md text-white hover:text-gray-400 focus:outline-none transition ease-in-out duration-150"
                                             >
+                                                {
+                                                    auth.user.photoProfil && <Avatar src={auth.user.photoProfil}/>
+                                                }
+
                                                 {auth.user.name}
 
                                                 <svg
@@ -316,6 +328,9 @@ export default function Authenticated({ auth, header, children,active, }) {
                                         </Dropdown.Trigger>
 
                                         <Dropdown.Content>
+                                            <Dropdown.Link href={route('user.show',auth.user.id)} method="get" as="button" active={route().current('user.show')}>
+                                                Profil
+                                            </Dropdown.Link>
                                             <Dropdown.Link href={route('user.projet.create',auth.user.id)} method="get" as="button" active={active&&active==="creerProjet"}>
                                                 Créer un projet
                                             </Dropdown.Link>
@@ -327,6 +342,9 @@ export default function Authenticated({ auth, header, children,active, }) {
                                             </Dropdown.Link>
                                             <Dropdown.Link href={route('user.contribution.index',auth.user.id)} method="get" as="button" active={active&&active==="contributions"}>
                                                 Mes contributions
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('user.edit',auth.user.id)} method="get" as="button" active={route().current('user.edit')}>
+                                                Paramètres
                                             </Dropdown.Link>
                                             <Dropdown.Link href={route('logout')} method="post" as="button" className={"border-t border-indigo-600"}>
                                                 Deconnexion
@@ -380,13 +398,16 @@ export default function Authenticated({ auth, header, children,active, }) {
                     </div>
                 </div>
 
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' md:hidden'}>
+                <div className={(showingNavigationDropdown ? 'block overflow-auto' : 'hidden') + ' md:hidden transition duration-500'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('accueil')} active={route().current('accueil')||route().current('home')}>
                             Accueil
                         </ResponsiveNavLink>
                         {auth.user &&
                             <>
+                                <ResponsiveNavLink href={route('user.show',auth.user.id)} active={route().current('user.show')}>
+                                    Profil
+                                </ResponsiveNavLink>
                                 <Accordion
                                     defaultExpanded={true}
                                 >
@@ -416,8 +437,12 @@ export default function Authenticated({ auth, header, children,active, }) {
                                         </List>
                                     </AccordionDetails>
                                 </Accordion>
+
                                 <ResponsiveNavLink href={route('user.contribution.index',auth.user.id)} active={active&&active==="contributions"}>
                                     Mes contributions
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink href={route('user.edit',auth.user.id)} active={route().current('user.edit')}>
+                                    Paramètres
                                 </ResponsiveNavLink>
                             </>
                         }
@@ -465,6 +490,7 @@ export default function Authenticated({ auth, header, children,active, }) {
                     }
                 </div>
             </nav>
+
             <div style={{paddingTop:64}}>{children}</div>
 
             <div className="w-full bg-black mt-auto py-5">

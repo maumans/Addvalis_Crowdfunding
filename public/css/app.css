@@ -38371,6 +38371,11 @@ select{
   font-family: 'Crimson Text', serif;
 }
 
+.swal2-popup {
+  font-size: 10px !important;
+  font-family: Georgia, serif;
+}
+
 @-webkit-keyframes visible {
   from {
     opacity: 0;

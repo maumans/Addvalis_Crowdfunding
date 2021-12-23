@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'biographie',
+        "photoProfil"
     ];
 
     /**
@@ -49,7 +51,7 @@ class User extends Authenticatable
 
     public function projetFinances()
     {
-        return $this->belongsToMany(Projet::class,"contributions");
+        return $this->belongsToMany(Projet::class,"contributions")->withPivot("montant");
     }
 
     public function roles()

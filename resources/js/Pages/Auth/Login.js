@@ -43,7 +43,7 @@ export default function Login({ status, canResetPassword,auth,AllProjets }) {
 
                 <ValidationErrors errors={errors} />
 
-                <form onSubmit={submit}>
+                <form onSubmit={submit} style={{width:360}}>
                     <div>
                         <Label forInput="email" value="Email" />
 
@@ -79,7 +79,7 @@ export default function Login({ status, canResetPassword,auth,AllProjets }) {
                         </label>
                     </div>
 
-                    <div className="flex items-center justify-end mt-4">
+                    <div className="flex items-center gap-3 justify-end mt-4">
                         {canResetPassword && (
                             <Link
                                 href={route('password.request')}
@@ -89,16 +89,16 @@ export default function Login({ status, canResetPassword,auth,AllProjets }) {
                             </Link>
                         )}
 
+                        <Link
+                            href={route('register')}
+                            className="text-indigo-600 hover:text-indigo-800 hover:underline">
+                            S'inscrire
+                        </Link>
+
                         <Button className="ml-4" processing={processing}>
                             Connexion
                         </Button>
-                        <Button className="ml-4" role="button">
-                            <Link
-                                href={route('register')}
-                                className="text-white hover:text-gray-20">
-                                Inscription
-                            </Link>
-                        </Button>
+
                     </div>
                 </form>
             </Guest>
