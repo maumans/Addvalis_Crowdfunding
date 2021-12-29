@@ -7,6 +7,7 @@ use App\Models\Programme;
 use App\Models\Projet;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ProjetController extends Controller
@@ -72,7 +73,7 @@ class ProjetController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request,$userId, Programme $programme,Projet $projet)
     {
@@ -92,10 +93,12 @@ class ProjetController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($userId,Programme $programme,Projet $projet)
     {
-        //
+        $projet->delete();
+        return redirect()->route('admin.programme.projet.index',[$userId,$programme->id])->with("success", "projet supprimé avec succès");
+        //dd($projet,$programme);
     }
 }

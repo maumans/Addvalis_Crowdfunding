@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\programmeIsEditable;
 use App\Http\Middleware\ProjectIsValidated;
 use App\Http\Middleware\UserIsAdmin;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'userIsAdmin' =>UserIsAdmin::class,
         "projectIsValidated"=>ProjectIsValidated::class,
+        "programmeIsEditable" => ProgrammeIsEditable::class,
     ];
 }

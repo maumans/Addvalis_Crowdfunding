@@ -44,7 +44,7 @@ function Validation({projets,auth})
 {
 
     return <div className={"flex xs:items-center justify-center w-full p-5"}>
-        <div className={"grid md:grid-cols-3 grid-cols-1 gap-4 mb-20"}>
+        <div className={"grid md:grid-cols-4 sm:grid-cols-2 gap-4 mb-20"}>
             {
                 projets.map((p,i)=>(
                     <div key={p.id} data-aos-once={true} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col overflow-hidden"} style={{maxWidth:400,minWidth:"auto",height:500,boxShadow:"2px 5px 5px gray"}}>

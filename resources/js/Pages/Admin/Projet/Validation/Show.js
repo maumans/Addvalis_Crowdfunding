@@ -109,16 +109,16 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
 
     function handleSubmit(e) {
 
+        /*
 
-        e.preventDefault()
         let verif=true
         for (const [id, note] of Object.entries(notes)) {
             (note>10 || note<0) && (verif = false)
         }
-
-        verif?Inertia.post(route("admin.projet.validation",[auth.user.id,projet.id]),{"notes":notes}):alert("Notes incorrect")
+         */
+        e.preventDefault()
+        Inertia.post(route("admin.projet.validation",[auth.user.id,projet.id]),{"notes":notes})
     }
-
 
 
     return (
@@ -134,39 +134,8 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
             active={"projet"}
             sousActive={"validation"}
         >
-            <div>
+            <div className={"mb-10"}>
                 <div className={"fixed right-0 bottom-10 z-30 space-y-2"}>
-                    <div onMouseLeave={()=>setVoirCriteres(false)} className={"space-y-2 rounded relative"}>
-
-                        <div data-aos={voirCriteres?"fade-up":""} data-aos-duration={1000} className="absolute bottom-12 right-5">
-                            <div className={voirCriteres?"flex flex-col border p-2 bg-white overflow-auto":"hidden"} style={{maxHeight:600}}>
-                                {
-                                    criteres.map((c)=>(
-                                        <div key={c.id} className={"flex items-start space-x-5 pb-4"}>
-                                            <div style={{minWidth:"200"}}>{c.description}</div>
-                                            <div>
-                                                <TextField onChange={(e)=>{
-
-                                                    setNotes((notes)=>(
-                                                        {
-                                                            ...notes,
-                                                            [c.id]: e.target.value
-                                                        }))
-
-
-                                                }} InputProps={{ type:"number", max: 10, min: 0 }} style={{width:80}} label={"note/10"} variant={"standard"}/>
-
-                                                <div style={{minWidth:100}} className={"text-red-500"} hidden={notes[c.id]<11 && notes[c.id]>=0}>
-                                                    Notes {notes[c.id]>10?"max 10":"min 0"}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                        <button onMouseEnter={()=>setVoirCriteres(true)} className={"text-white mr-10 p-2 bg-indigo-600 rounded hover:w-80 hover:bg-indigo-900 transition duration-500"} type={"submit"}>  <VisibilityIcon/> criteres</button>
-                    </div>
                     <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
                         <button className={"text-white p-2 bg-green-600 rounded hover:w-80 hover:bg-green-900 transition duration-500"} type="submit"><CheckIcon/> valider</button>
                         <button className={"text-white p-2 bg-red-600 rounded hover:w-80 hover:bg-red-900 transition duration-500"} type={"button"} onClick={()=>Inertia.delete(route("admin.projet.validation.destroy",[auth.user.id,projet?.id]))}> <HighlightOffIcon/> retirer</button>

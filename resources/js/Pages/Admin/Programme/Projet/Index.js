@@ -74,7 +74,7 @@ function Index({auth,programme,projets,success,page}) {
                                 <MenuItem value={0}>Tous les projets</MenuItem>
                                 <MenuItem value={1}>Preselection</MenuItem>
                                 <MenuItem value={2}>Selection</MenuItem>
-                                <MenuItem value={3}>valide</MenuItem>
+                                <MenuItem value={3}>validé</MenuItem>
                             </Select>
                         </div>
                     </div>
@@ -97,6 +97,9 @@ function Index({auth,programme,projets,success,page}) {
                                    <span className={"italic text-xs my-5"}>
                                        Pojet de: <span className={"capitalize font-bold"}> {p.user.name}</span>
                                    </span>
+                                   <div className={"p-2 my-5 bg-black text-white w-max"}>
+                                       {p.etape}
+                                   </div>
                                    <div className={"mt-auto md:w-6/12 w-full"}>
                                        <button onClick={()=>Inertia.get(route("admin.programme.projet.show",[auth.user.id,programme.id,p.id]))} className={"bg-indigo-600 text-white hover:text-indigo-600 hover:border-indigo-600 border hover:bg-white p-2 w-full transition duration-500"}>
                                            Voir les details

@@ -48,7 +48,6 @@ function Show({auth,projetsSoutenus,dateInscription}) {
 
                    <div className={"flex  items-center space-x-5"}>
                         <div className={"text-indigo-600"}>
-                            {console.log(projetsSoutenus)}
                             {projetsSoutenus.length} projets soutenus
                         </div>
                        <div>

@@ -16,7 +16,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Avatar from "@mui/material/Avatar";
-import {minHeight} from "@mui/system";
+import {maxHeight, minHeight} from "@mui/system";
 
 
 const TextFieldCustom = withStyles({
@@ -137,7 +137,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                     </div>
                 </div>
                 <div className={"flex md:flex-row flex-col md:space-x-5 space-y-5 md:space-y-0 md:max-h-96"} style={{maxWidth:1000}}>
-                    <img src={projet.image} className="flex-1 md:w-8/12"  style={{minHeight:300,objectFit:"cover"}}/>
+                    <img src={projet.image} className="flex-1 md:w-8/12"  style={{minHeight:300,maxHeight:600,objectFit:"cover"}}/>
                     <div className={"xs:mr-0 flex md:w-6/12 h-full flex-col items-between justify-between"}>
                        <div className={"flex w-full"}>
                            <div className={"border border-indigo-600 w-full rounded overflow-hidden"}>

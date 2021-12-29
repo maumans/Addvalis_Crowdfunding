@@ -58,7 +58,7 @@ function Index({auth,success,programmes}) {
                                                <button onClick={(e)=>handleClick(e,p.id)} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:border-0 hover:text-white transition duration-500 rounded p-1"}>
                                                    <VisibilityIcon/> details
                                                </button>
-                                               <button onClick={(e)=>Inertia.get(route("admin.programme.edit",[auth.user.id,p.id]))} className={"border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:border-0 hover:text-white transition duration-500 rounded p-1"}>
+                                               <button disabled={p.nombreProjets>0} onClick={(e)=>Inertia.get(route("admin.programme.edit",[auth.user.id,p.id]))} className={p.nombreProjets>0?"border-2 border-gray-400 text-gray-400 rounded p-1 cursor-not-allowed":"border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:border-0 hover:text-white transition duration-500 rounded p-1"} alt={"mau"}>
                                                   <EditIcon/> modifier
                                                </button>
                                                <button onClick={()=>Inertia.get(route("admin.programme.projet.index",[auth.user.id,p.id]))} className={"border-2 border-indigo-800 text-indigo-800 hover:bg-indigo-800 hover:text-white transition duration-500 rounded p-1"}>

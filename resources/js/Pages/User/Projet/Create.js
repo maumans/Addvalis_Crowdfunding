@@ -158,6 +158,7 @@ export default function Create(props) {
     },[data.region])
 
 
+
     function handleEditorChange(content)
     {
         setData("details",content)
@@ -347,6 +348,7 @@ export default function Create(props) {
                                 onChange={(e,val)=>setData("ville",val)}
                                 disablePortal={true}
                                 options={data.villes}
+                                defaultValue={data.region.villes}
                                 getOptionLabel={option=>option.libelle}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
                                 renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"ville"} label={params?.libelle}/>}

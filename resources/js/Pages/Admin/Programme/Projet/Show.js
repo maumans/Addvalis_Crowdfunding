@@ -12,6 +12,7 @@ import {InputAdornment, Switch, TextField} from "@mui/material";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import {maxHeight} from "@mui/system";
 
 function Show({auth,success,projet,programme,criteres}) {
 
@@ -86,13 +87,14 @@ function Show({auth,success,projet,programme,criteres}) {
             sousActive={"voirProgramme"}
         >
             <form action="" onSubmit={handleSubmit}>
-                <div>
-                    <div className={"fixed w-full bg-white flex justify-center items-center border-b z-10"} style={{height:80}}>
+                <div className={"relative"}>
+                    <div className={"fixed w-full bg-white flex justify-center items-center border-b z-10 py-5 space-x-5"}>
                         <button type={"submit"} className={"border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded p-2"}>Enregistrer</button>
+                        <button onClick={()=>confirm("Voulez-vous vraiment retirer ce projet du programme?") && Inertia.delete(route("admin.programme.projet.destroy",[auth.user.id,programme.id,projet.id]))} type={"button"} className={"border border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition duration-500 rounded p-2"}>Supprimer</button>
                     </div>
-                    <div className={"flex p-5 space-x-5 w-full"} style={{paddingTop:80}}>
-                        <img src={projet.image} className={"w-6/12 h-3/6 object-cover"} style={{minWidth:200,minHeight:200}} alt=""/>
-                        <div className={"w-full"}>
+                    <div className={"flex space-x-5 w-full justify-center"} style={{paddingTop:100}}>
+                        <img src={projet.image} className={"object-cover"} style={{minWidth:200,maxHeight:400}} alt=""/>
+                        <div>
                             <div className={"flex flex-col"}>
                                 <div className={"font-bold md:text-2xl uppercase"}>
                                     {projet.titre}
@@ -129,7 +131,7 @@ function Show({auth,success,projet,programme,criteres}) {
 
                                             <div hidden={projet.etape!=="preselection"} className="space-y-10">
                                                 <div className="w-full border-b border-t text-xl font-bold">
-                                                    Critères de presélection
+                                                    Presélection
                                                 </div>
                                                 <div className="space-y-5">
                                                     {criteres.map((c)=>(
@@ -163,20 +165,20 @@ function Show({auth,success,projet,programme,criteres}) {
                                                         <span className={"font-bold"}>Note totale minimale de preselection:</span> {programme.noteMinPreselection}
                                                     </div>
                                                     <div className={`ml-auto ${noteTotalePreselection>=programme.noteMinPreselection ? "text-green-500 transition duration-500":"text-red-500 transition duration-500"}`}>
-                                                       <span className={"font-bold"}>Note totale:</span> {noteTotalePreselection}
+                                                        <span className={"font-bold"}>Note totale:</span> {noteTotalePreselection}
                                                     </div>
 
                                                 </div>
                                                 <div className={"w-full flex justify-end"}>
                                                     <button disabled={noteTotalePreselection<programme.noteMinPreselection} onClick={()=>{
-                                                            setEtape("selection")
-                                                        }
+                                                        setEtape("selection")
+                                                    }
                                                     } type={"submit"} className={noteTotalePreselection<programme.noteMinPreselection?"border border-gray-400 text-gray-400 rounded p-2 cursor-not-allowed":"border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition duration-500 rounded p-2"}>Passer à la preselection <NavigateNextIcon/> </button>
                                                 </div>
                                             </div>
                                             <div hidden={projet.etape!=="selection"} className="space-y-10">
                                                 <div className="w-full border-b border-t text-xl font-bold">
-                                                    Critères de sélection
+                                                    Sélection
                                                 </div>
                                                 <div className="space-y-5">
                                                     {criteres.map((c)=>(
@@ -223,6 +225,22 @@ function Show({auth,success,projet,programme,criteres}) {
                                                         setEtape("valide")
                                                     }
                                                     } type={"submit"} className={noteTotaleSelection<programme.noteMinSelection?"border border-gray-400 text-gray-400 rounded p-2 cursor-not-allowed":"border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition duration-500 rounded p-2"}>Valider le projet </button>
+                                                </div>
+                                            </div>
+
+                                            <div className={"w-full flex justify-center"}>
+                                                <div hidden={projet.etape!=="valide"} className="space-y-10 md:w-6/12 w-10/12">
+                                                    <div className="w-full border-b border-t text-xl font-bold">
+                                                        Note de validation
+                                                    </div>
+                                                    <div className={"space-y-5"}>
+                                                        <div className={"flex justify-between"}>
+                                                            <div className={"font-bold"}>Preselection:</div> <div>{noteTotalePreselection+"/"+programme.noteMinPreselection}</div>
+                                                        </div>
+                                                        <div className={"flex justify-between"}>
+                                                            <div className={"font-bold"}>Selection:</div> <div>{noteTotaleSelection+"/"+programme.noteMinSelection}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

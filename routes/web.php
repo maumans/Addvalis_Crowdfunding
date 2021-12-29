@@ -89,7 +89,8 @@ Route::resource("user.contribution",\App\Http\Controllers\User\ContributionContr
 
 //Admin route
 Route::resource("admin.projet",\App\Http\Controllers\Admin\ProjetController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
-Route::resource("admin.programme",\App\Http\Controllers\Admin\ProgrammeController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
+Route::resource("admin.programme",\App\Http\Controllers\Admin\ProgrammeController::class)->except("edit")->middleware(['auth', 'verified',"userIsAdmin"]);
+Route::resource("admin.programme",\App\Http\Controllers\Admin\ProgrammeController::class)->only("edit")->middleware(['auth', 'verified',"userIsAdmin","programmeIsEditable"]);
 Route::resource("admin.secteur",\App\Http\Controllers\Admin\SecteurController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::resource("admin.utilisateur",\App\Http\Controllers\Admin\UtilisateurController::class)->middleware(['auth', 'verified',"userIsAdmin"]);
 Route::resource("admin.critere",\App\Http\Controllers\Admin\CritereController::class)->middleware(['auth', 'verified',"userIsAdmin"]);

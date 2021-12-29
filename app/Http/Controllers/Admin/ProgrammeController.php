@@ -27,6 +27,11 @@ class ProgrammeController extends Controller
     public function index()
     {
         $programmes=Programme::orderBy("created_at","desc")->get();
+
+        foreach($programmes as $p)
+        {
+            $p->nombreProjets=$p->projets->count();
+        }
         return Inertia::render("Admin/Programme/Index",["programmes"=>$programmes]);
     }
 
@@ -58,7 +63,7 @@ class ProgrammeController extends Controller
             "titre" =>"required|max:100",
             "description" =>"required|min:10|max:255",
             "dateDebut" =>"required|date",
-            "dateFin" =>"required|date",
+            "dateFin" =>"required|date|after_or_equal:dateDebut",
             "details" =>"required",
             "image" =>"required",
             "noteMinPreselection"=>$request->criteresPreselections?"required":"",
@@ -74,6 +79,7 @@ class ProgrammeController extends Controller
             "dateDebut.date"=>"Une date est requise",
             "dateFin.required"=>"La date de fin est requise",
             "dateFin.date"=>"Une date est requise",
+            "dateFin.after_or_equal"=>"La date de fin doit est superieure à la date de debut",
             "details.required"=>"Les details sont requis",
             "image.required"=>"L'image est requise",
             "noteMinPreselection.required"=>"La note minimale de preselection est requise",
@@ -175,7 +181,7 @@ class ProgrammeController extends Controller
             "programme.titre" =>"required|max:100",
             "programme.description" =>"required|min:1|max:255",
             "programme.dateDebut" =>"required|date",
-            "programme.dateFin" =>"required|date",
+            "programme.dateFin" =>"required|date|after_or_equal:programme.dateDebut",
             "programme.details" =>"required",
             "programme.noteMinPreselection"=>count($request->programme["criteresPreselections"])!=0 ?"required":"",
             "programme.noteMinSelection"=>count($request->programme["criteresSelections"])!=0 ?"required":"",
@@ -190,6 +196,7 @@ class ProgrammeController extends Controller
                 "programme.dateDebut.date"=>"Une date est requise",
                 "programme.dateFin.required"=>"La date de fin est requise",
                 "programme.dateFin.date"=>"Une date est requise",
+                "programme.dateFin.after_or_equal"=>"La date de fin doit est superieure à la date de debut",
                 "programme.details.required"=>"Les details sont requis",
                 "programme.noteMinPreselection.required"=>"La note minimale de preselection est requise",
                 "programme.noteMinSelection.required"=>"La note minimale de selection est requise",

@@ -9,6 +9,7 @@ import {capitalize} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Swal from "sweetalert2";
+import ShowMoreText from "react-show-more-text";
 
 function Index(props) {
     useEffect(()=>{
@@ -41,7 +42,7 @@ function Validation({projets,auth})
 {
 
     return <div className="flex xs:items-center justify-center w-full p-5">
-                <div className={"grid md:grid-cols-3 xs:grid-cols-1 gap-4 mb-20 w-full xs:w-auto"}>
+                <div className={"grid md:grid-cols-4 sm:grid-cols-2 gap-4 mb-20"}>
             {
                 projets.map((p,i)=>(
                     <div  key={p.id} data-aos-once={true} data-aos={"zoom-in"} data-aos-duration={500} className={"flex flex-col overflow-hidden"} style={{maxWidth:400,minWidth:"auto",height:500,boxShadow:"2px 5px 5px gray"}}>
@@ -55,8 +56,15 @@ function Validation({projets,auth})
                             <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:200,width:"100%",objectFit:"cover"}}/>
                         </div>
                         <div className={"p-2"}>
-                            {capitalize(p.description.toLowerCase())}
+                            <ShowMoreText
+                                more=""
+                                lines={3}
+                                className={"w-full"}
+                            >
+                                {capitalize(p.description.toLowerCase())}
+                            </ShowMoreText>
                         </div>
+
                         <div className={"mt-auto w-11/12 border-b border-t mx-5 self-center"}>
                             <div className={"flex space-x-2 ml-5 py-2 "}>
                                 <FavoriteIcon/>

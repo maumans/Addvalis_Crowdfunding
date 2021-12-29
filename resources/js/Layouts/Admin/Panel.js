@@ -43,6 +43,52 @@ function ResponsiveDrawer(props) {
         open===a?setOpen(""):setOpen(a);
     };
 
+    function hadiMain()
+    {
+        return(<div>
+            <button
+                className={"w-full flex justify-between p-4"}
+                style={props.active==="projet"?{backgroundColor:"#4f46e5",color:"white"}:null}
+                onClick={(e)=>handleClick(e,"projets")}>
+                <span>Projets</span>
+                {open==="projets" ? <ExpandLess /> : <ExpandMore />}
+            </button>
+
+            <Collapse in={open==="projets"} timeout="auto" className={"p-2"} unmountOnExit>
+                <List component="div">
+                    <Link href={route("admin.projet.index",props.auth.user.id)}>
+                        <ListItem sx={props.sousActive==="listeProjets"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                            <ListItemText primary={"Liste des projets"} />
+                        </ListItem>
+                    </Link>
+                    <Link href={route("admin.projet.validation.index",props.auth.user.id)}>
+                        <ListItem   sx={props.sousActive==="validation"?{backgroundColor:"#4f46e5",color:"white"}:null}>
+                            <ListItemText primary={"Projets à valider"} />
+                        </ListItem>
+                    </Link>
+                </List>
+            </Collapse>
+
+            <ListItemButton onClick={(e)=>handleClick(e,"programmes")}>
+                <ListItemIcon>
+                    <InboxIcon/>
+                </ListItemIcon>
+                <ListItemText primary="Programmes" />
+                {open==="programmes" ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={open==="programmes"} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                            <StarBorder />
+                        </ListItemIcon>
+                        <ListItemText primary="Starred" />
+                    </ListItemButton>
+                </List>
+            </Collapse>
+        </div>)
+    }
+
     const drawer = (
         <div className={"z-0"}>
 
@@ -158,44 +204,6 @@ function ResponsiveDrawer(props) {
                     </List>
                 </AccordionDetails>
             </Accordion>
-
-
-            <ListItemButton onClick={(e)=>handleClick(e,"projets")}>
-                <ListItemIcon>
-                    <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Projets" />
-                {open==="projets" ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-
-            <Collapse in={open==="projets"} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                            <StarBorder />
-                        </ListItemIcon>
-                        <ListItemText primary="Starred" />
-                    </ListItemButton>
-                </List>
-            </Collapse>
-
-            <ListItemButton onClick={(e)=>handleClick(e,"programmes")}>
-                <ListItemIcon>
-                    <InboxIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Programmes" />
-                {open==="programmes" ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open==="programmes"} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                            <StarBorder />
-                        </ListItemIcon>
-                        <ListItemText primary="Starred" />
-                    </ListItemButton>
-                </List>
-            </Collapse>
 
         </div>
     );

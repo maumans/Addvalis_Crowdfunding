@@ -49,10 +49,12 @@ function Show(props) {
     return (
        <Authenticated
            auth={props.auth}
-           errors={props.errors}>
+           errors={props.errors}
+           active={"secteur"}
+       >
            <div className={"font"}>
                <div>
-                   <div className={"flex justify-center"}>
+                   <div className={"flex justify-center mb-10"}>
                        <div className={"grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12"}>
                            <div className={"text-4xl font-bold my-10 capitalize md:col-span-3 sm:col-span-2 xs:col-span-1"}>
                                {secteur.libelle}

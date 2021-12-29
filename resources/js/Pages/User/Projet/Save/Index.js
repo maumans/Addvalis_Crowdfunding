@@ -33,7 +33,7 @@ function Index(props) {
         >
             <div className={"flex justify-center"}>
 
-                <div className={"grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12 font"}>
+                <div className={"grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12 mb-10 font"}>
 
                     <div data-aos={"zoom-in"} className={"my-8 md:col-span-3 sm:col-span-2 xs:col-span-1 font md:text-3xl text-2xl projetfont border-indigo-600 border-b-2 border-l-2"} style={{width:"fit-content"}}>
                         <div className={"m-2 p-1 bg-indigo-600 text-white"}>

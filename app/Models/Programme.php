@@ -13,6 +13,8 @@ class Programme extends Model
 
     protected $joursRestant;
 
+    protected $nombreProjets;
+
 
     public function getJoursRestantAttribute(){
         return $this->joursRestant;
@@ -21,7 +23,14 @@ class Programme extends Model
         $this->joursRestant = $joursRestant;
     }
 
-    protected $appends = ["joursRestant"];
+    public function getNombreProjetsAttribute(){
+        return $this->nombreProjets;
+    }
+    public function setNombreProjetsAttribute($nombreProjets){
+        $this->nombreProjets = $nombreProjets;
+    }
+
+    protected $appends = ["joursRestant","nombreProjets"];
 
 
     public function projets()

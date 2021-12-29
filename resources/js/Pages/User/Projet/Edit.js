@@ -289,7 +289,7 @@ function Edit(props) {
                                                 />
                                             </div>
 
-                                            <div className={"text-red-600"}>{props.errors["projet.dateDebut"]}</div>
+                                            <div className={"text-red-600"}>{props.errors["projet.region"]}</div>
                                         </div>
 
                                         <div style={{maxWidth:400}}>
@@ -307,7 +307,7 @@ function Edit(props) {
                                                     renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"ville"} label={params?.libelle}/>}
                                                 />
                                             </div>
-                                            <div className={"text-red-600"}>{props.errors["projet.dateFin"]}</div>
+                                            <div className={"text-red-600"}>{props.errors["projet.ville"]}</div>
                                         </div>
 
 

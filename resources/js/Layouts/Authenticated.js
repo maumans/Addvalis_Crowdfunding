@@ -145,8 +145,8 @@ export default function Authenticated({ auth, header, children,active, }) {
                                 searchProjetList.map((p)=>(
 
                                         <div role="button" onClick={()=>Inertia.get(route("projet.show",p.id))} key={p.id} className="w-full p-2 hover:bg-blue-600 hover:text-white transform hover:scale-105 transition duration-500 flex">
-                                            <div className={"w-5/12"}>
-                                                <img src={p.image} alt="" className="w-full h-4/12" style={{objectFit:"cover"}}/>
+                                            <div className={"w-6/12"}>
+                                                <img src={p.image} className={"w-full"} alt="" style={{objectFit:"cover",height:200}}/>
                                             </div>
                                             <div className="space-y-2 ml-2 w-full">
                                                 <p className="font-bold">
@@ -258,7 +258,7 @@ export default function Authenticated({ auth, header, children,active, }) {
                                 >
                                     <Dropdown>
                                         <Dropdown.Trigger>
-                                            <div className="flex items-center" role={"button"}>
+                                            <div className={`flex items-center ${active==="secteur" && "border-b-2 border-indigo-600"}`} role={"button"}>
                                                 <button className={"text-white text-sm h-full py-5"}>Secteurs</button>
                                                 <ArrowDropDownIcon className={"text-white"}/>
                                             </div>
@@ -432,7 +432,7 @@ export default function Authenticated({ auth, header, children,active, }) {
                                                 Mes projets
                                             </ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('user.projet.save',auth.user.id)} active={route().current()==="user.projet.save"}>
-                                                Projets enregitrés
+                                                Projets enregistrés
                                             </ResponsiveNavLink>
                                         </List>
                                     </AccordionDetails>

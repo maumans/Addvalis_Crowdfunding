@@ -44,7 +44,7 @@ function Accueil(props) {
     const [secteurs,setSecteurs]=useState([]);
     const [projets,setProjets]=useState([]);
     const [programmes,setProgrammes]=useState([]);
-    const [voirPlus,setVoirPlus]=useState(3)
+    const [voirPlus,setVoirPlus]=useState(4)
     const [voirPlusProgramme,setVoirPlusProgramme]=useState(2)
 
     useEffect(()=>{
@@ -135,8 +135,8 @@ function Accueil(props) {
 
                 <div className={"flex justify-center border-t"}>
 
-                    <div className={projets.length>0?"grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12":"flex flex-col mb-20"}>
-                        <div className={"md:col-span-3 sm:col-span-2 xs:col-span-1 md:text-xl sm:text-xl text-lg my-10 font flex"}>
+                    <div className={projets.length>0?"grid md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 gap-4 md:w-8/10 sm:w-10/12 xs:w-11/12":"flex flex-col mb-20"}>
+                        <div className={"md:col-span-4 sm:col-span-2 xs:col-span-1 md:text-xl sm:text-xl text-lg my-10 font flex"}>
                             <span className={"underline"}>Projets en cours</span> <Link className={"ml-10 text-xs text-indigo-600 flex items-center hover:underline"} href={route("projet.index")}>Plus de projets <NavigateNextIcon className={"text-xs"}/></Link>
                         </div>
                         {
@@ -194,7 +194,7 @@ function Accueil(props) {
                     </div>
                 </div>
                 <div className={voirPlus<projets.length? "flex justify-center my-10":""} hidden={voirPlus>=projets.length}>
-                    <button onClick={()=>setVoirPlus(voirPlus+3)} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded py-2 px-10 mb-10"} >
+                    <button onClick={()=>setVoirPlus(voirPlus+4)} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded py-2 px-10 mb-10"} >
                         Voir plus
                     </button>
                 </div>
