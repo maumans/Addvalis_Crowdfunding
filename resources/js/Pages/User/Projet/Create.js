@@ -217,7 +217,7 @@ export default function Create(props) {
                             options={secteurs}
                             getOptionLabel={option=>option.libelle}
 
-                            renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}></TextField>}
+                            renderInput={(params)=><TextField variant={"standard"} fullWidth {...params} placeholder={"secteur d'activite"} label={params.libelle}/>}
                         />
                         <div className={"text-red-600"}>{props.errors?.secteur}</div>
 

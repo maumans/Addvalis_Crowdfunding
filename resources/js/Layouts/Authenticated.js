@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
@@ -12,12 +12,18 @@ import Typography from "@mui/material/Typography";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import List from "@mui/material/List";
 import Accordion from "@mui/material/Accordion";
-import {TextField} from "@mui/material";
+import {Badge, MenuItem, TextField} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
 import {withStyles} from "@mui/styles";
 import Avatar from "@mui/material/Avatar";
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 
+
+import Popover from '@mui/material/Popover';
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import Button from "@mui/material/Button";
+import {Menu} from "@mui/icons-material";
 
 const TextFieldCustom = withStyles({
     root: {
@@ -53,10 +59,10 @@ const TextFieldCustom = withStyles({
     },
 })(TextField);
 
-export default function Authenticated({ auth, header, children,active, }) {
+export default function Authenticated({ auth, header, children,active }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [isAdmin, SetIsAdmin] = useState(false);
-    const {AllProjets,secteurs}=usePage().props
+    const {AllProjets,secteurs,notifications}=usePage().props
 
     const [anchorEl, setAnchorEl] = useState(false);
     const [see, setSee] = useState(false);
@@ -67,6 +73,9 @@ export default function Authenticated({ auth, header, children,active, }) {
     const [searchSecteurList, setSearchSecteurList] = useState(null);
     const [search, setSearch] = useState("");
     const inputEl = useRef(null);
+    const [notificationsSt,setNotificationsSt] = useState([])
+    const [notif,setNotif] = useState(null)
+    const [showNotifications,setShowNotifications] = useState(false)
 
     useEffect(() => {
         see && inputEl.current.focus();
@@ -105,6 +114,28 @@ export default function Authenticated({ auth, header, children,active, }) {
             },500
         )
     }
+
+    useEffect(() => {
+        setNotificationsSt(notifications)
+    },[])
+
+
+    window.Echo.private('App.Models.User.' + auth.user?.id)
+        .notification((notification) => {
+            setNotif(notification)
+        });
+
+    useEffect(() => {
+        notif &&
+        setNotificationsSt(notificationsSt=>[
+            ...notificationsSt,
+            {
+                [notificationsSt.length]:notif
+            }
+        ])
+    },[notif])
+
+
 
     return (
         <div className="min-h-screen flex flex-col justify-between z-40">
@@ -285,7 +316,67 @@ export default function Authenticated({ auth, header, children,active, }) {
                                         Administration
                                     </NavLink>
                                 }
-                                <div className="h-full w-full flex items-center justify-end">
+                                <div className="flex h-full w-full flex items-center justify-end space-x-5">
+                                    {
+                                        /*
+                                        <PopupState variant="popover" popupId="demo-popup-popover">
+                                        {(popupState) => (
+                                            <div>
+                                                <Badge {...bindTrigger(popupState)} color="secondary" badgeContent={notificationsSt?.length}>
+                                                    <CircleNotificationsIcon className={"text-white"} />
+                                                </Badge>
+                                                <Popover
+                                                    {...bindPopover(popupState)}
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'center',
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'center',
+                                                    }}
+                                                >
+                                                    {
+                                                        notificationsSt &&
+                                                        <div style={{maxWidth:300}} className={"p-2 space-y-5"}>
+                                                            {notificationsSt.map((n,i)=>(
+                                                                n.projet && <div key={i}>
+                                                                    {
+                                                                        "Le projet " +n.projet.titre+" "+n.message+"kjdvfldkfgdlgd dfgdfgd"
+                                                                    }
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    }
+
+                                                </Popover>
+                                            </div>
+                                        )}
+                                    </PopupState>
+
+                                         */
+                                    }
+
+                                    <div className="relative">
+                                        <Badge onClick={()=>setShowNotifications(!showNotifications)} role="button" color="secondary" badgeContent={notificationsSt?.length}>
+                                            <CircleNotificationsIcon className={"text-white"} />
+                                        </Badge>
+                                        {
+                                            notificationsSt &&
+                                            <div onBlur={()=>setShowNotifications(false)} hidden={!showNotifications} style={{maxWidth:400,height:520,top:64}} className={"p-2 space-y-5 absolute bg-black text-white overflow-y-auto divide-y"}>
+                                                {notificationsSt.map((n,i)=>(
+                                                    n.projet &&
+                                                    <div key={i}>
+                                                        {
+                                                            "Le projet " +n.projet.titre+" "+n.message+"kjdvfldkfgdlgd dfgdfgd"
+                                                        }
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        }
+                                    </div>
+
+
                                     <div>
                                         <IconButton onClick={handleClick}>
                                             <SearchIcon className="text-white"/>
@@ -365,7 +456,12 @@ export default function Authenticated({ auth, header, children,active, }) {
                         </div>
 
                         <div className="-mr-2 flex items-center md:hidden">
-                            <div className="h-full flex items-center">
+                            <div className="h-full flex items-center space-x-5">
+                                <div>
+                                    <Badge color="secondary" badgeContent={notificationsSt?.length}>
+                                        <CircleNotificationsIcon className={"text-white"} />
+                                    </Badge>
+                                </div>
                                 <div>
                                     <IconButton onClick={handleClick}>
                                         <SearchIcon className="text-white"/>

@@ -217,7 +217,7 @@ function Index({success,auth,criteres,errors}) {
                                     </div>
                                     <div>
                                         <button type={"submit"} className={"text-white rounded bg-indigo-600 p-2 font-bold"}>
-                                            Ajouter le secteur
+                                            Ajouter le critere
                                         </button>
                                     </div>
                                 </div>

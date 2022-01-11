@@ -36,11 +36,16 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $user=$request->user()?User::where('id',$request->user()->id)->with('notifications')->first():null;
+
+
+
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $request->user(),
+                'user' =>$user,
                 'admin'=>$request->user() && $request->user()->isAdmin()
             ],
+            "notifications" => $user?$user->notifications->pluck("data"):null,
             'success' => session('success'),
             'secteurs' => Secteur::all(),
             'AllProjets'=>Projet::where("etat","valide")->get(['id',"titre","image","description"]),

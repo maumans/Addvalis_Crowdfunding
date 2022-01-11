@@ -146,7 +146,7 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
     }
 
 
-    function selectMultiple() {
+    function selectMultiple(e) {
             setData("fichiersSupplementaires",e.target.files)
 
     }
@@ -310,9 +310,9 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                         </div>
                         <div>
                             <div>
-                                Selectionnez les fichiers supplementaire à ajouter (pdf,word,excel)*
+                                Selectionnez les fichiers supplementaire à ajouter (pdf,word,excel,img)*
                             </div>
-                            <input accept={".pdf,.xlsx,.xls,.docx"} className={"form-control custom-control mt-5"} id={"img"} type="file" multiple  onChange={selectMultiple} />
+                            <input accept={".pdf,.xlsx,.xls,.docx,.jpeg,.jpg,.png"} className={"form-control custom-control mt-5"} id={"img"} type="file" multiple  onChange={selectMultiple} />
 
                         </div>
 

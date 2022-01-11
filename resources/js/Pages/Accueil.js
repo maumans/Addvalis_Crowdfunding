@@ -37,6 +37,7 @@ SwiperCore.use([Pagination,Navigation,Autoplay]);
 
 import AOS from "aos"
 import ShowMoreText from "react-show-more-text";
+import Echo from "laravel-echo";
 
 
 function Accueil(props) {

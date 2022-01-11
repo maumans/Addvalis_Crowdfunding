@@ -103,7 +103,7 @@ function Show({auth,success,projet,programme,criteres}) {
                                     {projet.description}
                                 </div>
                                 <span className={"italic md:text-sm text-xs my-5"}>
-                               Pojet de: <span className={"capitalize font-bold"}> {projet.user.name}</span>
+                               Projet de: <span className={"capitalize font-bold"}> {projet.user.name}</span>
                            </span>
                             </div>
 

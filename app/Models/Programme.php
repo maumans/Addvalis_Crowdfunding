@@ -52,4 +52,9 @@ class Programme extends Model
     {
         return $this->belongsToMany(Critere::class,"programme_critere");
     }
+
+    public function fichiers()
+    {
+        return $this->hasMany(Fichier::class);
+    }
 }

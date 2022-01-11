@@ -95,7 +95,7 @@ function Index({auth,programme,projets,success,page}) {
                                        {p.description}
                                    </div>
                                    <span className={"italic text-xs my-5"}>
-                                       Pojet de: <span className={"capitalize font-bold"}> {p.user.name}</span>
+                                       Projet de: <span className={"capitalize font-bold"}> {p.user.name}</span>
                                    </span>
                                    <div className={"p-2 my-5 bg-black text-white w-max"}>
                                        {p.etape}

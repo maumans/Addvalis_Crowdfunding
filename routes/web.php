@@ -32,7 +32,6 @@ Route::get('/', function () {
         $p->enregistre=$p->enregistreurs->contains(Auth::user());
     }
 
-
     return Inertia::render('Accueil', [
         "secteurs"=>$secteurs,
         "projets"=>$projets,
@@ -43,10 +42,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name("home");
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get("/accueil",function () {
 

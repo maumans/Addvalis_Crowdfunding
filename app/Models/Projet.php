@@ -105,5 +105,10 @@ class Projet extends Model
         return $this->belongsTo(TypeProjet::class);
     }
 
+    public function fichiers()
+    {
+        return $this->hasMany(Fichier::class);
+    }
+
 
 }

@@ -182,7 +182,7 @@ function Show({auth,errors,projet,createur,contributeurs,pourcentage,montantFina
                     }
                 </div>
             </div>
-            <div className={"w-full mt-32 flex justify-center"}>
+            <div className={"w-full my-32 flex justify-center"}>
                 <div className={"md:w-7/12 w-11/12"}>
                     {ReactHtmlParser(projet.details)}
                 </div>

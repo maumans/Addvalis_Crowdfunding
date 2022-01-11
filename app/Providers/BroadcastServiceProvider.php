@@ -18,4 +18,10 @@ class BroadcastServiceProvider extends ServiceProvider
 
         require base_path('routes/channels.php');
     }
+
+    /**
+     * Les canaux sur lesquels l'utilisateur reçoit les diffusions de notification.
+     *
+     * @return string
+     */
 }

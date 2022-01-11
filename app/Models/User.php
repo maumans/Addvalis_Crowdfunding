@@ -75,4 +75,11 @@ class User extends Authenticatable
         else return false;
 
     }
+
+    /*
+    public function receivesBroadcastNotificationsOn()
+    {
+        return 'App.Models.User.'.$this->id;
+    }
+    */
 }

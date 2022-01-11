@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Critere;
+use App\Models\Fichier;
 use App\Models\Programme;
 use App\Models\Region;
 use App\Models\Secteur;
@@ -100,6 +101,21 @@ class ProgrammeController extends Controller
             "noteMinPreselection"=>$request->criteresPreselections ? $request->noteMinPreselection:"",
             "noteMinSelection"=>$request->criteresSelections ? $request->noteMinSelection:""
         ]);
+
+        if($request->fichiersSupplementaires)
+        {
+            foreach($request->fichiersSupplementaires as $f)
+            {
+                $nom=$f->store("ProgrammeFichier","public");
+                $url=Storage::url($nom);
+
+                Fichier::create([
+                    "url" => $url,
+                ])->programme()->associate($programme)->save();
+            }
+        }
+
+
 
         foreach($request->criteresPreselections as $key => $value)
         {

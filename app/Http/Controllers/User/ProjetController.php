@@ -7,6 +7,7 @@ use App\Models\Adresse;
 use App\Models\Programme;
 use App\Models\Region;
 use App\Models\Ville;
+use App\Notifications\ProjetNotification;
 use Illuminate\Http\Request;
 
 
@@ -39,6 +40,12 @@ class ProjetController extends Controller
      */
     public function create()
     {
+        $user=User::find(2);
+
+        $user->notify(new ProjetNotification(Projet::find(4),"est mis en attente"));
+
+       return redirect()->back();
+
         $secteurs=Secteur::all();
         $regions=Region::with("villes")->get();
         $villes=Ville::with("region")->get();
