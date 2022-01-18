@@ -40,9 +40,9 @@ class ProjetController extends Controller
      */
     public function create()
     {
-        $user=User::find(2);
+        //$user=User::find(2);
 
-        $user->notify(new ProjetNotification(Projet::find(4),"est mis en attente"));
+        //$user->notify(new ProjetNotification(Projet::find(4),"est mis en attente"));
 
         $secteurs=Secteur::all();
         $regions=Region::with("villes")->get();
