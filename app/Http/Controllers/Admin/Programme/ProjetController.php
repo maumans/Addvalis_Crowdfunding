@@ -86,6 +86,40 @@ class ProjetController extends Controller
         $projet->etape=$request->etape;
         $projet->save();
 
+        if($request->etape=="attente")
+        {
+            $preselec=0;
+            $selec=0;
+            $etape="";
+            foreach($programme->criteres as $critere)
+            {
+                if($critere->typeCritere->libelle=="preselection")
+                {
+                    $preselec=1;
+                }
+                if($critere->typeCritere->libelle=="selection")
+                {
+                    $selec=1;
+                }
+                $projet->criteres()->syncWithoutDetaching([$critere->id=>["note"=>"","choix"=>false]]);
+            }
+            if($preselec==1)
+            {
+                $etape="preselection";
+            }
+            else if($selec==1)
+            {
+                $etape="selection";
+            }
+            else
+            {
+                $etape="valide";
+            }
+
+            $projet->etape=$etape;
+            $projet->save();
+        }
+
         return redirect()->back();
     }
 

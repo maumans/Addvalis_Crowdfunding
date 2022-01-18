@@ -23,6 +23,7 @@ class CreateProjetsTable extends Migration
             $table->integer("montantInitial")->nullable();
             $table->integer("montantRechercher")->nullable();
             $table->string("etat")->nullable();
+            $table->string("etape")->nullable();
             $table->longText("details")->nullable();
             $table->foreignId("secteur_id")->nullable()->constrained("secteurs")->cascadeOnDelete();
             $table->foreignId("user_id")->nullable()->constrained("users")->cascadeOnDelete();

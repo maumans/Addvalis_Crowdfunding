@@ -60,6 +60,8 @@ import {useForm} from "@inertiajs/inertia-react";
 import {indigo} from "@mui/material/colors";
 import {styles} from "dom7";
 
+import ClearIcon from '@mui/icons-material/Clear';
+
 function Create({auth,success,criteresSelections,criteresPreselections,secteurs,regions,errors}) {
 
     const {data,setData,post}=useForm({
@@ -73,9 +75,11 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
         "criteresPreselections":[],
         "criteresSelections":[],
         "image":"",
+        "fichier":"",
+        "nomFichier":"",
         "fichiersSupplementaires":[],
-        "noteMinPreselection":"",
-        "noteMinSelection":""
+        "noteMinPreselection":0,
+        "noteMinSelection":0
     })
 
 
@@ -149,6 +153,28 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
     function selectMultiple(e) {
             setData("fichiersSupplementaires",e.target.files)
 
+    }
+
+    function addFile()
+    {
+        if(data.fichier!=="" && data.nomFichier!=="")
+        {
+            let fichiers=data.fichiersSupplementaires
+            fichiers.push({"nomFichier":data.nomFichier,"fichier":data.fichier,"extension":data.fichier.name.split(".").slice(-1)[0]})
+            setData("fichiersSupplementaires",fichiers)
+            setData("fichier",null)
+            setData("nomFichier","")
+        }
+    }
+    useEffect(()=>{
+        console.log(data.fichier)
+    },[data.fichier])
+
+    function retirerFichier(e,index)
+    {
+        let fichiers=data.fichiersSupplementaires
+        fichiers.splice(index,1)
+        setData("fichiersSupplementaires",fichiers)
     }
 
     return (
@@ -308,11 +334,37 @@ function Create({auth,success,criteresSelections,criteresPreselections,secteurs,
                                 <div className={"text-red-600"}>{errors?.noteMinSelection}</div>
                             </div>
                         </div>
-                        <div>
+                        <div hidden={true}>
                             <div>
                                 Selectionnez les fichiers supplementaire à ajouter (pdf,word,excel,img)*
                             </div>
                             <input accept={".pdf,.xlsx,.xls,.docx,.jpeg,.jpg,.png"} className={"form-control custom-control mt-5"} id={"img"} type="file" multiple  onChange={selectMultiple} />
+
+                        </div>
+
+                        <div>
+                            <div>
+                                Ajouter des fichiers supplementaires (pdf,word,excel,img)*
+                            </div>
+
+                            <div className="mt-5 gap-2 flex flex-wrap">
+                                {data.fichiersSupplementaires.map((f,i)=>(
+                                    <div key={i} className={"border rounded p-2 flex items-center max-w-max gap-5"}>
+                                        <span> {f.nomFichier}.{f.extension} </span>
+                                        <button onClick={(e)=>retirerFichier(e,i)} type="button" className="p-0.5 bg-red-600 text-white max-h-max rounded">
+                                            <ClearIcon fontSize={"small"}/>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex items-center gap-2 mt-5">
+                                <TextField value={data.nomFichier} label="Nommez votre fichier" type="text" onChange={e=>setData("nomFichier",e.target.value)}/>
+                                <TextField type={"file"} onChange={e=>setData("fichier",e.target.files[0])}></TextField>
+                                <button type="button" onClick={addFile} className={"bg-blue-600 text-white p-2"}>
+                                    ajouter
+                                </button>
+                            </div>
 
                         </div>
 

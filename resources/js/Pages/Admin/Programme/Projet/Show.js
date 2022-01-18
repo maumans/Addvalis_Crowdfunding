@@ -227,7 +227,12 @@ function Show({auth,success,projet,programme,criteres}) {
                                                     } type={"submit"} className={noteTotaleSelection<programme.noteMinSelection?"border border-gray-400 text-gray-400 rounded p-2 cursor-not-allowed":"border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition duration-500 rounded p-2"}>Valider le projet </button>
                                                 </div>
                                             </div>
-
+                                            <div hidden={projet.etape!=="attente"} className="space-y-10">
+                                                <div>Si ce projet est admissible à ce programme malgré certains critères non remplis</div>
+                                                <button onClick={()=>setEtape("attente")} type="submit" className={"border border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded p-2"}>
+                                                    Passez à la prochaine etape
+                                                </button>
+                                            </div>
                                             <div className={"w-full flex justify-center"}>
                                                 <div hidden={projet.etape!=="valide"} className="space-y-10 md:w-6/12 w-10/12">
                                                     <div className="w-full border-b border-t text-xl font-bold">

@@ -28,6 +28,9 @@ function Index({auth,programme,projets,success,page}) {
             case 3:
                 setProjetsSt(projets.filter((p)=>(p.etape==="valide")))
                 break
+            case 4:
+                setProjetsSt(projets.filter((p)=>(p.etape==="attente")))
+                break
             default:
                 setProjetsSt(projets)
         }
@@ -75,6 +78,7 @@ function Index({auth,programme,projets,success,page}) {
                                 <MenuItem value={1}>Preselection</MenuItem>
                                 <MenuItem value={2}>Selection</MenuItem>
                                 <MenuItem value={3}>validé</MenuItem>
+                                <MenuItem value={4}>En attente</MenuItem>
                             </Select>
                         </div>
                     </div>

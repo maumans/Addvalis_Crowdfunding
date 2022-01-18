@@ -16,6 +16,8 @@ class CreateFichiersTable extends Migration
         Schema::create('fichiers', function (Blueprint $table) {
             $table->id();
             $table->string("url");
+            $table->string("nom")->nullable();
+            $table->string("extension")->nullable();
             $table->foreignId("programme_id")->nullable()->constrained("programmes")->cascadeOnDelete();
             $table->foreignId("projet_id")->nullable()->constrained("projets")->cascadeOnDelete();
             $table->timestamps();

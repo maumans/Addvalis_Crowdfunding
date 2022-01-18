@@ -62,7 +62,7 @@ class ProgrammeController extends Controller
     {
         $request->validate([
             "titre" =>"required|max:100",
-            "description" =>"required|min:10|max:255",
+            "description" =>"required|min:1|max:255",
             "dateDebut" =>"required|date",
             "dateFin" =>"required|date|after_or_equal:dateDebut",
             "details" =>"required",
@@ -98,47 +98,64 @@ class ProgrammeController extends Controller
             "dateFin" =>$request->dateFin,
             "details" =>$request->details,
             "image" =>$image,
-            "noteMinPreselection"=>$request->criteresPreselections ? $request->noteMinPreselection:"",
-            "noteMinSelection"=>$request->criteresSelections ? $request->noteMinSelection:""
+            "noteMinPreselection"=>$request->criteresPreselections ? $request->noteMinPreselection:null,
+            "noteMinSelection"=>$request->criteresSelections ? $request->noteMinSelection:null
         ]);
 
         if($request->fichiersSupplementaires)
         {
             foreach($request->fichiersSupplementaires as $f)
             {
-                $nom=$f->store("ProgrammeFichier","public");
+                $nom=$f["fichier"]->store("ProgrammeFichier","public");
                 $url=Storage::url($nom);
 
                 Fichier::create([
                     "url" => $url,
+                    "nom"=>$f["nomFichier"],
+                    "extension" => $f["extension"]
                 ])->programme()->associate($programme)->save();
             }
         }
 
 
 
-        foreach($request->criteresPreselections as $key => $value)
+        if($request->criteresPreselections)
         {
-            $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
+            foreach($request->criteresPreselections as $key => $value)
+            {
+                $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
 
+            }
         }
 
-        foreach($request->criteresSelections as $key => $value)
+        if($request->criteresSelections)
         {
-            $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
+            foreach($request->criteresSelections as $key => $value)
+            {
+                $programme->criteres()->syncWithoutDetaching(Critere::find($value["id"]));
 
+            }
         }
 
-        foreach($request->regions as $key => $value)
+
+
+        if($request->regions)
         {
-            $programme->regions()->syncWithoutDetaching(Region::find($value["id"]));
+            foreach($request->regions as $key => $value)
+            {
+                $programme->regions()->syncWithoutDetaching(Region::find($value["id"]));
+            }
         }
 
-        foreach($request->secteurs as $key => $value)
+        if($request->secteurs)
         {
-            $programme->secteurs()->syncWithoutDetaching(Secteur::find($value["id"]));
+            foreach($request->secteurs as $key => $value)
+            {
+                $programme->secteurs()->syncWithoutDetaching(Secteur::find($value["id"]));
 
+            }
         }
+
 
 
 
@@ -155,7 +172,8 @@ class ProgrammeController extends Controller
      */
     public function show($userId, $programmeId)
     {
-        $programme = Programme::where("id",$programmeId)->with(["criteres","regions","secteurs"])->first();
+        $programme = Programme::where("id",$programmeId)->with(["criteres","regions","secteurs","fichiers"])->first();
+
         $criteres = $programme->criteres()->with("typeCritere")->get();
 
         $programme->joursRestant=$programme->dateFin>=Date::now()?Carbon::parse($programme->dateFin)->diffInDays(Date::now()):0;

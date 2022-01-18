@@ -58,7 +58,7 @@ class CritereController extends Controller
         ]);
 
         $request->genreCritere?$critere->genreCritere()->associate(GenreCritere::where("libelle","choix")->first())->save():$critere->genreCritere()->associate(GenreCritere::where("libelle","note")->first())->save();
-        $request->typeCritere?$critere->typeCritere()->associate(TypeCritere::where("libelle","selection")->first())->save():$critere->genreCritere()->associate(TypeCritere::where("libelle","preselection")->first())->save();
+        $request->typeCritere?$critere->typeCritere()->associate(TypeCritere::where("libelle","selection")->first())->save():$critere->typeCritere()->associate(TypeCritere::where("libelle","preselection")->first())->save();
 
         return redirect()->back()->with("success","critere ajouté avec succès");
     }

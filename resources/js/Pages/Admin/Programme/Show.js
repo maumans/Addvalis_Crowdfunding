@@ -4,7 +4,33 @@ import Swal from "sweetalert2";
 import ReactHtmlParser from "react-html-parser";
 import {Inertia} from "@inertiajs/inertia";
 
+import FilePreviewer from "react-file-previewer";
+import {Accordion, AccordionDetails, Button, Modal} from "@mui/material";
+import Box from "@mui/material/Box";
+import FilePreview from "react-file-preview-latest";
+
+import FeedIcon from "@mui/icons-material/Feed"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+
+
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+};
 function Show({auth,success,programme,criteres}) {
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(()=>{
         success && Swal.fire({
@@ -46,6 +72,59 @@ function Show({auth,success,programme,criteres}) {
                                 <button onClick={()=>Inertia.get(route("admin.programme.projet.index",[auth.user.id,programme.id]))} className={"border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500 rounded p-1 my-5 md:w-full"}>
                                     Voir les projets soumis
                                 </button>
+
+                                {
+                                    programme.fichiers.length!==0 &&
+                                    <div>
+                                        <Accordion>
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <div className={"gap-4"}>
+                                                    <FeedIcon/> Documents associés
+                                                </div>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <div>
+                                                    {
+                                                        programme.fichiers.map((f,i)=>(
+                                                            <div key={i} className={i%2===0?"bg-indigo-100 p-2":"p-2"}>
+                                                                <a href={f.url} className="hover:text-indigo-600 hover:underline">
+                                                                    {f.nom}.{f.extension}
+                                                                </a>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+                                            </AccordionDetails>
+                                        </Accordion>
+                                        <Modal
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-labelledby="modal-modal-title"
+                                            aria-describedby="modal-modal-description"
+                                        >
+                                            <Box  sx={style}>
+                                                <div>
+                                                    {
+                                                        programme.fichiers.map((f,i)=>(
+                                                            <div className={i%2===0?"bg-indigo-600":""}>
+                                                                <a href={f.url} className="hover:text-indigo-600 hover:underline">
+                                                                    {f.nom}.{f.extension}
+                                                                </a>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+
+                                            </Box>
+                                        </Modal>
+                                    </div>
+                                }
+
+
                                 <div className={" md:divide-y space-y-1"} style={{height:"fit-content"}}>
                                     <div className={"p-2 md:bg-indigo-600 md:text-white uppercase font-bold"}>
                                         Informations générales
@@ -83,8 +162,7 @@ function Show({auth,success,programme,criteres}) {
                                         <span className={"space-x-2"}>
                                             <span className={"font-bold mr-2"}> Critères de preselection: </span>
                                             {criteres.length!==0 ? criteres.map((c)=> {
-                                                return c.type_critere.libelle === "preselection" && <span className={"underline"}>{c.description} </span>
-
+                                                return c.type_critere.libelle === "preselection" && <span key={c.id} className={"underline"}>{c.description} </span>
                                             }):"aucun"}
                                         </span>
                                     </div>
@@ -92,7 +170,7 @@ function Show({auth,success,programme,criteres}) {
                                         <span className={"space-x-2"}>
                                             <span className={"font-bold mr-2"}> Critères de selection: </span>
                                             {criteres.length!==0 ? criteres.map((c)=> {
-                                                return c.type_critere.libelle === "selection" && <span className={"underline"}>{c.description } </span>
+                                                return c.type_critere.libelle === "selection" && <span key={c.id} className={"underline"}>{c.description } </span>
 
                                             }):"aucun"}
                                         </span>
@@ -110,5 +188,4 @@ function Show({auth,success,programme,criteres}) {
         </Panel>
     );
 }
-
 export default Show;

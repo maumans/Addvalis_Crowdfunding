@@ -44,8 +44,6 @@ class ProjetController extends Controller
 
         $user->notify(new ProjetNotification(Projet::find(4),"est mis en attente"));
 
-       return redirect()->back();
-
         $secteurs=Secteur::all();
         $regions=Region::with("villes")->get();
         $villes=Ville::with("region")->get();
@@ -60,7 +58,6 @@ class ProjetController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             "titre"=>"required|string",
             "description"=>"required|string|max:100",
@@ -122,7 +119,7 @@ class ProjetController extends Controller
         {
             $programme=Programme::where("id",$request->programmeId)->with("regions","criteres","secteurs")->first();
             if($request->region)
-                $region=$programme->regions->where("libelle",$request->region["libelle"]);
+                $region=$programme->regions->where("libelle",$request->region["libelle"])->first();
 
             $secteur=$programme->secteurs()->find($request->secteur);
 
@@ -131,10 +128,14 @@ class ProjetController extends Controller
                 $region=$programme->regions()->whereRelation("villes","id",Ville::find($request->ville["id"])->region->id)->first();
             }
 
-            if($region && $secteur)
+            if($region==null || $secteur==null)
             {
-                $programme->projets()->syncWithoutDetaching($projet);
+                $projet->etape="attente";
+                $projet->save();
             }
+
+            $programme->projets()->syncWithoutDetaching($projet);
+
 
             foreach($programme->criteres as $critere)
             {
