@@ -47,6 +47,7 @@ class HandleInertiaRequests extends Middleware
             ],
             "notifications" => $user?$user->notifications->pluck("data"):null,
             'success' => session('success'),
+            'erreur' => session('erreur'),
             'secteurs' => Secteur::all(),
             'AllProjets'=>Projet::where("etat","valide")->get(['id',"titre","image","description"]),
             "previousUrl"=>session("previousUrl"),

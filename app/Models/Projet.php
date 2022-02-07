@@ -110,5 +110,10 @@ class Projet extends Model
         return $this->hasMany(Fichier::class);
     }
 
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class);
+    }
+
 
 }

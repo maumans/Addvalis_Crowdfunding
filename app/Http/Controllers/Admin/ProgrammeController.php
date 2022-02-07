@@ -62,7 +62,7 @@ class ProgrammeController extends Controller
     {
         $request->validate([
             "titre" =>"required|max:100",
-            "description" =>"required|min:1|max:255",
+            "description" =>"required|min:1|max:500",
             "dateDebut" =>"required|date",
             "dateFin" =>"required|date|after_or_equal:dateDebut",
             "details" =>"required",
@@ -75,7 +75,7 @@ class ProgrammeController extends Controller
             "titre.max"=>"100 caractères max pour titre ",
             "description.required"=>"La description est requise",
             "description.min"=>"10 caractères min pour titre",
-            "description.max"=>"255 caractères max pour titre",
+            "description.max"=>"500 caractères max pour titre",
             "dateDebut.required"=>"La date de debut est requise",
             "dateDebut.date"=>"Une date est requise",
             "dateFin.required"=>"La date de fin est requise",

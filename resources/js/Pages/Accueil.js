@@ -98,8 +98,8 @@ function Accueil(props) {
                            Financez-les ici
                        </div>
 
-                       <button onClick={()=>props.auth.user?Inertia.get(route('user.projet.create',props.auth.user.id)):Inertia.get(route('login'))} className={"md:p-4 p-2 md:text-xl sm:text-lg text-sm rounded border border-white font-bold text-white hover:border-0 hover:bg-black hover:text-white transition duration-500"}>
-                           demarrer un projet
+                       <button onClick={()=>Inertia.get(route('projet.index',props.auth.user.id))} className={"md:p-4 p-2 md:text-lg text-sm rounded border border-white text-white hover:border-0 hover:bg-black hover:text-white transition duration-500"}>
+                           Voir les projets
                        </button>
                    </div>
                </div>
@@ -142,14 +142,20 @@ function Accueil(props) {
                         </div>
                         {
                             props.projets.length>0 ? projets.map((p,i)=>(
-                                    <div key={p.id} data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col overflow-hidden"} style={{height:500,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
+                                    <div key={p.id} data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} className={i>=voirPlus?"":"flex flex-col overflow-hidden"} style={{height:550,boxShadow:"2px 5px 5px gray"}} hidden={i>=voirPlus}>
                                         <div className={"overflow-hidden"}>
-                                            <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:250,width:"100%",objectFit:"cover"}}/>
+                                            <img className={"transform hover:scale-110 transition duration-300 ease-in"} src={p.image} alt="" style={{height:230,width:"100%",objectFit:"cover"}}/>
                                         </div>
-                                        <div className={"text-xl p-2"}>
-                                            {p.titre}
+                                        <div className={" p-2 text-xl my-5"} style={{height:50}}>
+                                            <ShowMoreText
+                                                more=""
+                                                lines={2}
+                                                className={"w-full"}
+                                            >
+                                                {p.titre}
+                                            </ShowMoreText>
                                         </div>
-                                        <div className={"p-2"} style={{height:55}}>
+                                        <div className={"p-2"} style={{height:70}}>
                                             <ShowMoreText
                                                 more=""
                                                 lines={3}
@@ -186,8 +192,8 @@ function Accueil(props) {
                                     <div>
                                         Aucun projet encours
                                     </div>
-                                    <button onClick={()=>props.auth.user?Inertia.get(route('user.projet.create',props.auth.user.id)):Inertia.get(route('login'))} className={"p-2 border border-indigo-600 text-indigo-600 hover:border-0 hover:bg-indigo-600 hover:text-white transition duration-500"}>
-                                        demarrer un projet
+                                    <button onClick={()=>Inertia.get(route('programme.index'))} className={"p-2 border border-indigo-600 text-indigo-600 hover:border-0 hover:bg-indigo-600 hover:text-white transition duration-500"}>
+                                        Voir les programmes de projets
                                     </button>
 
                                 </div>

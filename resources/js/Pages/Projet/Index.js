@@ -114,7 +114,7 @@ function Index({auth,projets,secteurs,regions,search,previousUrl,components}) {
                 <div className="grid md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4">
                     {items.map((p)=>(
                         <div key={p.id} className={"border space-y-4 group"} >
-                            <div className={"w-full"} style={{height:250}}>
+                            <div className={"w-full"} style={{height:255}}>
                                 <div className={"space-y-2 p-2 absolute z-10 invisible group-hover:visible"}>
                                     <Avatar sx={{backgroundColor:"white"}} >
                                         <IconButton onClick={()=> onEnregistre(p)}>
@@ -131,8 +131,14 @@ function Index({auth,projets,secteurs,regions,search,previousUrl,components}) {
                             </div>
                             <div className={"p-4 space-y-4"} style={{height:200}}>
                                 <div className={"space-y-4 group"} role="button" onClick={()=>Inertia.get(route("projet.show",p.id))}>
-                                    <div className={"text-xl uppercase group-hover:underline"} style={{height:50}}>
-                                        {p.titre}
+                                    <div className={"text-xl uppercase group-hover:underline overflow-hidden"} style={{height:55}}>
+                                        <ShowMoreText
+                                            more=""
+                                            lines={2}
+                                            className={"w-full"}
+                                        >
+                                            {p.titre}
+                                        </ShowMoreText>
                                     </div>
                                     <div style={{height:100}}>
                                         <ShowMoreText

@@ -2,8 +2,29 @@ import React, {useEffect, useState} from 'react';
 import Authenticated from "@/Layouts/Authenticated";
 import ReactHtmlParser from "react-html-parser";
 import {Inertia} from "@inertiajs/inertia";
+import {Accordion, AccordionDetails, Modal} from "@mui/material";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FeedIcon from "@mui/icons-material/Feed";
+import Box from "@mui/material/Box"
+
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+};
 
 function Show({auth,success,programme,criteres,errors}) {
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     return (
         <Authenticated
@@ -34,6 +55,56 @@ function Show({auth,success,programme,criteres,errors}) {
                                 <button disabled={programme.joursRestant<1} onClick={()=>Inertia.get(route("programme.projet",programme.id))} className={`border-2 rounded p-1 my-5 md:w-full ${programme.joursRestant>0?"border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition duration-500":" bg-gray-200 border-gray-400 text-gray-400"}`}>
                                     Soumettre sa candidature
                                 </button>
+                                {
+                                    programme.fichiers.length!==0 &&
+                                    <div>
+                                        <Accordion>
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                aria-controls="panel1a-content"
+                                                id="panel1a-header"
+                                            >
+                                                <div className={"gap-4"}>
+                                                    <FeedIcon/> Documents associés
+                                                </div>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <div>
+                                                    {
+                                                        programme.fichiers.map((f,i)=>(
+                                                            <div key={i} className={i%2===0?"bg-indigo-100 p-2":"p-2"}>
+                                                                <a href={f.url} className="hover:text-indigo-600 hover:underline">
+                                                                    {f.nom}.{f.extension}
+                                                                </a>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+                                            </AccordionDetails>
+                                        </Accordion>
+                                        <Modal
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-labelledby="modal-modal-title"
+                                            aria-describedby="modal-modal-description"
+                                        >
+                                            <Box  sx={style}>
+                                                <div>
+                                                    {
+                                                        programme.fichiers.map((f,i)=>(
+                                                            <div className={i%2===0?"bg-indigo-600":""}>
+                                                                <a href={f.url} className="hover:text-indigo-600 hover:underline">
+                                                                    {f.nom}.{f.extension}
+                                                                </a>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+
+                                            </Box>
+                                        </Modal>
+                                    </div>
+                                }
                                 <div className={" md:divide-y space-y-1"} style={{height:"fit-content"}}>
                                     <div className={"p-2 md:bg-indigo-600 md:text-white uppercase font-bold"}>
                                         Informations générales

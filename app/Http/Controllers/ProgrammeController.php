@@ -55,7 +55,7 @@ class ProgrammeController extends Controller
      */
     public function show($programmeId)
     {
-        $programme = Programme::where("id",$programmeId)->with(["criteres","regions","secteurs"])->first();
+        $programme = Programme::where("id",$programmeId)->with(["criteres","regions","secteurs","fichiers"])->first();
 
         $criteres = $programme->criteres()->with("typeCritere")->get();
 

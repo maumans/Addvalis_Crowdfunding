@@ -3,7 +3,7 @@ import Authenticated from "@/Layouts/Authenticated";
 import ReactHtmlParser from "react-html-parser";
 //import { keyframes } from "styled-components";
 import AOS from "aos"
-import {TextField} from "@mui/material"
+import {Checkbox, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField} from "@mui/material"
 import {withStyles} from "@mui/styles";
 import {useForm} from "@inertiajs/inertia-react";
 import Swal from 'sweetalert2';
@@ -17,6 +17,9 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Avatar from "@mui/material/Avatar";
 import {maxHeight, minHeight} from "@mui/system";
+
+import Radio from '@mui/material/Radio';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 
 const TextFieldCustom = withStyles({
@@ -53,7 +56,9 @@ const TextFieldCustom = withStyles({
     },
 })(TextField);
 
-function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentage,montantFinance,success}) {
+
+
+function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentage,montantFinance,success,erreur}) {
     const [voirSoutien,setVoirSoutien]=useState(false)
 
     const {data,setData,post}=useForm({
@@ -69,6 +74,16 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
             showConfirmButton: false,
             timer: 2000
         })
+
+        erreur && Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: erreur,
+                showConfirmButton: false,
+                timer: 2000
+            }
+
+        )
     },[projet])
 
     //var taille = keyframes`from {width: 0%;}to {width: 50%;}`
@@ -93,13 +108,6 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
         return new Intl.NumberFormat('de-DE').format(number)
     }
 
-
-    function handleSubmit(e)
-    {
-        e.preventDefault()
-
-        post("/projet/contribuer",{preserveScroll:true})
-    }
     function capitalize(str) {
         const arr = str.split(" ");
         for (var i = 0; i < arr.length; i++) {
@@ -121,6 +129,61 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
     const [value, setValue] = useState('1');
     const [soutienContributeurs, setSoutienContributeurs] = useState(false);
 
+    const [typePaiement, setTypePaiement] = useState("");
+    const [mobilePaiement, setMobilePaiement] = useState("orange");
+
+    function handleChangePaiement(event) {
+        setTypePaiement(event.target.value);
+    }
+
+    function handleChangeMobile(event) {
+        setMobilePaiement(event.target.value);
+    }
+
+    function handleSubmit(e)
+    {
+        e.preventDefault()
+
+        //post(route("om.init"),{preserveScroll:true})
+
+        switch(typePaiement)
+        {
+            case "mobile":
+            {
+                if(mobilePaiement ==="orange")
+                {
+                    axios.post(route("om.init"), {"projetId":data.projetId,"montant":data.montant,"typePaiement":data.typePaiement,"mobilePaiement":data.mobilePaiement})
+                        .then(({ data }) => {
+                            window.location.assign(data)
+                        })
+                        .catch(({ response }) => {
+                            console.log('response', response)
+                        })
+                }
+                if(mobilePaiement ==="mtn")
+                {
+
+                }
+            }
+            case "carte":
+            {
+
+            }
+            case "paypal":
+            {
+
+            }
+            case "paycard":
+            {
+
+            }
+            default:break;
+        }
+    }
+
+    useEffect(() => {
+        console.log(typePaiement)
+    },[typePaiement])
 
     return (
         <Authenticated
@@ -197,7 +260,7 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
 
             </div>
 
-            <div ref={myref}  className={voirSoutien||soutienContributeurs?"flex justify-center":""} >
+            <div  className={voirSoutien||soutienContributeurs?"flex justify-center":""} >
                 <div hidden={!voirSoutien && !soutienContributeurs} data-aos={voirSoutien || soutienContributeurs?"fade-up":"fade-down"} data-aos-duration={1000} className={"h-96 w-full p-10 border my-10 bg-indigo-600"}>
                     <div className={"w-80 text-white font text-lg"}>
                         Votre contribution n'est prélevée que si l'objectif de financement du projet est atteint avant la date limite.
@@ -217,16 +280,79 @@ function Show({auth,errors,projet,createur,contributeurs,contributeur,pourcentag
                                 financer
                             </button>
 
-                        </form>
-                    </div>
-                    <div>
-                        <div className={"text-white"}>
-                            Vous recevrez <span className={"text-xl"}>{(data.montant*100/(projet.montantInitial+projet.montantRechercher)).toFixed(2)}</span> % des parts en cas de bénéfices
-                        </div>
+                            <div className={"text-white"} style={{maxWidth:500}}>
+                                Vous recevrez <span className={"text-xl"}>{(data.montant*100/(projet.montantInitial+projet.montantRechercher)).toFixed(2)}</span> % des parts en cas de bénéfices ceci augmentera en fonction de votre apport
+                            </div>
 
+                        </form>
                     </div>
                 </div>
             </div>
+
+
+            <div ref={myref} className={"flex justify-center"} >
+                <div className={"w-full p-10 border my-10"}>
+                    <div className={"my-10 flex justify-center"}>
+
+                        <form onSubmit={handleSubmit} className={"flex flex-col space-y-5"}>
+                            <div>
+                                <FormControl>
+                                    <FormLabel id="demo-controlled-radio-buttons-group">Choisissez le moyen de paiement</FormLabel>
+                                    <RadioGroup
+                                        row
+                                        aria-labelledby="demo-controlled-radio-buttons-group"
+                                        name="controlled-radio-buttons-group"
+                                        value={typePaiement}
+                                        onChange={handleChangePaiement}
+                                    >
+                                        <FormControlLabel value="mobile" control={<Radio />} label="mobile" />
+                                        <FormControlLabel value="carte" control={<Radio />} label="carte" />
+                                        <FormControlLabel value="paypal" control={<Radio />} label="paypal" />
+                                        <FormControlLabel value="paycard" control={<Radio />} label="paycard" />
+                                    </RadioGroup>
+                                </FormControl>
+
+                                <div hidden={typePaiement!=="mobile"} className={"mt-10"}>
+                                    <FormControl>
+                                        <FormLabel id="demo-controlled-radio-buttons-group">Choisissez le moyen de paiement</FormLabel>
+                                        <RadioGroup
+                                            row
+                                            aria-labelledby="demo-controlled-radio-buttons-group"
+                                            name="controlled-radio-buttons-group"
+                                            value={mobilePaiement}
+                                            onChange={handleChangeMobile}
+                                        >
+                                            <FormControlLabel value="orange" control={<Radio />} label="Orange" />
+                                            <FormControlLabel value="mtn" control={<Radio />} label="MTN" />
+
+                                        </RadioGroup>
+                                    </FormControl>
+                                </div>
+                            </div>
+
+                            <div hidden={!typePaiement} className={"w-full space-y-5 mt-5"}>
+                                <TextField
+                                    className={"w-full"}
+                                    value={data.montant}
+                                    onChange={(e)=>setData("montant",e.target.value)}
+                                    label={"montant"}
+                                    variant={"standard"}
+                                />
+                                <div className={"text-red-600"}>{errors?.montant }</div>
+
+                                <button type={"submit"} className={"w-full text-indigo-600 border border-indigo-600 p-2 rounded hover:text-white hover:bg-indigo-600"}>
+                                    <CreditCardIcon/> contribuer
+                                </button>
+
+                                <div style={{maxWidth:500}}>
+                                    Vous recevrez <span className={"text-xl"}>{(data.montant*100/(projet.montantInitial+projet.montantRechercher)).toFixed(2)}</span> % des parts en cas de bénéfices ceci augmentera en fonction de votre apport
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
 
             <div className={"flex md:flex-row flex-col md:justify-around md:space-y-0 space-y-5 px-5 my-20 py-5 md:space-x-5 space-x-0 items-center font-bold crimson text-lg"}>
                 <div data-aos={"fade-up"} data-aos-once={true} data-aos-duration={500} data-aos-delay={400} style={{maxHeight:600}} className={"flex md:flex-col md:space-x-0 space-x-5"}>

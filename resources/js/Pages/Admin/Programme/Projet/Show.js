@@ -144,6 +144,9 @@ function Show({auth,success,projet,programme,criteres}) {
                                                                 <div className="ml-auto">
                                                                     <TextField
                                                                         InputProps={{
+                                                                            inputProps:{
+                                                                                max:c.notemax,
+                                                                            },
                                                                             endAdornment: <InputAdornment position="end">/{c.notemax}</InputAdornment>,
                                                                         }}
                                                                         defaultValue={c.pivot.note} onChange={(e)=>handleValidationChange(e,c.id)} type={"number"} inputProps={{max:100,min:1}} variant="standard" label={"Entrez la note"} style={{minWidth:140}}/>
@@ -173,7 +176,7 @@ function Show({auth,success,projet,programme,criteres}) {
                                                     <button disabled={noteTotalePreselection<programme.noteMinPreselection} onClick={()=>{
                                                         setEtape("selection")
                                                     }
-                                                    } type={"submit"} className={noteTotalePreselection<programme.noteMinPreselection?"border border-gray-400 text-gray-400 rounded p-2 cursor-not-allowed":"border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition duration-500 rounded p-2"}>Passer à la preselection <NavigateNextIcon/> </button>
+                                                    } type={"submit"} className={noteTotalePreselection<programme.noteMinPreselection?"border border-gray-400 text-gray-400 rounded p-2 cursor-not-allowed":"border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition duration-500 rounded p-2"}>Passer à la selection <NavigateNextIcon/> </button>
                                                 </div>
                                             </div>
                                             <div hidden={projet.etape!=="selection"} className="space-y-10">
@@ -190,6 +193,9 @@ function Show({auth,success,projet,programme,criteres}) {
                                                             <div className="ml-auto">
                                                                 <TextField
                                                                     InputProps={{
+                                                                        inputProps:{
+                                                                            max:c.notemax,
+                                                                        },
                                                                         endAdornment: <InputAdornment position="end">/{c.notemax}</InputAdornment>,
                                                                     }}
 

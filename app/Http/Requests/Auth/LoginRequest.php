@@ -34,6 +34,15 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            "email.required" =>"l'email est requis",
+            "email.email" =>"Un email est requis pour ce champ",
+            "password.required" =>"le mot de passe est requis",
+        ];
+    }
+
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -49,10 +58,9 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => "Les informations d'authentification ne correspondent pas",
             ]);
         }
-
         RateLimiter::clear($this->throttleKey());
     }
 

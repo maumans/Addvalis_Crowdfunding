@@ -18,8 +18,7 @@ class CritereController extends Controller
      */
     public function index()
     {
-        $criteres=Critere::with("genreCritere","typeCritere")->get();
-
+        $criteres=Critere::orderBy("created_at","desc")->with("genreCritere","typeCritere")->get();
 
         return Inertia::render("Admin/Critere/Index",["criteres"=>$criteres]);
     }

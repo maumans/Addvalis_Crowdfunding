@@ -28,7 +28,7 @@ class ProjetController extends Controller
      */
     public function index()
     {
-        $projets=Projet::where("user_id",Auth::user()->id)->orderBy("created_at","desc")->get(["id","titre","description","image"]);
+        $projets=Projet::where("user_id",Auth::id())->orderBy("created_at","desc")->get(["id","titre","description","image","etape"]);
 
         return Inertia::render("User/Projet/Index",["projets"=>$projets]);
     }
@@ -60,7 +60,7 @@ class ProjetController extends Controller
     {
         $request->validate([
             "titre"=>"required|string",
-            "description"=>"required|string|max:100",
+            "description"=>"required|string|max:500",
             "montantInitial"=>"required|integer",
             "montantRechercher"=>"required|integer",
             "dateDebut"=>"required|date",
@@ -196,7 +196,7 @@ class ProjetController extends Controller
     {
         $request->validate([
             "projet.titre"=>"required|string",
-            "projet.description"=>"required|string|max:100",
+            "projet.description"=>"required|string|max:500",
             "projet.montantInitial"=>"required|integer",
             "projet.montantRechercher"=>"required|integer",
             "projet.dateDebut"=>"required|date",

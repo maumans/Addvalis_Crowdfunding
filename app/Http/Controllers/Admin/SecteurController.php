@@ -16,7 +16,7 @@ class SecteurController extends Controller
      */
     public function index()
     {
-        $secteurs=Secteur::all();
+        $secteurs=Secteur::orderBy("created_at","desc")->get();
 
         return Inertia::render("Admin/Secteur/Index",["secteurs"=>$secteurs]);
     }

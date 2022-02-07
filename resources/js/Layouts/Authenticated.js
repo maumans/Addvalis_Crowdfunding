@@ -422,9 +422,6 @@ export default function Authenticated({ auth, header, children,active }) {
                                             <Dropdown.Link href={route('user.show',auth.user.id)} method="get" as="button" active={route().current('user.show')}>
                                                 Profil
                                             </Dropdown.Link>
-                                            <Dropdown.Link href={route('user.projet.create',auth.user.id)} method="get" as="button" active={active&&active==="creerProjet"}>
-                                                Créer un projet
-                                            </Dropdown.Link>
                                             <Dropdown.Link href={route('user.projet.index',auth.user.id)} method="get" as="button"  active={active&&active==="mesProjets"}>
                                                 Mes projets
                                             </Dropdown.Link>
@@ -520,9 +517,6 @@ export default function Authenticated({ auth, header, children,active }) {
                                         <List>
                                             <ResponsiveNavLink href={route('projet.index')} active={route().current()==="projet.index"}>
                                                 Tous les projets
-                                            </ResponsiveNavLink>
-                                            <ResponsiveNavLink href={route('user.projet.create',auth.user.id)} active={route().current()==="user.projet.create"}>
-                                                Créer un projet
                                             </ResponsiveNavLink>
                                             <ResponsiveNavLink href={route('user.projet.index',[auth.user.id])} active={route().current()==="user.projet.index"}>
                                                 Mes projets

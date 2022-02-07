@@ -42,6 +42,12 @@ class NewPasswordController extends Controller
             'token' => 'required',
             'email' => 'required|email',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ],
+        [
+            [
+                "email.required" =>"l'email est requis",
+                "email.email" =>"ce champs doit contenir un email",
+            ]
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we

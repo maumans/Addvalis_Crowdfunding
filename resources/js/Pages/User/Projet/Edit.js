@@ -348,7 +348,7 @@ function Edit(props) {
                                             </div>
                                             <div className={"text-red-600"}>{props.errors["projet.description"]}</div>
 
-                                            <div hidden={data.description.length <=100} className={"text-red-600"}>caractères max 100</div>
+                                            <div hidden={data.description.length <=500} className={"text-red-600"}>caractères max 500</div>
                                         </div>
 
                                     </div>

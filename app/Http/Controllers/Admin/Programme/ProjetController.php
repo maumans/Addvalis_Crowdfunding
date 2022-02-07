@@ -133,6 +133,5 @@ class ProjetController extends Controller
     {
         $projet->delete();
         return redirect()->route('admin.programme.projet.index',[$userId,$programme->id])->with("success", "projet supprimé avec succès");
-        //dd($projet,$programme);
     }
 }

@@ -20,10 +20,10 @@ use App\Models\Secteur;
 |
 */
 
-Route::get('/', function () {
+Route::middleware(['check_paiement'])->get('/', function () {
 
     $secteurs=Secteur::all();
-    $projets=Projet::where("etat","valide")->orderBy('created_at',"desc")->with("user")->get();
+    $projets=Projet::where("etape","valide")->orderBy('created_at',"desc")->with("user")->get();
     $programmes=Programme::all();
 
     foreach($projets as $p)
@@ -46,7 +46,7 @@ Route::get('/', function () {
 Route::get("/accueil",function () {
 
     $secteurs=Secteur::all();
-    $projets=Projet::where("etat","valide")->orderBy('created_at',"desc")->with("user")->get();
+    $projets=Projet::where("etape","valide")->orderBy('created_at',"desc")->with("user")->get();
     $programmes=Programme::all();
 
     foreach($projets as $p)
@@ -68,7 +68,7 @@ Route::get("/projet/search/{search}",[\App\Http\Controllers\ProjetController::cl
 //User route
 Route::resource("user",\App\Http\Controllers\UserController::class)->middleware(['auth', 'verified'])->except("edit");
 Route::get("user/{user}/edit/{biographie?}",[\App\Http\Controllers\UserController::class,"edit"])->name("user.edit")->middleware(['auth', 'verified']);
-Route::resource("user.projet",\App\Http\Controllers\User\ProjetController::class)->middleware(['auth', 'verified']);
+Route::resource("user.projet",\App\Http\Controllers\User\ProjetController::class)->except("create")->middleware(['auth', 'verified']);
 Route::get("user/{user}/save",[\App\Http\Controllers\SaveController::class,"index"])->name("user.projet.save")->middleware(['auth', 'verified']);
 
 
@@ -113,7 +113,18 @@ Route::name("likes.")->group(function(){
 
 //Likes route
 Route::name("save.")->group(function(){
-    Route::get("save/{user}/enregistrer/{projet}",[\App\Http\Controllers\saveController::class,"enregistrer"])->middleware(['auth', 'verified'])->name("enregistrer");
+    Route::get("save/{user}/enregistrer/{projet}",[\App\Http\Controllers\SaveController::class,"enregistrer"])->middleware(['auth', 'verified'])->name("enregistrer");
+});
+
+
+//Les routes OrangeMoney
+Route::post('/om/init', [\App\Http\Controllers\Paiement\OrangeMoneyController::class,"init"])->middleware(['auth', 'verified',"cors"])->name('om.init');
+Route::group(['prefix' => 'om'], function () {
+    Route::get('return', [\App\Http\Controllers\Paiement\OrangeMoneyController::class,"return"]);
+    Route::get('cancel', [\App\Http\Controllers\Paiement\OrangeMoneyController::class,"cancel"]);
+    Route::get('notif', [\App\Http\Controllers\Paiement\OrangeMoneyController::class,"notif"]);
 });
 
 require __DIR__.'/auth.php';
+
+

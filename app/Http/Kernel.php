@@ -2,7 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\programmeIsEditable;
+use App\Http\Middleware\CheckPaiementsMiddleware;
+use App\Http\Middleware\ProgrammeIsEditable;
 use App\Http\Middleware\ProjectIsValidated;
 use App\Http\Middleware\UserIsAdmin;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -70,5 +71,7 @@ class Kernel extends HttpKernel
         'userIsAdmin' =>UserIsAdmin::class,
         "projectIsValidated"=>ProjectIsValidated::class,
         "programmeIsEditable" => ProgrammeIsEditable::class,
+        'cors' => \App\Http\Middleware\Cors::class,
+        'check_paiement' => CheckPaiementsMiddleware::class
     ];
 }

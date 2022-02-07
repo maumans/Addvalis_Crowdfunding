@@ -317,7 +317,7 @@ export default function Create(props) {
                             placeholder="Decrivez brièvement votre projet"
                             style={{height:80}}
                         />
-                        <div hidden={data.description.length <=100} className={"text-red-600"}>caractères max 100</div>
+                        <div hidden={data.description.length <=500} className={"text-red-600"}>caractères max 500</div>
                     </div>
                 </div>
 

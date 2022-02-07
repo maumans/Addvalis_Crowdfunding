@@ -17,7 +17,7 @@ class ProjectIsValidated
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->projet->etat==="attente")
+        if($request->projet->etape==="attente")
         {
             return Redirect::route("accueil");
         }

@@ -23,7 +23,7 @@ class ProjetController extends Controller
      */
     public function index()
     {
-        $projets=Projet::where("etat","valide")->orderBy('created_at',"desc")->with(["user","secteur","adresse"])->get();
+        $projets=Projet::where("etape","valide")->orderBy('created_at',"desc")->with(["user","secteur","adresse"])->get();
         foreach($projets as $projet)
         {
             $projet->adresse->ville->region;
